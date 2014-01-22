@@ -676,7 +676,7 @@ select {
 }
 
 .loginpage .homelink a:hover {
-  color: #333;
+  color: #222;
 }
 
 .loginpage .homelink a:before {
@@ -687,14 +687,71 @@ select {
 }
 
 .loginpage .homelink a:hover:before {
-  color: #555;
+  color: #444;
 }
 
 .loginpage .container {
-  padding: 10px;
-  background-color: #fff;
+  padding: 40px 10px 10px;
 }
 
 .loginpage h3 {
   margin-top: 0;
+}
+
+.loginpage .attention {
+  padding: 7px;
+  border: 1px solid #E7C92D;
+}
+
+.loginpage #error {
+  display: none;
+  cursor: pointer;
+  background-color: #EABFBC;
+  text-decoration: none;
+  padding: 7px;
+  color: #852424;
+  border-radius: 5px;
+  margin: 5px 0;
+  transition: opacity 0.3s;
+}
+
+.loginpage #error:hover {
+  opacity: 0.7;
+}
+
+.loginpage .row {
+  width: 500px;
+  margin: 7px 0;
+}
+
+.loginpage .row:last-child {
+  margin-top: 15px;
+}
+
+.loginpage .text {
+  width: 470px;
+  padding: 7px 5px;
+  border: 0;
+  border-color: #ccc;
+  box-shadow: 0 2px 6px -4px #212121;
+  outline: none;
+}
+
+.loginpage .text:focus {
+  border-color: #aaa;
+  box-shadow: 0 1px 6px 0px #849EAF;
+}
+
+.loginpage .button {
+  display: block;
+  width: 480px;
+  padding: 7px 0;
+  color: #333;
+  outline: none;
+  background-color: #C9D6DF;
+}
+
+.loginpage .button:hover {
+  color: #000;
+  background-color: #97B7CD;
 }

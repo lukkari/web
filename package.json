@@ -1,19 +1,22 @@
 {
   "name"   : "lukkari",
   "version": "0.0.2",
-  "private": false,
+  "private": true,
+  "author" : "Roman Zaynetdinov",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express"  : "3.4.4",
-    "jade"     : "*",
-    "mongodb"  : "*",
-    "mongoose" : "*",
-    "request"  : "*",
-    "jsdom"    : "*",
-    "iconv"    : "*",
-    "async"    : "*"
+    "express"        : "~3.4.4",
+    "jade"           : "~1.1.5",
+    "connect-mongo"  : "~0.4.0",
+    "mongoose"       : "~3.8.4",
+    "request"        : "~2.33.0",
+    "jsdom"          : "~0.8.11",
+    "iconv"          : "~2.0.7",
+    "async"          : "~0.2.9",
+    "passport"       : "~0.1.18",
+    "passport-local" : "~0.1.6"
   },
   "repository": {
     "type": "git",

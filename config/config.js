@@ -2,7 +2,7 @@ module.exports = {
   development: {
     db: 'mongodb://localhost/learnnode_dev',
     app: {
-      name: 'LearnNode'
+      name: 'Lukkari'
     }
   }
 };

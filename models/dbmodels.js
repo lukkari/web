@@ -2,7 +2,9 @@
  * DB Models
  */
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    crypto   = require('crypto');
+
 var Schema = mongoose.Schema;
 
 
@@ -190,6 +192,7 @@ parseSchema.pre('save', function (next) {
 
 mongoose.model('Parse', parseSchema);
 
+
 /**
  * ########################################################################3
  * Messages from the main page
@@ -198,7 +201,51 @@ mongoose.model('Parse', parseSchema);
 var contactSchema = new Schema({
   message   : { type : String, default : '' },
   from      : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref: 'User' },
   createdAt : { type : Date,   default : Date.now }
 });
 
 mongoose.model('Contact', contactSchema);
+
+
+/**
+ * ########################################################################3
+ * Users
+ */
+
+ var userSchema = new Schema({
+  username  : { type : String, default : '', unique : true },
+  password  : { type : String, default : '' },
+  salt      : { type : String, default : '' },
+  email     : { type : String, default : '', unique : true },
+  roles     : {
+    admin : { type : Boolean, default : false }
+  },
+  createdAt : { type : Date,   default : Date.now }
+ });
+
+
+ userSchema.methods = {
+
+  authenticate: function (plainText) {
+    return this.encryptPassword(plainText) === this.password;
+  },
+
+  makeSalt: function () {
+    return Math.round((new Date().valueOf() * Math.random())) + '';
+  },
+
+  encryptPassword: function (password) {
+    if (!password) return '';
+    var encrypred;
+    try {
+      encrypred = crypto.createHmac('sha512', this.salt).update(password).digest('hex');
+      return encrypred;
+    }
+    catch (err) {
+      return '';
+    }
+  }
+ }
+
+ mongoose.model('User', userSchema);

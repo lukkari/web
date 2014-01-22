@@ -3,81 +3,76 @@
  */
 
 
-var express  = require('express'),
-    routes   = require('./routes'),
-    user     = require('./routes/user'),
-    http     = require('http'),
-    path     = require('path');
+var express    = require('express'),
+    MongoStore = require('connect-mongo')(express),
+    passport   = require('passport'),
+    routes     = require('./routes'),
+    http       = require('http'),
+    path       = require('path'),
+    config     = require('./config/config.js')['development'],
+    mongoose   = require('mongoose');
 
-var config   = require('./config/config.js')['development'];
-    mongoose = require('mongoose');
+
+//create express app
+var app = express();
+
+//setup the web server
+app.server = http.createServer(app);
+
 
 var connect = function () {
   mongoose.connect(config.db);
-}
+};
+
 connect();
 
 // Error handler
 mongoose.connection.on('error', function (err) {
   console.log(err);
-})
+});
 
 // Reconnect when closed
 mongoose.connection.on('disconnected', function () {
   connect();
-})
-
-var app = express();
-
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser('learnnode'));
-app.use(express.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
-
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
-
-//app.get('/users', user.list);
-
-// Parse page
-app.get(   '/parse',       routes.parse);
-app.post(  '/parse/add',   routes.addParse);
-app.post(  '/parse/staff', routes.staffParse);
-app.get(   '/parse/:id',   routes.runParse);
-app.delete('/parse/:id',   routes.deleteParse);
-app.put(   '/parse/:id',   routes.clearParse);
+});
 
 
-// Manage page
-app.get('/manage', routes.manage);
-app.get('/manage/clear/:model', routes.clearModel);
+require(__dirname + '/config/passport')(passport);
 
 
-// Login
-app.get('/login', routes.login);
+app.configure(function () {
+  // settings
+  app.disable('x-powered-by');
+  app.set('port', process.env.PORT || 3000);
+  app.set('views', path.join(__dirname, 'views'));
+  app.set('view engine', 'jade');
 
-// API
-app.get( '/api/groups',       routes.getGroups);
-app.get( '/api/teachers',     routes.getTeachers);
-app.get( '/api/schedule/:id', routes.getSchedule);
-app.post('/api/messages',     routes.sendMsg);
+  // middleware
+  app.use(express.compress());
+  app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
+  app.use(express.logger('dev'));
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.json());
+  app.use(express.urlencoded());
+  app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({
+    secret : config.app.name,
+    store  : new MongoStore({ url : config.db })
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(app.router);
 
-// Main page
-app.get('/:search', routes.index);
-app.get('/',        routes.index);
+  // development only
+  if ('development' == app.get('env')) {
+    app.use(express.errorHandler());
+  }
+});
+
+require(__dirname + '/config/routes')(app, passport);
 
 
-http.createServer(app).listen(app.get('port'), function(){
+app.server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

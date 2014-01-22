@@ -582,17 +582,3 @@ exports.sendMsg = function (req, res) {
     });
   }
 };
-
-
-/**
- * #####################################################################
- * Login
- */
-
-exports.login = function (req, res) {
-
-  res.render('login', {
-        title : 'Login'
-      });
-
-};
