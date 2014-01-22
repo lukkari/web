@@ -1,0 +1,159 @@
+body {
+  background-color: #fff;
+}
+
+.manage {
+  width: 700px;
+  margin: 10px auto;
+}
+
+.manage .easylinks {
+  border-left: 5px solid #57B6F0;
+  padding: 3px 0 3px 10px;
+}
+
+.manage .easylinks ul > li {
+  margin: 3px 0;
+}
+
+.manage .easylinks li > a {
+  font-size: 15px;
+}
+
+.manage .container {
+  margin: 20px 0;
+}
+
+.manage .block {
+  margin-top: 10px;
+}
+
+.manage .block h3 {
+  border-bottom: 2px solid #53CE85;
+}
+
+.manage .block ul > li {
+  margin: 3px 0;
+}
+
+.manage .block li > span {
+  padding-left: 5px;
+  font-style: italic;
+}
+
+.manage .block li > a {
+  font-size: 12px;
+  margin-left: 7px;
+}
+
+.manage .msg {
+  margin: 2px 0;
+  padding: 0 5px;
+  clear: left;
+  border-left: 3px solid #59A6D4;
+}
+
+.manage .msg:nth-child(2n) {
+  border-left: 3px solid #59A6D4;
+}
+
+.manage .msg:nth-child(2n+1) {
+  border-left: 3px solid #BF59D4;
+}
+
+.manage .msg .from {
+  float: left;
+  font-size: 0.9em;
+  padding-right: 10px;
+  color: #888;
+}
+
+.manage #error {
+  color: #c00;
+}
+
+.manage #error:first-letter {
+  text-transform: uppercase;
+}
+
+.manage .addparseform {
+  padding: 10px 0;
+}
+
+.manage .addparseform .long {
+  width: 450px;
+}
+
+.manage .addparseform .button {
+  width: 150px;
+}
+
+.manage .addparseform select {
+  margin: 3px;
+}
+
+.manage .addparseform .customname {
+  margin: 5px 0 0;
+  background-color: #f5f5f5;
+}
+
+.manage .addparseform .customname label {
+  padding-right: 10px;
+}
+
+.manage .parselist li.parsed {
+  background-color: #ecf0f1;
+}
+
+.manage .parselist li > div {
+  float: left;
+}
+
+.manage .parselist li:hover > .del, .manage .parselist li:hover > .clear {
+  opacity: 1;
+}
+
+.manage .parselist .del {
+  width: 35px;
+  text-align: right;
+  position: relative;
+  top: -1px;
+  right: 5px;
+}
+
+.manage .parselist .group {
+  width: 210px;
+}
+
+.manage .parselist .link {
+  width: 410px;
+}
+
+.manage .parselist .clear {
+  width: 45px;
+}
+
+.manage .parselist .del, .manage .parselist .clear {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.manage .parselist .del a, .manage .parselist .clear a {
+  font-size: 12px;
+}
+
+.manage .parselist .del a {
+  color: #c00;
+}
+
+.manage .parselist .clear a {
+  color: #F59F15;
+}
+
+.manage .parselist .description {
+  float: none;
+  clear: both;
+  font-size: 13px;
+  padding: 2px 40px;
+  color: #888;
+}

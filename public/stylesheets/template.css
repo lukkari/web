@@ -1,0 +1,646 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #e9e9e9;
+}
+
+a {
+  color: #1B98E5;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #3E8CBC;
+  text-decoration: underline;
+}
+
+.klear {
+  clear: both;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+select {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.text {
+  border: 1px solid #bbb;
+  padding: 3px;
+  width: 200px;
+}
+
+.button {
+  position: relative;
+  border: 0;
+  padding: 4px 10px;
+  cursor: pointer;
+  background-color: #D9DDDE;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: #bdc3c7;
+}
+
+.button:active {
+  top: 1px;
+  left: 1px;
+}
+
+.footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 0;
+  color: #888;
+}
+
+.attention {
+  background-color: #FCF0B0;
+}
+
+.success {
+  background-color: #BFF1BC;
+}
+
+.attention, .success {
+  padding: 5px 7px;
+  border-radius: 3px;
+}
+
+
+/**
+ * TOP MENU
+ *
+**/
+
+.topmenu {
+  width: 100%;
+  margin: 0 0 10px;
+  background-color: #f9f9f9;
+}
+
+.topmenu ul {
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.topmenu ul > li {
+  float: left;
+  width: 50%;
+}
+
+.topmenu ul > li > a {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #336E9B;
+  border-left: 2px solid #ddd;
+}
+
+.topmenu ul > li:last-child a {
+  border-right: 2px solid #ddd;
+}
+
+.topmenu ul > li > a:hover {
+  background-color: #ecf0f1;
+}
+
+/**
+ * MAIN PAGE
+ *
+ */
+
+.mainpage {
+  width: 700px;
+  margin: 20px auto 10px;
+ }
+
+.mainpage h3 {
+  margin: 20px 0 5px;
+}
+
+.mainpage .block {
+  padding: 10px;
+  background-color: #fff;
+}
+
+.mainpage h4 {
+  color: #2C5E84;
+  margin: 15px 0 10px;
+}
+
+.mainpage h4:first-child {
+  margin-top: 0;
+}
+
+.mainpage s {
+  padding-left: 4px;
+}
+
+ .mainpage .attention {
+  margin: 3px 5px;
+}
+.mainpage .success {
+  margin: 3px 0;
+}
+
+.mainpage #sent {
+  display: none;
+}
+
+.mainpage .contactform {
+  margin: 10px 0;
+}
+
+.mainpage .contactform textarea {
+  width: 25%;
+  height: 16px;
+  transition: height 0.3s, width 0.3s;
+}
+
+.mainpage .contactform textarea.big {
+  width: 100%;
+  height: 32px;
+}
+
+.mainpage .contactform #hiddenform {
+  display: none;
+}
+
+
+/**
+ * SCHEDULE TEMPLATE
+ *
+ */
+
+.schedule {
+  clear: both;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.schedule .bwrap {
+  float: left;
+}
+
+.schedule .block {
+  position: relative;
+  overflow: hidden;
+  margin: 5px;
+  background-color: #fff;
+  border-radius: 5px;
+  transition: box-shadow 0.2s;
+}
+
+.schedule .block:hover {
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.6);
+}
+
+.schedule .weekblock {
+  float: none;
+}
+
+.schedule #calendar {
+  display: none;
+  padding: 10px 0;
+}
+
+.schedule .weekcontent {
+  clear: both;
+  display: block;
+  margin: 5px;
+  padding: 7px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 5px;
+  text-shadow: 0 1px 5px #fff;
+  font-size: 1.5em;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.schedule .weekcontent:hover {
+  background-color: #C1E4FB;
+}
+
+.schedule .weekcontent span {
+  padding-left: 0.2em;
+}
+
+.schedule .bwrap:nth-of-type(5n) .weekday {
+  background-color: #9b59b6;
+}
+
+.schedule .bwrap:nth-of-type(5n+1) .weekday {
+  background-color: #47617C;
+}
+
+.schedule .bwrap:nth-of-type(5n+2) .weekday {
+  background-color: #e67e22;
+}
+
+.schedule .bwrap:nth-of-type(5n+3) .weekday {
+  background-color: #27AE60;
+}
+
+.schedule .bwrap:nth-of-type(5n+4) .weekday {
+  background-color: #3498D8;
+}
+
+.schedule .weekday {
+  background-color: #7f8c8d;
+  position: relative;
+  overflow: hidden;
+  height: 18px;
+  padding: 5px 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #fcfcfc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.schedule .date {
+  position: absolute;
+  top: -1px;
+  right: 6px;
+  text-align: center;
+  overflow: hidden;
+  background-color: #fcfcfc;
+  border: 1px solid #e3e3e3;
+  border-bottom: 0;
+  box-shadow: inset 0 -8px 10px -8px rgba(0,0,0,0.4);
+  background-color: #fcfcfc;
+}
+
+.schedule .date .day {
+  font-size: 1.4em;
+  color: #c00;
+  padding: 1px 3px 1px 5px;
+  float: left;
+}
+
+.schedule .date .month {
+  color: #555;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 2px 2px 5px;
+  float: left;
+}
+
+.schedule .container {
+  clear: left;
+}
+
+.schedule .noclasses {
+  font-size: 1.2em;
+  padding: 10px 0;
+  background-color: #fdfdfd;
+  text-align: center;
+}
+
+.schedule .subject {
+  clear: left;
+  overflow: hidden;
+  border-bottom: 2px dashed #ccc;
+}
+
+.schedule .subject:hover {
+  background-color: #E2F4FF;
+}
+
+.schedule .subject:last-child {
+  padding-bottom: 5px;
+  border: 0;
+}
+
+.schedule .subject .time {
+  float: left;
+  width: 20%;
+  text-align: center;
+}
+
+.schedule .subject .hour {
+  font-weight: bold;
+  padding: 5px 0 2px;
+}
+
+.schedule .subject .duration {
+  font-size: 0.9em;
+  color: #222;
+}
+
+.schedule .subject .duration span {
+  padding: 0 2px;
+  background-color: #E3F3FC;
+  border: 2px solid #7AC0EB;
+  border-radius: 5px;
+}
+
+.schedule .subject .duration span u {
+  text-decoration: none;
+}
+
+.schedule .subject .duration .dur-1 {
+  border-color: #7DC790;
+  background-color: #DCFCE4;
+}
+
+.schedule .subject .duration .dur-2 {
+  border-color: #E3E35B;
+  background-color: #FCFCD7;
+}
+
+.schedule .subject .duration .dur-3 {
+  border-color: #E8C658;
+  background-color: #FFF7DE;
+}
+
+.schedule .subject .duration .dur-4 {
+  border-color: #D68B56;
+  background-color: #FFEDE0;
+}
+
+.schedule .subject .duration .dur-5 {
+  border-color: #D65656;
+  background-color: #FCE1E1;
+}
+
+.schedule .subject #duration {
+  padding-right: 2px;
+  font-style: normal;
+}
+
+.schedule .subject .info {
+  float: left;
+  width: 80%;
+}
+
+.schedule .subject .inner {
+  padding: 4px 10px 0;
+}
+
+.schedule .subject .resttext {
+  font-size: 1.3em;
+  padding: 10px 5px 10px 20px;
+  color: #333;
+}
+
+.schedule .subject .inner .name a {
+  font-size: 1.2em;
+  color: #2C6D98;
+}
+
+.schedule .subject .room {
+  margin: 4px 0;
+  font-style: italic;
+}
+
+.schedule .subject .teachers li {
+  margin: 2px 0;
+}
+
+.schedule .subject .teachers li > a {
+  background: url('/design/teacher_icon.png') no-repeat left center;
+  padding-left: 20px;
+  color: #3A3D3F;
+}
+
+.schedule .subject .groups {
+  width: 100%;
+  overflow: hidden;
+  clear: left;
+}
+
+.schedule .subject .groups li {
+  float: right;
+  margin: 6px 4px 6px 0;
+}
+
+.schedule .subject .groups li > a {
+  border: 2px solid #dadada;
+  border-radius: 5px;
+  font-size: 0.9em;
+  padding: 2px 3px;
+  background-color: #f9f9f9;
+  color: #666;
+}
+
+.schedule .subject .groups li > a:hover {
+  text-decoration: none;
+  border-color: #bbb;
+  color: #444;
+}
+
+.schedule .subject .infoklear {
+  clear: left;
+  height: 1px;
+}
+
+@media screen and (max-width: 480px) {
+  .schedule .bwrap {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 740px) {
+  .schedule .bwrap {
+    width: 50%;
+  }
+
+  /*.schedule .block:nth-child(4n+2), .schedule .block:nth-child(4n+3) {
+    background-color: #E8F6FF;
+  }*/
+}
+
+@media screen and (min-width: 740px) and (max-width: 980px) {
+  .schedule .bwrap {
+    width: 33.3333333333%;
+  }
+
+  /*.schedule .block:nth-child(2n) {
+    background-color: #E8F6FF;
+  }*/
+}
+
+@media screen and (min-width: 980px) and (max-width: 1330px) {
+  .schedule .bwrap {
+    width: 25%;
+  }
+
+  /*.schedule .block:nth-child(5n+5) {
+    background-color: #E8F6FF;
+  }*/
+}
+
+@media screen and (min-width: 1330px) {
+  .schedule .bwrap {
+    width: 20%;
+  }
+
+  .schedule .weekblock   {
+    float: none;
+  }
+}
+
+@media screen and (min-width: 980px) {
+  .topmenu ul {
+    width: 900px;
+  }
+}
+
+
+/**
+ * SIDE BAR
+ */
+
+.sidebarwrap {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebarwrap .bg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+}
+
+.sidebarwrap .sidebar {
+  position: absolute;
+  top: 0;
+  left: -700px;
+  width: 700px;
+  height: 100%;
+}
+
+.sidebarwrap .sidebar .closebtn {
+  display: block;
+  padding: 7px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #f7f7f7;
+  text-decoration: none;
+  background-color: rgba(0,0,0,0.6);
+  transition: background-color 0.2s;
+}
+
+.sidebarwrap .sidebar .closebtn:hover {
+  background-color: rgba(0,0,0,0.7);
+}
+
+.sidebarwrap .sidebar .container {
+  background-color: #555;
+  padding-bottom: 15px;
+}
+
+.sidebarwrap .sidebar .search {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.sidebarwrap .sidebar .text {
+  padding: 4px 5px;
+  font-size: 1.2em;
+  border: 0;
+  width: 250px;
+  box-shadow: 0 0 12px 1px #212121;
+  transition : box-shadow 0.3s;
+  outline: none;
+}
+
+.sidebarwrap .sidebar .text:focus {
+  box-shadow: 0 0 12px 1px #EBE2B5;
+}
+
+.sidebarwrap .sidebar .list {
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.sidebarwrap .sidebar .list li {
+  float: left;
+  width: 33.33333%;
+}
+
+.sidebarwrap .sidebar .list li > a {
+  display: block;
+  background-color: #666;
+  margin: 1px;
+  padding: 6px 5px;
+  font-size: 1.1em;
+  color: #eee;
+  text-decoration: none;
+  transition: background-color 0.1s;
+}
+
+.sidebarwrap .sidebar .list li > a:hover {
+  background-color: #5a5a5a;
+}
+
+
+/**
+ * CALENDAR
+ */
+
+#calendar table {
+  float: left;
+  border-spacing: 0;
+  border: 0;
+  margin: 10px;
+  text-align: center;
+  vertical-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+#calendar thead {
+  font-weight: bold;
+}
+
+#calendar td, #calendar th {
+  padding: 5px;
+}
+
+#calendar thead tr:first-child th {
+  border-bottom: 2px solid #ddd;
+}
+
+#calendar td.old {
+  color: #888;
+}
+
+#calendar tbody {
+  font-size: 0.9em;
+}
+
+#calendar tbody tr.current {
+  color: #f7f7f7;
+  background-color: #0062CC;
+}
+
+#calendar tbody tr:hover {
+  cursor: pointer;
+  color: #000;
+  background-color: #CACED0;
+}
