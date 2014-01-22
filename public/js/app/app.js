@@ -260,6 +260,7 @@
     mainpage : function () {
       $('.schedule').hide();
       $('.mainpage').show();
+      header.clear();
     },
 
     search : function (query) {
@@ -282,6 +283,10 @@
     }
 
     return {
+      clear : function () {
+        clear();
+      },
+
       set : function (type, val) {
         clear();
         $('#' + type).text(val);
@@ -293,7 +298,7 @@
     var router = new Router();
 
     Backbone.history.start({ pushState: true });
-    $(document).on('click', 'a:not([data-outer])', function (e) {
+    $(document).on('click', 'a[data-local]', function (e) {
 
       var href = $(this).attr('href');
       var protocol = this.protocol + '//';

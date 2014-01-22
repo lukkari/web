@@ -405,6 +405,7 @@ exports.manage = function (req, res) {
       function (cb) {
         Contact.find({})
                .sort({ createdAt : -1 })
+               .limit(50)
                .exec(function (err, data) {
                   if(err)
                     console.log(err);
@@ -580,4 +581,18 @@ exports.sendMsg = function (req, res) {
         res.json(200, 'success');
     });
   }
+};
+
+
+/**
+ * #####################################################################
+ * Login
+ */
+
+exports.login = function (req, res) {
+
+  res.render('login', {
+        title : 'Login'
+      });
+
 };

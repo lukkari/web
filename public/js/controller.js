@@ -74,7 +74,6 @@
       url  : "/api/messages",
       data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val()),
       success : function (data) {
-        console.log(data);
         $('#sent').slideDown('fast', function() {
           setTimeout(function () {
             $('#sent').fadeOut('slow');

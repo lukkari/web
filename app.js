@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -34,7 +33,7 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon());
+app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -50,6 +49,8 @@ if ('development' == app.get('env')) {
 }
 
 //app.get('/users', user.list);
+
+// Parse page
 app.get(   '/parse',       routes.parse);
 app.post(  '/parse/add',   routes.addParse);
 app.post(  '/parse/staff', routes.staffParse);
@@ -57,8 +58,14 @@ app.get(   '/parse/:id',   routes.runParse);
 app.delete('/parse/:id',   routes.deleteParse);
 app.put(   '/parse/:id',   routes.clearParse);
 
+
+// Manage page
 app.get('/manage', routes.manage);
 app.get('/manage/clear/:model', routes.clearModel);
+
+
+// Login
+app.get('/login', routes.login);
 
 // API
 app.get( '/api/groups',       routes.getGroups);

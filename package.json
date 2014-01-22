@@ -1,7 +1,7 @@
 {
-  "name"   : "schedule-of-ICT-building",
-  "version": "0.0.1",
-  "private": true,
+  "name"   : "lukkari",
+  "version": "0.0.2",
+  "private": false,
   "scripts": {
     "start": "node app.js"
   },
@@ -17,6 +17,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/zaynetro/learnnode.git"
+    "url": "https://github.com/zaynetro/lukkari.git"
   }
 }

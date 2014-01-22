@@ -4,8 +4,8 @@ block content
   div.body
     div.topmenu
       ul
-        li: a#group(href='/' data-outer ref='Groups') Groups
-        li: a#teacher(href='/' data-outer ref='Teachers') Teachers
+        li: a#group(href='/' ref='Groups') Groups
+        li: a#teacher(href='/' ref='Teachers') Teachers
 
 
     div.mainpage
@@ -58,7 +58,7 @@ block content
 
             div.klear
 
-          a.weekcontent(href='/' data-outer) Week
+          a.weekcontent(href='/') Week
             span#weeknum #{weeknum}
 
         div#days
@@ -68,7 +68,7 @@ block content
     div.sidebarwrap
       div.bg
       div.sidebar
-        a.closebtn(href='/' data-outer) Close
+        a.closebtn(href='/') Close
         div.container
           div#groupList
             div.search
@@ -113,12 +113,12 @@ block customFoot
 
               ul.teachers
                 <% _.each(subject.teachers, function (teacher) { %>
-                li: a(href!='/<%= toUrl(teacher.name) %>') <%= teacher.name %>
+                li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
                 <% }); %>
 
           ul.groups
             <% _.each(subject.groups, function (group) { %>
-            li: a(href!='/<%= toUrl(group.name) %>') <%= group.name %>
+            li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
             <% }); %>
 
         <% }); %><% } else { %>
@@ -129,7 +129,7 @@ block customFoot
     div.notfound Not found
 
   script#itemlinkTemplate(type='text/html')
-    li: a(href!='/<%= tourl %>')<%= name %>
+    li: a(href!='/<%= tourl %>' data-local)<%= name %>
 
   script(src='/js/libs/jquery-1.10.2.min.js')
   script(src='/js/libs/underscore-min.js')

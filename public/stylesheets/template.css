@@ -64,6 +64,15 @@ select {
   color: #888;
 }
 
+.footer a {
+  color: #777;
+  margin: 0 4px;
+}
+
+.footlinks {
+  padding-right: 15px;
+}
+
 .attention {
   background-color: #FCF0B0;
 }
@@ -643,4 +652,49 @@ select {
   cursor: pointer;
   color: #000;
   background-color: #CACED0;
+}
+
+
+/**
+ * #####################################################################
+ * Login page
+ */
+
+.loginpage {
+  width: 500px;
+  margin: 20px auto;
+}
+
+.loginpage .homelink {
+  margin: 7px 0;
+}
+
+.loginpage .homelink a {
+  font-size: 1.3em;
+  color: #555;
+  text-decoration: none;
+}
+
+.loginpage .homelink a:hover {
+  color: #333;
+}
+
+.loginpage .homelink a:before {
+  font-size: 1.2em;
+  color: #888;
+  padding-right: 4px;
+  content: '\2190';
+}
+
+.loginpage .homelink a:hover:before {
+  color: #555;
+}
+
+.loginpage .container {
+  padding: 10px;
+  background-color: #fff;
+}
+
+.loginpage h3 {
+  margin-top: 0;
 }
