@@ -667,6 +667,7 @@ select {
 
 .loginpage .homelink {
   margin: 7px 0;
+  float: left;
 }
 
 .loginpage .homelink a {
@@ -690,7 +691,26 @@ select {
   color: #444;
 }
 
+.loginpage .tophelper {
+  float: right;
+}
+
+.loginpage .tophelper a {
+  display: block;
+  margin: 8px 0 0;
+  font-size: 1.1em;
+  padding: 5px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.loginpage .tophelper a:hover {
+  background-color: #D9E0E8;
+}
+
 .loginpage .container {
+  clear: both;
   padding: 40px 10px 10px;
 }
 
@@ -740,6 +760,13 @@ select {
 .loginpage .text:focus {
   border-color: #aaa;
   box-shadow: 0 1px 6px 0px #849EAF;
+}
+
+.loginpage select {
+  outline: none;
+  width: 480px;
+  padding: 3px 5px;
+  margin: 3px 0;
 }
 
 .loginpage .button {

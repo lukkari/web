@@ -1,4 +1,4 @@
-extends layout
+extends ./layouts/main
 
 block customHead
   link(rel='stylesheet', href='/stylesheets/manage.css')
@@ -53,3 +53,5 @@ block content
               div.from= message.from
               div.contain= msg
 
+block footlinks
+  include ./layouts/footlinks/logged

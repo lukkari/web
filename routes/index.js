@@ -63,7 +63,8 @@ exports.index = function(req, res) {
   res.render('index', {
                         title    : 'Schedule',
                         calendar : dates,
-                        weeknum  : date.getStudyWeek()
+                        weeknum  : date.getStudyWeek(),
+                        logged   : req.isAuthenticated()
                       });
 };
 

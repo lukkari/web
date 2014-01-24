@@ -213,19 +213,27 @@ mongoose.model('Contact', contactSchema);
  * Users
  */
 
- var userSchema = new Schema({
-  username  : { type : String, default : '', unique : true },
-  password  : { type : String, default : '' },
+var userSchema = new Schema({
+  username  : { type : String, default : '', unique : true, required : true },
+  password  : { type : String, default : '', required : true},
   salt      : { type : String, default : '' },
-  email     : { type : String, default : '', unique : true },
+  email     : { type : String, default : '' },
   roles     : {
     admin : { type : Boolean, default : false }
   },
   createdAt : { type : Date,   default : Date.now }
- });
+});
+
+userSchema.pre('save', function (next) {
+  if(this.isNew) {
+    this.salt = this.makeSalt();
+    this.password = this.encryptPassword(this.password);
+  }
+  next();
+});
 
 
- userSchema.methods = {
+userSchema.methods = {
 
   authenticate: function (plainText) {
     return this.encryptPassword(plainText) === this.password;
@@ -239,13 +247,13 @@ mongoose.model('Contact', contactSchema);
     if (!password) return '';
     var encrypred;
     try {
-      encrypred = crypto.createHmac('sha512', this.salt).update(password).digest('hex');
+      encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex');
       return encrypred;
     }
     catch (err) {
       return '';
     }
   }
- }
+}
 
- mongoose.model('User', userSchema);
+mongoose.model('User', userSchema);

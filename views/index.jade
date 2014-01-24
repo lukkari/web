@@ -1,4 +1,4 @@
-extends layout
+extends ./layouts/main
 
 block content
   div.body
@@ -81,7 +81,6 @@ block content
             div.list
 
 
-
 block customFoot
   script#weekdayTemplate(type='text/html')
     div.block
@@ -136,3 +135,10 @@ block customFoot
   script(src='/js/libs/backbone-min.js')
   script(src='/js/controller.js')
   script(src='/js/app/app.js')
+
+
+block footlinks
+  if logged
+    include ./layouts/footlinks/logged
+  else
+    include ./layouts/footlinks/unlogged
