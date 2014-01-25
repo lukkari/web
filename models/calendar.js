@@ -14,9 +14,10 @@ var calendar = function () {
         dur    = Math.round((nm.getTime() - pm.getTime()) / oneday) + 1;
 
     var cal = {
-      month : months[fd.getMonth()],
-      dates : []
-    },
+          month : months[fd.getMonth()],
+          dates : []
+        },
+
         tmp = {
           days : []
         };
@@ -27,9 +28,11 @@ var calendar = function () {
       if(cd.getDay() > 0) {
         if(cd.getDay() == 6) {
           if(cd.getMonth() >= fd.getMonth()) {
-            tmp.week    = cd.getWeek();
-            tmp.curweek = Math.abs(cd.getWeek() - w);
-            cal.dates.push(tmp);
+            if(!((cd.getDate() == 1) && (cd.getMonth() == fd.getMonth()))) {
+              tmp.week    = cd.getWeek();
+              tmp.curweek = Math.abs(cd.getWeek() - w);
+              cal.dates.push(tmp);
+            }
           }
           var tmp = {
             days : []
@@ -47,9 +50,16 @@ var calendar = function () {
 
   function show(w, d, arr) {
 
-    var res = [];
-    arr.forEach(function (el) {
-      res.push(buildMonth(w, new Date(d.getFullYear(), el, 1)));
+    var res = [],
+        i;
+
+    arr.forEach(function (m) {
+      i = 0;
+
+      // If month less than current more than a half year, it means that it is next year
+      if(d.getMonth() > (m + 5))
+        i = 1;
+      res.push(buildMonth(w, new Date(d.getFullYear() + i, m, 1)));
     });
 
     return res;

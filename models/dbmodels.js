@@ -211,6 +211,8 @@ var contactSchema = new Schema({
   createdAt : { type : Date,   default : Date.now }
 });
 
+contactSchema.index({ "createdAt" : 1 }, { expireAfterSeconds : (60*60*24*30) });
+
 mongoose.model('Contact', contactSchema);
 
 

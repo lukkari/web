@@ -50,7 +50,7 @@ block content
                 tbody
                   each week in month.dates
                     - var trClass = (week.curweek == 0) ? 'current' : ''
-                    tr(class=trClass)
+                    tr(class=trClass link='w#{week.week}')
                       th #{week.week}
                       each day in week.days
                         - var tdClass = (day.old > 0) ? 'old' : ''
@@ -58,8 +58,11 @@ block content
 
             div.klear
 
-          a.weekcontent(href='/') Week
-            span#weeknum #{weeknum}
+          div.weekselector
+            a.neighbourweek#prevweek(href='/' data='#{weeknum-1}' data-local) Prev
+            a.weekcontent(href='/') Week
+              span#weeknum #{weeknum}
+            a.neighbourweek#nextweek(href='/' data='#{weeknum+1}' data-local) Next
 
         div#days
 
@@ -133,7 +136,6 @@ block customFoot
   script(src='/js/libs/jquery-1.10.2.min.js')
   script(src='/js/libs/underscore-min.js')
   script(src='/js/libs/backbone-min.js')
-  script(src='/js/controller.js')
   script(src='/js/app/app.js')
 
 

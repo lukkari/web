@@ -1,5 +1,6 @@
 var routes = require('../routes/'),
-    users  = require('../routes/users');
+    users  = require('../routes/users'),
+    api    = require('../routes/api');
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -51,12 +52,12 @@ module.exports = function (app, passport) {
   app.get('/u',  users.me);
 
   // "API"
-  app.get( '/api/groups',       routes.getGroups);
-  app.get( '/api/teachers',     routes.getTeachers);
-  app.get( '/api/schedule/:id', routes.getSchedule);
-  app.post('/api/messages',     routes.sendMsg);
+  app.get(' /api*',             ensureAuthenticated);
+  app.get( '/api/groups',       api.getGroups);
+  app.get( '/api/teachers',     api.getTeachers);
+  app.get( '/api/schedule*', api.getSchedule);
+  app.post('/api/messages',     api.sendMsg);
 
   // Main page
-  app.get('/:search', routes.index);
-  app.get('/',        routes.index);
+  app.get('/*',    routes.index);
 };

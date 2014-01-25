@@ -159,9 +159,10 @@ select {
   padding-left: 4px;
 }
 
- .mainpage .attention {
+.mainpage .attention {
   margin: 3px 5px;
 }
+
 .mainpage .success {
   margin: 3px 0;
 }
@@ -194,6 +195,10 @@ select {
  * SCHEDULE TEMPLATE
  *
  */
+
+ .mainpage, .schedule {
+  display: none;
+ }
 
 .schedule {
   clear: both;
@@ -229,14 +234,20 @@ select {
   padding: 10px 0;
 }
 
-.schedule .weekcontent {
+.schedule .weekselector {
   clear: both;
+  width: 100%;
+  overflow: hidden;
+  margin: 5px 0 10px;
+}
+
+.schedule .weekcontent {
+  float: left;
+  width: 80%;
   display: block;
-  margin: 5px;
-  padding: 7px;
+  padding: 7px 0;
   text-align: center;
   background-color: #fff;
-  border-radius: 5px;
   text-shadow: 0 1px 5px #fff;
   font-size: 1.5em;
   text-decoration: none;
@@ -249,6 +260,28 @@ select {
 
 .schedule .weekcontent span {
   padding-left: 0.2em;
+}
+
+.schedule .neighbourweek {
+  float: left;
+  display: block;
+  width: 10%;
+  padding: 7px 0;
+  background-color: #FFEDE1;
+  text-align: center;
+  font-size: 1.5em;
+  color: #777;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.schedule .neighbourweek:hover {
+  color: #666;
+  background-color: #FBD8C1;
+}
+
+.schedule .days {
+  clear: both;
 }
 
 .schedule .bwrap:nth-of-type(5n) .weekday {
@@ -648,7 +681,7 @@ select {
   background-color: #0062CC;
 }
 
-#calendar tbody tr:hover {
+#calendar tbody tr:hover, #calendar tbody tr.selected {
   cursor: pointer;
   color: #000;
   background-color: #CACED0;

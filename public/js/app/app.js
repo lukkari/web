@@ -85,7 +85,7 @@
 
     closeList : function (e) {
       header.set(this.title, e.target.text);
-      this.$el.parents('.sidebarwrap').fadeOut('fast');
+      sideBar.close();
     },
 
     searchFilter : function (e) {
@@ -242,7 +242,9 @@
   var Router = Backbone.Router.extend({
     routes : {
       ''       : 'mainpage',
-      ':query' : 'search'
+      ':q'     : 'search',
+      ':q/'    : 'search',
+      ':q/:q2' : 'search'
     },
 
     initialize : function () {
@@ -263,9 +265,24 @@
       header.clear();
     },
 
-    search : function (query) {
+    search : function (q, q2) {
       $('.mainpage').hide();
       $('.schedule').show();
+
+      var query = q,
+          week;
+
+      if(q2)
+        if(q.match(/w[0-9]+/ig)) {
+          query = q2 + '/' + q;
+          week = q;
+        }
+        else {
+          query = q + '/' + q2;
+          week = q2;
+        }
+
+      weekBar.set(query, week);
 
       var schedule = new WeekView({ url : query })
     }
@@ -294,6 +311,79 @@
     }
   }();
 
+  var sideBar = function () {
+    var active = false,
+        that   = this;
+
+    $('.sidebarwrap .container').height(
+      $(document).height() - $('.sidebarwrap .closebtn').outerHeight(true) - 35
+    );
+
+    //$('.sidebarwrap .bg').height($(document.height()));
+
+    $('.sidebarwrap .closebtn').click(function (e) {
+      e.preventDefault();
+      close();
+    });
+
+    $('.sidebarwrap .bg').click(function () {
+      close();
+    });
+
+    function show(id) {
+      $('.sidebarwrap .container > div').hide();
+      $('#'+id).show();
+
+      if(parseInt($('.sidebarwrap .sidebar').css('left')) > -100)
+        $('.sidebarwrap .sidebar').css('left', -$('.sidebarwrap .sidebar').width());
+
+      $('.sidebarwrap').fadeIn('fast');
+      $('.sidebarwrap .sidebar').animate({ left : 0 }, 400);
+    }
+
+    function close() {
+      $('.sidebarwrap').fadeOut('fast');
+      $('.sidebarwrap .sidebar').animate(
+        { left : '-' + $('.sidebarwrap .sidebar').width() + 'px' },
+        400
+      );
+    }
+
+    return {
+      show : function (id) {
+        show(id);
+      },
+
+      close : function () {
+        close();
+      }
+    }
+
+  }();
+
+  var weekBar = function () {
+
+    return {
+      set : function (q, w) {
+
+        if(w) {
+          $('#weeknum').text(w.substr(1));
+          if(q.indexOf('/') !== 0)
+            q = '/' + q;
+          $('#prevweek').attr('href', q.replace('/' + w, '/w' + (w.substr(1) - 1)));
+          $('#nextweek').attr('href', q.replace('/' + w, '/w' + (parseInt(w.substr(1)) + 1)));
+        }
+        else {
+          var url = window.location.pathname,
+              w   = parseInt($('#weeknum').text());
+
+          $('#prevweek').attr('href', url + '/w' + (w - 1));
+          $('#nextweek').attr('href', url + '/w' + (w + 1));
+        }
+      }
+    }
+  }();
+
   (function () {
     var router = new Router();
 
@@ -307,6 +397,61 @@
         e.preventDefault();
         router.navigate(href, true);
       }
+    });
+
+    $("#calendar tr[link='w" + $('#weeknum').text() + "']").addClass('selected');
+
+    $('.topmenu li a').click(function (e) {
+      e.preventDefault();
+      sideBar.show($(this).attr('id') + 'List');
+    });
+
+    $('.weekcontent').click(function (e) {
+      e.preventDefault();
+
+      $('#calendar').slideToggle('fast');
+    });
+
+    // Contacts form
+    $('#message').focus(function (e) {
+      $(this).addClass('big');
+      $('#hiddenform').slideDown('fast');
+    });
+
+    $('#send').click(function(e) {
+      $.ajax({
+        type : "POST",
+        url  : "/api/messages",
+        data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val()),
+        success : function (data) {
+          $('#sent').slideDown('fast', function() {
+            setTimeout(function () {
+              $('#sent').fadeOut('slow');
+            }, 4000);
+          });
+        }
+      });
+
+      $('#hiddenform').slideUp('fast');
+      $('#message').removeClass('big');
+      $('#replyto').val('');
+      $('#message').val('');
+    });
+
+    $('#calendar tbody tr').click(function () {
+      var navto = window.location.pathname,
+          week  = $(this).attr('link'),
+          match;
+
+
+      if(match = navto.match(/w[0-9]+/ig))
+        navto = navto.replace(match, week);
+      else
+        navto += "/" + week;
+
+      $('#calendar tr.selected').removeClass('selected');
+      $(this).addClass('selected');
+      router.navigate(navto, { trigger : true });
     });
 
   })();

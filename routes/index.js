@@ -11,44 +11,10 @@ var mongoose = require('mongoose'),
     async    = require('async');
 
 
-// Add getWeek support
-Date.prototype.getWeek = function () {
-  var onejan = new Date(this.getFullYear(),0,1),
-      time   = this.getMilliseconds()
-             + this.getSeconds()*1000
-             + this.getMinutes()*60*1000
-             + this.getHours()*60*60*1000;
-  return Math.ceil((((this - onejan - time) / 86400000) + onejan.getDay()+1)/7);
-};
-
-// Get study week (increment if sat)
-Date.prototype.getStudyWeek = function () {
-  var inc = (this.getDay() == 6) ? 1 : 0;
-  return this.getWeek() + inc;
-};
-
-// Find week's first day
-Date.prototype.getDateOfISOWeek = function (w, y) {
-  var simple = new Date(y, 0, 1 + (w - 1) * 7);
-  var dow = simple.getDay();
-  var ISOweekStart = simple;
-  if (dow <= 4)
-    ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-  else
-    ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-  return ISOweekStart;
-}
-
-// Load models
-
-require('../models/dbmodels.js');
-
 var parser   = require('../models/parser.js');
 parser.init(request, jsdom, ic);
 
-var weekDay  = require('../models/weekday.js'),
-    week     = require('../models/week.js'),
-    calendar = require('../models/calendar.js');
+var calendar = require('../models/calendar.js');
 
 //########################################################################
 /**
@@ -57,13 +23,27 @@ var weekDay  = require('../models/weekday.js'),
 
 exports.index = function(req, res) {
 
-  var date  = new Date(),
-      dates = calendar.get(date.getStudyWeek());
+  var uri = req.params[0],
+      w;
+
+  if(uri)
+    w = uri.match(/w[0-9]+/ig);
+
+  if(w && (typeof w === 'object'))
+    w = w[0];
+
+
+  var date    = new Date(),
+      dates   = calendar.get(date.getStudyWeek()),
+      weeknum = date.getStudyWeek();
+
+  if(w)
+    weeknum = +w.substr(1);
 
   res.render('index', {
                         title    : 'Schedule',
                         calendar : dates,
-                        weeknum  : date.getStudyWeek(),
+                        weeknum  : weeknum,
                         logged   : req.isAuthenticated()
                       });
 };
@@ -473,113 +453,4 @@ exports.clearModel = function (req, res) {
       res.redirect('/manage');
   }
 
-};
-
-
-//###############################################################################
-/**
- * API
- */
-
-exports.getGroups = function (req, res) {
-  var Group   = mongoose.model('Group');
-
-  Group.getAll(function (err, group) {
-    if(err) {
-      console.log(err);
-      res.json(500, {error : { code : 500, msg : 'Unknown mistake' }});
-    }
-    else {
-      res.json(group);
-    }
-  });
-};
-
-exports.getTeachers = function (req, res) {
-  var Teacher   = mongoose.model('Teacher');
-
-  Teacher.getAll(function (err, teacher) {
-    if(err) {
-      console.log(err);
-      res.json(500, {error : { code : 500, msg : 'Unknown mistake' }});
-    }
-    else {
-      res.json(teacher);
-    }
-  });
-};
-
-exports.getSchedule = function (req, res) {
-
-  if(req.params.id && (req.params.id.length > 0)) {
-
-    var search = req.params.id.replace(/_/g, ' ');
-
-    var Group   = mongoose.model('Group'),
-        Teacher = mongoose.model('Teacher');
-
-    Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-      if(err) {
-        console.log(err);
-        res.json(500, { error : { code : 500, msg : 'Unknown mistake' }});
-      }
-      else {
-        if(group) {
-          var today   = new Date();
-
-          week.getSchedule(today, 'groups', group._id, function (err, data) {
-            res.json(data);
-          });
-        }
-        else {
-          Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-            if(err) {
-              console.log(err);
-              res.json(500, { error : { code : 500, msg : 'Unknown mistake' }});
-            }
-            else {
-              if(teacher) {
-                var today   = new Date();
-
-                week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
-                  res.json(data);
-                });
-              }
-              else
-                res.json(200, { error : { code : 404, msg : 'Not found' }});
-            }
-
-          });
-        }
-      }
-
-    });
-  }
-  else {
-    res.json(500, { error : { code : 500, msg :'Wrong request' }});
-  }
-
-};
-
-exports.sendMsg = function (req, res) {
-
-  var text    = encodeURI(req.param('msg')),
-      from    = encodeURI(req.param('from'));
-
-  if(text.length < 2)
-    res.json(200, 'success');
-  else {
-
-    var Contact = mongoose.model('Contact'),
-        contact = new Contact({ message : text, from : from });
-
-    contact.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.json(500, 'error');
-      }
-      else
-        res.json(200, 'success');
-    });
-  }
 };
