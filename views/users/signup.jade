@@ -1,0 +1,26 @@
+extends ../layouts/main
+
+block content
+  div.loginpage
+    div.homelink: a(href='/') Home
+    div.tophelper: a(href='/login') Have an account?
+    div.container
+      h3: label(for='username')= title
+      div.attention Work still in progress, registration will be open soon
+      if error
+        a#error All fields are required
+      form(method='post' action='')
+        div.row
+          input.text(type='text' id='username' name='username' value=user.username placeholder='Your username' autofocus)
+        div.row
+          input.text(type='password' id='password' name='password' placeholder='Your password')
+        div.row
+          select(name='group' id='group')
+            each group in grouplist
+              option(value=group.id)= group.name
+        div.row
+          input.button(type='submit' value='Sign up')
+
+
+block footlinks
+  include ../layouts/footlinks/unlogged

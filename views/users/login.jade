@@ -1,0 +1,22 @@
+extends ../layouts/main
+
+block content
+  div.loginpage
+    div.homelink: a(href='/') Home
+    div.tophelper: a(href='/signup') New user?
+    div.container
+      h3: label(for='username')= title
+      div.attention Work still in progress, registration will be open soon
+      if error
+        a#error We can't find your account
+      form(method='post' action='')
+        div.row
+          input.text(type='text' id='username' name='username' placeholder='Your username' autofocus)
+        div.row
+          input.text(type='password' id='password' name='password' placeholder='Your password')
+        div.row
+          input.button(type='submit' value='Log in')
+
+
+block footlinks
+  include ../layouts/footlinks/unlogged
