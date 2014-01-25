@@ -1,12 +1,12 @@
 {
-  "name"   : "lukkari",
-  "version": "0.0.3",
-  "private": true,
-  "author" : "Roman Zaynetdinov",
-  "scripts": {
-    "start": "node app.js"
+  "name"    : "lukkari",
+  "version" : "0.0.3",
+  "private" : true,
+  "author"  : "Roman Zaynetdinov",
+  "scripts" : {
+    "start" : "node app.js"
   },
-  "dependencies": {
+  "dependencies" : {
     "express"        : "~3.4.4",
     "jade"           : "~1.1.5",
     "connect-mongo"  : "~0.4.0",
@@ -18,8 +18,14 @@
     "passport"       : "~0.1.18",
     "passport-local" : "~0.1.6"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zaynetro/lukkari.git"
+  "engines" : {
+    "node" : "0.10.x"
+  },
+  "repository" : {
+    "type" : "git",
+    "url"  : "https://github.com/zaynetro/lukkari.git"
+  },
+  "bugs" : {
+    "url" : "https://github.com/zaynetro/lukkari/issues"
   }
 }
