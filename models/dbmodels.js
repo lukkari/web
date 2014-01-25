@@ -54,7 +54,7 @@ mongoose.model('Subject', subjectSchema);
  */
 
 var roomSchema = new Schema({
-  name      : { type: String, default: '', unique: true },
+  name      : { type: String, default: '' },
   building  : { type: String, default: '' },
   capacity  : { type: Number, default: 0 },
   createdAt : { type: Date,   default: Date.now }
@@ -73,6 +73,8 @@ roomSchema.statics = {
 
 };
 
+roomSchema.index({ name: 1 }, { unique: true });
+
 mongoose.model('Room', roomSchema);
 
 
@@ -82,7 +84,7 @@ mongoose.model('Room', roomSchema);
  */
 
 var teacherSchema = new Schema({
-  name      : { type: String, default: '', unique: true },
+  name      : { type: String, default: '' },
   createdAt : { type: Date,   default: Date.now }
 });
 
@@ -99,6 +101,8 @@ teacherSchema.statics = {
 
 };
 
+teacherSchema.index({ name: 1 }, { unique: true });
+
 mongoose.model('Teacher', teacherSchema);
 
 
@@ -108,7 +112,7 @@ mongoose.model('Teacher', teacherSchema);
  */
 
 var groupSchema = new Schema({
-  name      : { type: String, default: '', unique: true },
+  name      : { type: String, default: '' },
   createdAt : { type: Date,   default: Date.now }
 });
 
@@ -124,6 +128,8 @@ groupSchema.statics = {
   }
 
 };
+
+groupSchema.index({ name: 1 }, { unique: true });
 
 mongoose.model('Group', groupSchema);
 
@@ -214,10 +220,11 @@ mongoose.model('Contact', contactSchema);
  */
 
 var userSchema = new Schema({
-  username  : { type : String, default : '', unique : true, required : true },
+  username  : { type : String, default : '', required : true },
   password  : { type : String, default : '', required : true},
   salt      : { type : String, default : '' },
   email     : { type : String, default : '' },
+  group     : { type : Schema.Types.ObjectId, ref : 'Group' },
   roles     : {
     admin : { type : Boolean, default : false }
   },
@@ -255,5 +262,7 @@ userSchema.methods = {
     }
   }
 }
+
+userSchema.index({ username: 1 }, { unique: true });
 
 mongoose.model('User', userSchema);

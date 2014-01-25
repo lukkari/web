@@ -724,7 +724,7 @@ select {
 }
 
 .loginpage #error {
-  display: none;
+  display: block;
   cursor: pointer;
   background-color: #EABFBC;
   text-decoration: none;
