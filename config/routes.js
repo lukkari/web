@@ -27,8 +27,9 @@ module.exports = function (app, passport) {
 
 
   // Manage page
-  app.get('/manage*', ensureAuthenticated);
-  app.get('/manage',  routes.manage);
+  app.get('/manage*',             ensureAuthenticated);
+  app.get('/manage',              routes.manage);
+  app.get('/manage/log',          routes.showLog);
   app.get('/manage/clear/:model', routes.clearModel);
 
   // Log in
@@ -55,7 +56,7 @@ module.exports = function (app, passport) {
   app.get(' /api*',             ensureAuthenticated);
   app.get( '/api/groups',       api.getGroups);
   app.get( '/api/teachers',     api.getTeachers);
-  app.get( '/api/schedule*', api.getSchedule);
+  app.get( '/api/schedule/:q',  api.getSchedule);
   app.post('/api/messages',     api.sendMsg);
 
   // Main page

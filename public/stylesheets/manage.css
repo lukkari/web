@@ -46,6 +46,18 @@ body {
   margin-left: 7px;
 }
 
+.manage .block li > a.show {
+  text-decoration: none;
+  background-color: #ddd;
+  color: #000;
+  border: 1px solid #777;
+  padding: 1px 5px;
+}
+
+.manage .block li > a.show:hover {
+  background-color: #bbb;
+}
+
 .manage .msg {
   margin: 2px 0;
   padding: 0 5px;

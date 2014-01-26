@@ -9,8 +9,16 @@ var express    = require('express'),
     routes     = require('./routes'),
     http       = require('http'),
     path       = require('path'),
-    config     = require('./config/config.js')['development'],
-    mongoose   = require('mongoose');
+    fs         = require('fs'),
+    config     = require('./config/config')['development'],
+    mongoose   = require('mongoose'),
+    logPath    = __dirname + config.log.path,
+    logfile    = fs.createWriteStream(logPath, {flags: 'a'}),
+    loggingOptions = {
+      format : config.log.format,
+      stream : logfile
+    };
+
 
 
 //create express app
@@ -37,7 +45,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 require(__dirname + '/helpers');
-require(__dirname + '/models/dbmodels.js');
+require(__dirname + '/models/dbmodels');
 require(__dirname + '/config/passport')(passport);
 
 
@@ -50,6 +58,7 @@ app.configure(function () {
 
   // middleware
   app.use(express.compress());
+  app.use(express.logger(loggingOptions));
   app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.static(path.join(__dirname, 'public')));

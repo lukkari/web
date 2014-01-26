@@ -8,7 +8,9 @@ var mongoose = require('mongoose'),
     jsdom    = require('jsdom'),
     iconv    = require('iconv'),
     ic       = new iconv.Iconv('ISO-8859-1', 'utf-8'),
-    async    = require('async');
+    async    = require('async'),
+    fs       = require('fs'),
+    config   = require('../config/config')['development'];
 
 
 var parser   = require('../models/parser.js');
@@ -414,6 +416,11 @@ exports.manage = function (req, res) {
 
 };
 
+exports.showLog = function (req, res) {
+  res.set('Content-Type', 'text/plain');
+  res.send(fs.readFileSync(__dirname + '/..' + config.log.path));
+};
+
 exports.clearModel = function (req, res) {
 
   function doClear(Model) {
@@ -447,6 +454,12 @@ exports.clearModel = function (req, res) {
 
     case 'subjects':
       doClear(mongoose.model('Subject'));
+      break;
+
+    case 'log':
+      fs.writeFile(__dirname + '/..' + config.log.path, '', function (err) {
+        res.redirect('/manage');
+      });
       break;
 
     default:

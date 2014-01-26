@@ -39,6 +39,9 @@ block content
           li Subjects:
             span #{count.subjects}
             a(href='/manage/clear/subjects' onclick='return confirm("Clear all subjects?");') clear
+          li Log:
+            a.show(href='/manage/log' target='_blank') show
+            a(href='/manage/clear/log' onclick='return confirm("Clear log?");') clear
 
       div.block
         h3 Log

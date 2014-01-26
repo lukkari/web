@@ -61,12 +61,14 @@ block content
           div.weekselector
             a.neighbourweek#prevweek(href='/' data='#{weeknum-1}' data-local) Prev
             a.weekcontent(href='/') Week
-              span#weeknum #{weeknum}
+              span#weeknum(data='#{weeknum}') #{weeknum}
             a.neighbourweek#nextweek(href='/' data='#{weeknum+1}' data-local) Next
 
         div#days
 
     div.klear
+
+    div.unknown Keep calm and don't experiment with url
 
     div.sidebarwrap
       div.bg
@@ -136,7 +138,7 @@ block customFoot
   script(src='/js/libs/jquery-1.10.2.min.js')
   script(src='/js/libs/underscore-min.js')
   script(src='/js/libs/backbone-min.js')
-  script(src='/js/app/app.js')
+  script(src='/js/app.js')
 
 
 block footlinks

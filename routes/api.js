@@ -32,25 +32,13 @@ exports.getTeachers = function (req, res) {
 
 exports.getSchedule = function (req, res) {
 
-  var uri = req.params[0];
+  var search = req.params.q,
+      w      = req.param('w');
 
-  if(uri && (uri.length > 0)) {
 
-    uri = uri.split('/');
+  if(search && (search.length > 0)) {
 
-    var w,
-        search;
-
-    uri.forEach(function (el) {
-      if(el.match(/w[0-9]+/ig))
-        w = el.substr(1);
-    });
-    uri = uri.join('');
-
-    if(w)
-      uri = uri.replace('w' + w, '');
-
-    search = uri.replace(/_/g, ' ');
+    search = search.replace(/_/g, ' ');
 
     var today = new Date();
 
@@ -87,7 +75,7 @@ exports.getSchedule = function (req, res) {
                   res.json(data);
                 });
               else
-                res.json({ error : { code : 404, msg : 'Not found' }});
+                res.json(404, { error : { code : 404, msg : 'Not found' }});
             }
 
           });
@@ -104,8 +92,8 @@ exports.getSchedule = function (req, res) {
 
 exports.sendMsg = function (req, res) {
 
-  var text    = encodeURI(req.param('msg')),
-      from    = encodeURI(req.param('from'));
+  var text = encodeURI(req.param('msg')),
+      from = encodeURI(req.param('from'));
 
   if(text.length < 2)
     res.json(200, 'success');
