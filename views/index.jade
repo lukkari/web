@@ -1,89 +1,95 @@
 extends ./layouts/main
 
 block content
-  div.body
-    div.topmenu
-      ul
-        li: a#group(href='/' ref='Groups') Groups
-        li: a#teacher(href='/' ref='Teachers') Teachers
+  div.topmenu
+    ul
+      li: a#group(href='/' data-ref='Groups') Groups
+      li: a#teacher(href='/' data-ref='Teachers') Teachers
 
 
-    div.mainpage
-      h3 Schedule finder
-      div.block Custom schedule of ICT-building
+  div.mainpage
+    h3 Schedule finder
+    div.block Custom schedule of ICT-building
 
-      h3 How to use
-      div.block
-        h4 Basics
-        div.subblock Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher.
-          s To choose other week you can click on a wide button with week number.
+    h3 How to use
+    div.block
+      h4 Basics
+      div.subblock
+        b Choose schedule
+        div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher.
+          s To filter list start typing group name or teacher.
+          | You can quickly access your teachers timetable by clicking on them in your schedule.
 
-        h4 Save links
-        div.subblock You can save link and access it at any time. You will always see your current week timetable.
-          div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
+        b Choose week
+        div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
 
-        h4 Contacts
-        div.subblock If you have any suggestions or questions, please, contact me.
-          div.contactform
-            div.success#sent Thank you for texting me
-            textarea.text#message(placeholder='Input your message')
-            div#hiddenform
-              input.text#replyto(type='text' placeholder='Reply to or at least your name')
-              input.button#send(type='button' value='Send')
+      h4 Save links
+      div.subblock You can save link and access it at any time. You will always see your current week timetable.
+        div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
 
-    div.schedule
-      article
-        div.weekblock
-          div#calendar
-            each month in calendar
-              table
-                thead
-                  tr
-                    th(colspan='6') #{month.month}
-                  tr
-                    th #
-                    th Mo
-                    th Tu
-                    th We
-                    th Th
-                    th Fr
-                tbody
-                  each week in month.dates
-                    - var trClass = (week.curweek == 0) ? 'current' : ''
-                    tr(class=trClass link='w#{week.week}')
-                      th #{week.week}
-                      each day in week.days
-                        - var tdClass = (day.old > 0) ? 'old' : ''
-                        td(class=tdClass) #{day.day}
+      h4 Contacts
+      div.subblock If you have any suggestions or questions, please, contact me.
+        div.contactform
+          div.success#sent Thank you for texting me
+          textarea.text#message(placeholder='Input your message')
+          div#hiddenform
+            input.text#replyto(type='text' placeholder='Reply to or at least your name')
+            input.button#send(type='button' value='Send')
 
-            div.klear
+  div.schedule
+    article
+      div.weekblock
+        div#calendar
+          each month in calendar
+            table
+              thead
+                tr
+                  th(colspan='6') #{month.month}
+                tr
+                  th #
+                  th Mo
+                  th Tu
+                  th We
+                  th Th
+                  th Fr
+              tbody
+                each week in month.dates
+                  - var trClass = (week.curweek == 0) ? 'current' : ''
+                  tr(class=trClass data-link='w#{week.week}')
+                    th #{week.week}
+                    each day in week.days
+                      - var tdClass = (day.old > 0) ? 'old' : ''
+                      td(class=tdClass) #{day.day}
 
-          div.weekselector
-            a.neighbourweek#prevweek(href='/' data='#{weeknum-1}' data-local) Prev
-            a.weekcontent(href='/') Week
-              span#weeknum(data='#{weeknum}') #{weeknum}
-            a.neighbourweek#nextweek(href='/' data='#{weeknum+1}' data-local) Next
+          div.klear
 
-        div#days
+        div.weekselector
+          a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
+          a.weekcontent(href='/') Week
+            span#weeknum(data-week='#{weeknum}') #{weeknum}
+          a.neighbourweek#nextweek(href='/' data-week='#{weeknum+1}' data-local) Next
 
-    div.klear
+      div#days
 
-    div.unknown Keep calm and don't experiment with url
+  div.klear
 
-    div.sidebarwrap
-      div.bg
-      div.sidebar
-        a.closebtn(href='/') Close
-        div.container
-          div#groupList
-            div.search
-              input.text#groupFilter(type='text' placeholder='Type to filter groups' autofocus)
-            div.list
+  div.unknown Keep calm and don't experiment with url
 
-          div#teacherList
-            div.search
-              input.text#teacherFilter(type='text' placeholder='Type to filter teachers')
-            div.list
+  div.sidebarwrap
+    div.bg
+    div.sidebar
+      a.closebtn(href='/') Close
+      div.container
+        div#groupList
+          div.search
+            input.text#groupFilter(type='text' placeholder='Type to filter groups' autofocus)
+          div.list
+
+        div#teacherList
+          div.search
+            input.text#teacherFilter(type='text' placeholder='Type to filter teachers')
+          div.list
+      div.klear
 
 
 block customFoot

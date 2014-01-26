@@ -1,4 +1,4 @@
-(function ($) {
+;(function ($) {
 
   var ItemLink = Backbone.Model.extend({
     defaults : {
@@ -286,22 +286,34 @@
 
   var header = function () {
 
-    var sourse = ['#group', '#teacher'];
+    var sourse = {
+      group : {
+        $el  : $('#group'),
+        data : $('#group').text()
+      },
+      teacher : {
+        $el  : $('#teacher'),
+        data : $('#teacher').text()
+      }
+    };
 
-    function clear() {
-      sourse.forEach(function (el) {
-        $(el).text($(el).attr('ref'));
-      });
+    function clear(type) {
+      for(el in sourse) {
+        if((!type) && (el != type)) {
+          console.log(type);
+          sourse[el].$el.text(sourse[el].data);
+        }
+      }
     }
 
     return {
       clear : function () {
-        clear();
+        //clear();
       },
 
       set : function (type, val) {
-        clear();
-        $('#' + type).text(val);
+        /*clear(type);
+        sourse[type].$el.text(val);*/
       }
     }
   }();
@@ -330,14 +342,6 @@
   }();
 
   var sideBar = function () {
-    var active = false,
-        that   = this;
-
-    $('.sidebarwrap .container').height(
-      $(document).height() - $('.sidebarwrap .closebtn').outerHeight(true) - 35
-    );
-
-    //$('.sidebarwrap .bg').height($(document.height()));
 
     $('.sidebarwrap .closebtn').on('click', function (e) {
       e.preventDefault();
@@ -348,23 +352,25 @@
       close();
     });
 
+    var $container   = $('.sidebar .container'),
+        $sidebarwrap = $('.sidebarwrap'),
+        $sidebar     = $('.sidebarwrap .sidebar');
+
+
     function show(id) {
-      $('.sidebarwrap .container > div').hide();
+      $container.children('div').hide();
       $('#'+id).show();
 
-      if(parseInt($('.sidebarwrap .sidebar').css('left')) > -100)
-        $('.sidebarwrap .sidebar').css('left', -$('.sidebarwrap .sidebar').width());
+      if(parseInt($sidebar.css('left')) > -100)
+        $sidebar.css('left', -$sidebar.width());
 
-      $('.sidebarwrap').fadeIn('fast');
-      $('.sidebarwrap .sidebar').animate({ left : 0 }, 400);
+      $sidebarwrap.fadeIn('fast');
+      $sidebar.css('left', 0);
     }
 
     function close() {
-      $('.sidebarwrap').fadeOut('fast');
-      $('.sidebarwrap .sidebar').animate(
-        { left : '-' + $('.sidebarwrap .sidebar').width() + 'px' },
-        400
-      );
+      $sidebarwrap.fadeOut('fast');
+      $sidebar.css('left', -700);
     }
 
     return {
@@ -390,7 +396,7 @@
       set : function (q, w) {
         q = '/' + q;
 
-        var w = w || parseInt($weeknum.attr('data'));
+        var w = w || parseInt($weeknum.attr('data-week'));
         $weeknum.text(w);
 
         if(w > 1)
@@ -409,11 +415,11 @@
   var calendar = function () {
     var prevw;
 
-    $("#calendar tr[link='w" + $('#weeknum').text() + "']").addClass('selected');
+    $("#calendar tr[data-link='w" + $('#weeknum').text() + "']").addClass('selected');
 
     $('#calendar tbody tr').on('click', function () {
       var navto = window.location.pathname,
-          week  = $(this).attr('link'),
+          week  = $(this).attr('data-link'),
           match;
 
 
@@ -430,7 +436,7 @@
       if(w !== prevw) {
         prevw = w;
         $('#calendar tr.selected').removeClass('selected');
-        $("#calendar tr[link='w"+ w +"']").addClass('selected');
+        $("#calendar tr[data-link='w"+ w +"']").addClass('selected');
       }
     }
 

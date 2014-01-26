@@ -407,7 +407,7 @@ exports.manage = function (req, res) {
       res.render('manage', {
         title : 'Manage',
         date  : date.getDate() + '.' + parseInt(date.getMonth()+1) + '.' + date.getFullYear(),
-        week  : date.getWeek(),
+        week  : date.getStudyWeek(),
         count : count,
         messages : messages
       });

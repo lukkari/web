@@ -133,7 +133,7 @@ select {
  */
 
 .mainpage {
-  width: 700px;
+  max-width: 700px;
   margin: 20px auto 10px;
  }
 
@@ -146,6 +146,10 @@ select {
   background-color: #fff;
 }
 
+.mainpage .subblock .info {
+  margin: 2px 0 7px 10px;
+}
+
 .mainpage h4 {
   color: #2C5E84;
   margin: 15px 0 10px;
@@ -156,7 +160,7 @@ select {
 }
 
 .mainpage s {
-  padding-left: 4px;
+  padding: 0 4px;
 }
 
 .mainpage .attention {
@@ -176,7 +180,7 @@ select {
 }
 
 .mainpage .contactform textarea {
-  width: 25%;
+  width: 35%;
   height: 16px;
   transition: height 0.3s, width 0.3s;
 }
@@ -265,19 +269,28 @@ select {
 .schedule .neighbourweek {
   float: left;
   display: block;
+  overflow: hidden;
   width: 10%;
   padding: 7px 0;
-  background-color: #FFEDE1;
+  background-color: #fff;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.4em;
   color: #777;
   text-decoration: none;
   transition: background-color 0.2s;
 }
 
+.schedule .neighbourweek:first-of-type {
+  box-shadow: inset -6px 0 0 -4px rgba(0,0,0,0.2);
+}
+
+.schedule .neighbourweek:last-of-type {
+  box-shadow: inset 6px 0 0 -4px rgba(0,0,0,0.2);
+}
+
 .schedule .neighbourweek:hover {
   color: #666;
-  background-color: #FBD8C1;
+  background-color: #C1E4FB;
 }
 
 .schedule .days {
@@ -500,6 +513,14 @@ select {
   .schedule .bwrap {
     width: 100%;
   }
+
+  .schedule .weekcontent {
+    width: 70%;
+  }
+
+  .schedule .neighbourweek {
+    width: 15%;
+  }
 }
 
 @media screen and (min-width: 480px) and (max-width: 740px) {
@@ -507,38 +528,30 @@ select {
     width: 50%;
   }
 
-  /*.schedule .block:nth-child(4n+2), .schedule .block:nth-child(4n+3) {
-    background-color: #E8F6FF;
-  }*/
+  .schedule .weekcontent {
+    width: 70%;
+  }
+
+  .schedule .neighbourweek {
+    width: 15%;
+  }
 }
 
 @media screen and (min-width: 740px) and (max-width: 980px) {
   .schedule .bwrap {
     width: 33.3333333333%;
   }
-
-  /*.schedule .block:nth-child(2n) {
-    background-color: #E8F6FF;
-  }*/
 }
 
 @media screen and (min-width: 980px) and (max-width: 1330px) {
   .schedule .bwrap {
     width: 25%;
   }
-
-  /*.schedule .block:nth-child(5n+5) {
-    background-color: #E8F6FF;
-  }*/
 }
 
 @media screen and (min-width: 1330px) {
   .schedule .bwrap {
     width: 20%;
-  }
-
-  .schedule .weekblock   {
-    float: none;
   }
 }
 
@@ -570,6 +583,13 @@ select {
  * SIDE BAR
  */
 
+.globalouter {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+
 .sidebarwrap {
   display: none;
   position: absolute;
@@ -580,36 +600,41 @@ select {
 }
 
 .sidebarwrap .bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  cursor: pointer;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-color: rgba(0,0,0,0.3);
 }
 
 .sidebarwrap .sidebar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: -700px;
   width: 700px;
-  height: 100%;
+  min-height: 100%;
+  background-color: #555;
+  transition: left 0.4s;
 }
 
 .sidebarwrap .sidebar .closebtn {
   display: block;
-  padding: 7px;
+  padding: 7px 0;
   text-align: center;
   font-size: 1.2em;
   color: #f7f7f7;
   text-decoration: none;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0,0,0,0.2);
   transition: background-color 0.2s;
 }
 
 .sidebarwrap .sidebar .closebtn:hover {
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.4);
 }
 
 .sidebarwrap .sidebar .container {
-  background-color: #555;
   padding-bottom: 15px;
 }
 
@@ -657,6 +682,30 @@ select {
   background-color: #5a5a5a;
 }
 
+@media screen and (max-width: 480px) {
+  .sidebarwrap .sidebar {
+    width: 100%;
+  }
+
+  .sidebarwrap .sidebar .list li {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 700px) {
+  .sidebarwrap .sidebar {
+    width: 100%;
+  }
+
+  .sidebarwrap .sidebar .closebtn {
+    padding: 10px 0;
+  }
+
+  .sidebarwrap .sidebar .list li {
+    width: 50%;
+  }
+}
+
 
 /**
  * CALENDAR
@@ -668,7 +717,7 @@ select {
   border: 0;
   margin: 10px;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   background-color: #fff;
   border-radius: 10px;
 }

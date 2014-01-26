@@ -6,12 +6,13 @@ html
     link(rel='stylesheet', href='/stylesheets/template.css')
     block customHead
   body
-    block content
-    block customFoot
+    div.globalouter
+      block content
+      block customFoot
 
-    div.footer
-      span.footlinks
-        block footlinks
-      span by
-        a(href='https://github.com/zaynetro' target='_blank') zaynetro
-        | 2014
+      div.footer
+        span.footlinks
+          block footlinks
+        span by
+          a(href='https://github.com/zaynetro' target='_blank') zaynetro
+          | 2014
