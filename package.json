@@ -16,9 +16,7 @@
     "iconv"          : "~2.0.7",
     "async"          : "~0.2.9",
     "passport"       : "~0.1.18",
-    "passport-local" : "~0.1.6",
-    "gulp"           : "~3.5.0",
-    "gulp-gzip"      : "~0.0.4"
+    "passport-local" : "~0.1.6"
   },
   "engines" : {
     "node" : "0.10.x"
