@@ -117,6 +117,10 @@ body {
   background-color: #ecf0f1;
 }
 
+.manage .parselist li.mistake {
+  box-shadow: inset 8px 0 0 -4px #E6C44A;
+}
+
 .manage .parselist li > div {
   float: left;
 }
@@ -126,23 +130,42 @@ body {
 }
 
 .manage .parselist .del {
-  width: 35px;
-  text-align: right;
+  width: 30px;
+  text-align: left;
   position: relative;
   top: -1px;
-  right: 5px;
+  left: 0;
 }
 
 .manage .parselist .group {
-  width: 210px;
+  font-size: 0.9em;
+  width: 200px;
 }
 
 .manage .parselist .link {
-  width: 410px;
+  width: 430px;
+}
+
+.manage .parselist .link a {
+  text-decoration: none;
+  background-color: #eee;
+  color: #3E6383;
+  border: 1px solid #999;
+  padding: 1px 8px;
+  font-size: 1em;
+}
+
+.manage .parselist .link a:hover {
+  background-color: #ddd;
+}
+
+.manage .parselist .link i {
+  margin-left: 4px;
+  font-size: 0.9em;
 }
 
 .manage .parselist .clear {
-  width: 45px;
+  width: 40px;
 }
 
 .manage .parselist .del, .manage .parselist .clear {

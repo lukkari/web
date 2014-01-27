@@ -94,7 +94,7 @@ block content
 
 block customFoot
   script#weekdayTemplate(type='text/html')
-    div.block
+    div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
       div.weekday <%= weekday.name %>
         div.date
           div.day <%= date.day %>

@@ -114,18 +114,21 @@
 
     getTime : function (date) {
       var d = new Date(date);
-
       return d.getHours() + ':' + d.getMinutes();
     },
 
     getMonth : function (date) {
       var d = new Date(date);
-
       return months[d.getMonth()];
     },
 
     toUrl : function (name) {
       return name.replace(/\s/g, '_').toLowerCase();
+    },
+
+    isToday : function (date) {
+      var d = new Date();
+      return (d.getDate() == date.day) && (d.getMonth() == date.month)
     }
   };
 
@@ -244,8 +247,8 @@
   var Router = Backbone.Router.extend({
     routes : {
       ''               : 'mainpage',
-      ':q(/)(w:w)(/)' : 'search',
-      'w:w/:q(/)'     : 'search',
+      'w:w/:q(/)'      : 'search2',
+      ':q(/)(w:w)(/)'  : 'search',
       '*other'         : 'unknown'
     },
 
@@ -263,6 +266,10 @@
 
     mainpage : function () {
       pagesCtrl.toggle('mainpage');
+    },
+
+    search2 : function (w, q) {
+      this.search(q, w);
     },
 
     search : function (q, w) {

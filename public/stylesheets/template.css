@@ -2,7 +2,7 @@ body {
   padding: 0;
   margin: 0;
   background-color: #fff;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #e9e9e9;
 }
 
@@ -225,8 +225,12 @@ select {
   transition: box-shadow 0.2s;
 }
 
-.schedule .block:hover {
+.schedule .bwrap .today {
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.6);
+}
+
+.schedule .block:hover {
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.7);
 }
 
 .schedule .weekblock {
@@ -253,7 +257,7 @@ select {
   text-align: center;
   background-color: #fff;
   text-shadow: 0 1px 5px #fff;
-  font-size: 1.5em;
+  font-size: 1.4em;
   text-decoration: none;
   transition: background-color 0.2s;
 }
@@ -272,7 +276,7 @@ select {
   overflow: hidden;
   width: 10%;
   padding: 7px 0;
-  background-color: #fff;
+  background-color: #fafafa;
   text-align: center;
   font-size: 1.4em;
   color: #777;
@@ -424,7 +428,7 @@ select {
 }
 
 .schedule .subject .duration .dur-3 {
-  border-color: #E8C658;
+  border-color: #E6BD3A;
   background-color: #FFF7DE;
 }
 
@@ -672,7 +676,7 @@ select {
   background-color: #666;
   margin: 1px;
   padding: 6px 5px;
-  font-size: 1.1em;
+  font-size: 1em;
   color: #eee;
   text-decoration: none;
   transition: background-color 0.1s;

@@ -9,7 +9,7 @@ block content
       ul
         li: a(href='/') Home
         li: a(href='/manage') Manage
-        li: a(href='/parse') Parse
+        li: a(href='/manage/parse') Parse
 
     div.container
       h1= title
@@ -19,7 +19,7 @@ block content
 
         div#error= error
         div.addparseform
-          form(method='post' action='/parse/add')
+          form(method='post' action='/manage/parse/add')
             input.text.long(name='link' placeholder='Input link' autocomplete='off' autofocus)
             input.button(type='submit' value='Add')
             input.text(name='description' placeholder='Input description' value='K1 2014')
@@ -34,7 +34,7 @@ block content
       div.block
         h3 Run staff parse
         div.addparseform
-          form(method='post' action='/parse/staff')
+          form(method='post' action='/manage/parse/staff')
             input.text.long(name='link' placeholder='Input link' autocomplete='off')
             input.button(type='submit' value='Run')
 
@@ -46,18 +46,22 @@ block content
               - var liClass = (parse.parsed) ? 'parsed' : ''
               li(class=liClass)
                 div.del
-                  a(href='/parse/#{parse._id}') Del
+                  a(href='/manage/parse/#{parse._id}') Del
                 div.group=parse.group.name
                 div.link
-                  a(href='/parse/#{parse._id}')=parse.link
+                  a(href='/manage/parse/#{parse._id}' title=parse.link) Run
+                  i s:#{parse.startNum}
+                  if parse.customName
+                    i g:#{parse.customName}
+                  i v:#{parse.version}
                 div.clear
-                  a(href='/parse/#{parse._id}') Clear
+                  a(href='/manage/parse/#{parse._id}') Clear
 
                 div.description=parse.description
 
 block customFoot
   script(src='/js/libs/jquery-1.10.2.min.js')
-  script(src='/js/manage_controller.js')
+  script(src='/js/manage_app.js')
 
 block footlinks
   include ./layouts/footlinks/logged
