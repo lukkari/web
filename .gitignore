@@ -1,1 +1,3 @@
 node_modules
+logs/main.log
+config/config.js

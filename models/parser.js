@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var parser = function () {
-  var request, jsdom, ic, lastres, html, g_err;
+  var request, jsdom, ic, html, g_err;
 
   var staff = {
     "groups": [],
@@ -37,6 +37,10 @@ var parser = function () {
       }
       staff.rooms = rooms;
     });
+
+  }
+
+  function addToDb(data, cb) {
 
   }
 
@@ -309,34 +313,49 @@ var parser = function () {
                       else
                         obj.coursenum = 0;
 
-                      // Save subject to the db
-                      var subject = new Subject({
+                      // Check if subject exists
+                      var data = {
                         name      : tmp2,
                         duration  : j,
-                        date      : date,
+                        dates     : [date],
                         rooms     : obj.rooms,
                         groups    : obj.groups,
                         teachers  : obj.teachers,
                         coursenum : obj.coursenum,
-                        parse     : parseId
-                      });
-                      subject.save(function (err, subject, num) {
-                        if(err)
-                          console.log(err);
-                      });
+                        parse     : parseId,
+                        createdAt : new Date()
+                      };
 
+                      (function (data) {
+                        Subject
+                          .findOne({
+                              name     : data.name,
+                              duration : data.duration
+                            })
+                          .sort({ createdAt : 1 })
+                          .exec(function (err, subject) {
+                              if(err)
+                                console.log(err);
 
-                      result.subjects.push({
-                        row       : row,
-                        col       : col,
-                        date      : date,
-                        duration  : j,
-                        data      : tmp2,
-                        groups    : obj.groups,
-                        teachers  : obj.teachers,
-                        rooms     : obj.rooms,
-                        coursenum : obj.coursenum
-                      });
+                              if(subject) {
+                                subject.addDate(data.dates[0], function (err) {
+                                  if(err)
+                                    console.log(err);
+                                });
+                              }
+                              else {
+                                // If not found Save subject to the db
+                                var subject = new Subject(data);
+                                subject.save(function (err) {
+                                  if(err)
+                                    console.log(err);
+                                });
+                              }
+                            }
+                          );
+                      })(data);
+
+                      result.subjects.push(data);
                     }
 
                     col += 1;
@@ -352,10 +371,6 @@ var parser = function () {
           }
         );
       });
-    },
-
-    getJSON: function () {
-      return lastres;
     }
   };
 

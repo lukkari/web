@@ -16,34 +16,31 @@ var Schema = mongoose.Schema;
 var subjectSchema = new Schema({
   name      : { type: String, default: '' },
   duration  : { type: Number, default: 0 },
-  date      : { type: Date,   default: 0 },
+  dates     : [{ type: Date }],
   rooms     : [{ type: Schema.Types.ObjectId, ref: 'Room' }],
   groups    : [{ type: Schema.Types.ObjectId, ref: 'Group' }],
   teachers  : [{ type: Schema.Types.ObjectId, ref: 'Teacher' }],
   coursenum : { type: String, default: '' },
-  parse     : { type: Schema.Types.ObjectId, ref: 'Parse' }
+  parse     : { type: Schema.Types.ObjectId, ref: 'Parse' },
+  createdAt : { type: Date, default: Date.now }
 });
 
-subjectSchema.pre('save', function (next, done) {
-  var that = this;
-  mongoose.models['Subject'].findOne({
-      name     : that.name,
-      duration : that.duration,
-      date     : that.date
-    },
 
-    function (err, data) {
-      if(err)
-        done(err);
-      else if(data) {
-        done();
-      }
-      else
-        next();
-    }
-  );
+subjectSchema.methods = {
+  addDate : function (date, cb) {
+    var d   = new Date(date),
+        add = true;
+    for(var i = 0; i < this.dates.length; i += 1)
+      if(this.dates[i].getTime() === d.getTime())
+        add = false;
 
-});
+    if(add)
+      this.dates.push(d);
+
+    var cb = cb || null;
+    this.save(cb);
+  }
+}
 
 mongoose.model('Subject', subjectSchema);
 
@@ -155,9 +152,12 @@ var parseSchema = new Schema({
   createdAt   : { type: Date,    default: Date.now }
 });
 
-parseSchema.pre('save', function (next) {
+parseSchema.pre('save', function (next, done) {
   var link = this.link,
       groupname;
+
+  if(link.length < 1)
+    done('Url is too short');
 
   link  = link.split('/');
 
@@ -175,7 +175,6 @@ parseSchema.pre('save', function (next) {
 
   if(this.customName.length > 0) {
     this.link = this.link.replace(this.customName, '{g}');
-
     next();
   }
   else {

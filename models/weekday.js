@@ -28,9 +28,11 @@ var weekDay = function () {
           end   = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
 
       var query = {
-        'date' : {
-          $gte : start,
-          $lt  : end
+        'dates' : {
+          $elemMatch : {
+            $gte : start,
+            $lt  : end
+          }
         }
       }
       switch(ptype) {
@@ -44,17 +46,17 @@ var weekDay = function () {
 
       Subject.find(query,
                   {
-                    name     : 1,
-                    date     : 1,
-                    duration : 1,
-                    groups   : 1,
-                    teachers : 1,
-                    rooms    : 1
+                    'name'     : 1,
+                    'dates.$'  : 1,
+                    'duration' : 1,
+                    'groups'   : 1,
+                    'teachers' : 1,
+                    'rooms'    : 1
                   })
              .populate('groups', 'name')
              .populate('teachers', 'name')
              .populate('rooms', 'name')
-             .sort({ date : 1 })
+             .sort({ dates : 1 })
              .exec(function (err, subjects) {
                 data.subjects = subjects;
                 cb(err, data);

@@ -184,8 +184,6 @@ exports.clearModel = function (req, res) {
 
 exports.parse = function(req, res) {
 
-  console.log(req.headers);
-
   var list;
 
   var error = req.param('error');
@@ -243,17 +241,25 @@ exports.addParse = function (req, res) {
   var Parse = mongoose.model('Parse'),
       parse = new Parse(req.body);
 
-  parse.save(function (err) {
-    var addon = '';
-    if(err) {
-      console.log(err);
-      addon = 'error_in_adding';
+  function returnRes(err, parse) {
+    if(req.xhr) {
+      if(err)
+        res.json(500, err);
+      else
+        res.json({ response : 'success', data : parse });
     }
+    else {
+      var addon = err ? '?error='+err.replace(/\s/g, '_') : '';
+      res.redirect('/manage/parse' + addon);
+    }
+  }
 
-    if(addon.length > 0)
-      addon = '?error=' + addon;
+  parse.save(function (err, parse) {
+    var addon = '';
+    if(err)
+      console.log(err);
 
-    res.redirect('/manage/parse' + addon);
+    return returnRes(err, parse);
   });
 
 };
@@ -262,18 +268,28 @@ exports.staffParse = function (req, res) {
 
   var url = req.body.link;
 
+  function returnRes(err) {
+    if(req.xhr) {
+      if(err)
+        res.json(500, err);
+      else
+        res.json('success');
+    }
+    else {
+      var addon = err ? '?error='+err.replace(/\s/g, '_') : '';
+      res.redirect('/manage/parse' + addon);
+    }
+  }
+
+  if(!url || !url.length)
+    return returnRes('empty');
+
   parser.doStaff(url, function (err, result) {
     var addon = '';
-    if(err) {
+    if(err)
       console.log(err);
-      addon = 'error_in_running';
-    }
 
-    if(addon.length > 0)
-      addon = '?error=' + addon;
-
-    res.redirect('/manage/parse' + addon);
-
+    return returnRes(err);
   });
 };
 
@@ -282,7 +298,7 @@ exports.runParse = function (req, res) {
   var Parse = mongoose.model('Parse');
 
   function returnRes(err) {
-    if(req.param('ajax')) {
+    if(req.xhr) {
       if(err)
         res.json(500, { error : err });
       else
@@ -358,7 +374,7 @@ exports.deleteParse = function (req, res) {
       Subject = mongoose.model('Subject');
 
   function returnRes(err) {
-    if(req.param('ajax')) {
+    if(req.xhr) {
       if(err)
         res.json(500, { error : err });
       else
@@ -396,7 +412,7 @@ exports.clearParse = function (req, res) {
       Subject = mongoose.model('Subject');
 
   function returnRes(err) {
-    if(req.param('ajax')) {
+    if(req.xhr) {
       if(err)
         res.json(500, { error : err });
       else

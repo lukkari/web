@@ -104,7 +104,7 @@ block customFoot
         <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
         div.subject
           div.time
-            div.hour <%= getTime(subject.date) %>
+            div.hour <%= getTime(subject.dates) %>
             div.duration
               span(class!='dur-<%= subject.duration %>')
                 i#duration <%= subject.duration %>

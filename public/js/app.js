@@ -113,7 +113,8 @@
     },
 
     getTime : function (date) {
-      var d = new Date(date);
+      if(!date || !date.length) return 'No time';
+      var d = new Date(date[0]);
       return d.getHours() + ':' + d.getMinutes();
     },
 

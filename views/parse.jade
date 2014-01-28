@@ -19,7 +19,7 @@ block content
 
         div#error= error
         div.addparseform
-          form(method='post' action='/manage/parse/add')
+          form#addparse(method='post' action='/manage/parse/add')
             input.text.long(name='link' placeholder='Input link' autocomplete='off' autofocus)
             input.button(type='submit' value='Add')
             input.text(name='description' placeholder='Input description' value='K1 2014')
@@ -34,8 +34,8 @@ block content
       div.block
         h3 Run staff parse
         div.addparseform
-          form(method='post' action='/manage/parse/staff')
-            input.text.long(name='link' placeholder='Input link' autocomplete='off')
+          form#runstaff(method='post' action='/manage/parse/staff')
+            input.error.text.long(name='link' placeholder='Input link' autocomplete='off')
             input.button(type='submit' value='Run')
 
       div.block

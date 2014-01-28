@@ -92,6 +92,14 @@ body {
   padding: 10px 0;
 }
 
+.manage .addparseform .done {
+  background: url('/design/success_icon.png') no-repeat center right;
+}
+
+.manage .addparseporm .empty {
+  background-image: none;
+}
+
 .manage .addparseform .long {
   width: 450px;
 }
