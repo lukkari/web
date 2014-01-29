@@ -40,10 +40,6 @@ var parser = function () {
 
   }
 
-  function addToDb(data, cb) {
-
-  }
-
   function doParse(url, callback) {
     renewStaff();
 
@@ -84,6 +80,34 @@ var parser = function () {
     });
     return str;
   }
+
+  var stack = function () {
+    var stack   = [],
+        running = false;
+
+    function run() {
+      if(!stack.length) return;
+
+      running = true;
+      var obj = stack.shift();
+
+      obj.f(obj.data, function () {
+        running = false;
+        run();
+      });
+    }
+
+    return {
+      exec : function (func, data) {
+        stack.push({ f: func, data : data });
+
+        if(!running) run();
+
+        return;
+      }
+    }
+
+  }();
 
   return {
     init: function (_request, _jsdom, _ic) {
@@ -317,6 +341,10 @@ var parser = function () {
                       var data = {
                         name      : tmp2,
                         duration  : j,
+                        days      : [{
+                          date     : date,
+                          duration : j
+                        }],
                         dates     : [date],
                         rooms     : obj.rooms,
                         groups    : obj.groups,
@@ -326,11 +354,11 @@ var parser = function () {
                         createdAt : new Date()
                       };
 
-                      (function (data) {
+
+                      stack.exec(function (data, next) {
                         Subject
                           .findOne({
-                              name     : data.name,
-                              duration : data.duration
+                              name : data.name
                             })
                           .sort({ createdAt : 1 })
                           .exec(function (err, subject) {
@@ -338,10 +366,20 @@ var parser = function () {
                                 console.log(err);
 
                               if(subject) {
-                                subject.addDate(data.dates[0], function (err) {
+                                subject.addDay(data.days[0], function (err) {
                                   if(err)
                                     console.log(err);
+
+                                  next();
                                 });
+
+
+                                /*subject.addDate(data.dates[0], function (err) {
+                                  if(err)
+                                    console.log(err);
+
+                                  next();
+                                });*/
                               }
                               else {
                                 // If not found Save subject to the db
@@ -349,11 +387,15 @@ var parser = function () {
                                 subject.save(function (err) {
                                   if(err)
                                     console.log(err);
+
+                                  next();
                                 });
                               }
                             }
                           );
-                      })(data);
+                        },
+                        data
+                      );
 
                       result.subjects.push(data);
                     }

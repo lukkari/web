@@ -112,9 +112,9 @@
       return str.substr(0, str.length - 2);
     },
 
-    getTime : function (date) {
-      if(!date || !date.length) return 'No time';
-      var d = new Date(date[0]);
+    getTime : function (day) {
+      if(!day || !day.length) return 'No time';
+      var d = new Date(day[0].date);
       return d.getHours() + ':' + d.getMinutes();
     },
 
@@ -130,6 +130,11 @@
     isToday : function (date) {
       var d = new Date();
       return (d.getDate() == date.day) && (d.getMonth() == date.month)
+    },
+
+    getDur : function (day) {
+      if(!day || !day.length) return '0';
+      return day[0].duration;
     }
   };
 
@@ -225,6 +230,7 @@
       _.each(this.collection.models, function (item) {
         that.renderWeekDay(item);
       }, this);
+      alignDays();
     },
 
     showErr : function () {
@@ -404,8 +410,9 @@
       set : function (q, w) {
         q = '/' + q;
 
-        var w = w || parseInt($weeknum.attr('data-week'));
+        var w = w || parseInt($weeknum.attr('data-weeknow'));
         $weeknum.text(w);
+        $weeknum.attr('data-week', w);
 
         if(w > 1)
           $prevweek.attr('href', q + '/w' + (+w - 1));
@@ -423,7 +430,7 @@
   var calendar = function () {
     var prevw;
 
-    $("#calendar tr[data-link='w" + $('#weeknum').text() + "']").addClass('selected');
+    $("#calendar tr[data-link='w" + $('#weeknum').attr('data-week') + "']").addClass('selected');
 
     $('#calendar tbody tr').on('click', function () {
       var navto = window.location.pathname,
@@ -463,8 +470,8 @@
    */
 
   var router = new Router();
-
   Backbone.history.start({ pushState: true });
+
   $(document).on('click', 'a[data-local]', function (e) {
 
     var href = $(this).attr('href');
@@ -510,6 +517,32 @@
     $('#message').removeClass('big');
     $('#replyto').val('');
     $('#message').val('');
+  });
+
+
+  function alignDays() {
+    var blocks = $('.bwrap');
+
+    var docW = $(document).width();
+    var currW = blocks.eq(1).width();
+    var ratio = docW / currW;
+    var cols = Math.round(docW / currW);
+    //cols = ratio > 5 ? 6 : cols;
+    var rows = Math.ceil(blocks.length / cols);
+
+    if(cols < 2) {
+      blocks.css("height", "auto");
+      return true;
+    }
+
+    for(var i = 0; i < rows; i += 1)
+      blocks.slice(i*cols, (i+1)*cols).equalHeights();
+
+    return true;
+  }
+
+  $(window).resize(function () {
+    alignDays();
   });
 
 }(jQuery));

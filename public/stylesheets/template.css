@@ -527,7 +527,21 @@ select {
   }
 }
 
-@media screen and (min-width: 480px) and (max-width: 740px) {
+@media screen and (min-width: 480px) and (max-width: 550px) {
+  .schedule .bwrap {
+    width: 100%;
+  }
+
+  .schedule .weekcontent {
+    width: 70%;
+  }
+
+  .schedule .neighbourweek {
+    width: 15%;
+  }
+}
+
+@media screen and (min-width: 550px) and (max-width: 740px) {
   .schedule .bwrap {
     width: 50%;
   }
@@ -547,13 +561,13 @@ select {
   }
 }
 
-@media screen and (min-width: 980px) and (max-width: 1330px) {
+@media screen and (min-width: 980px) and (max-width: 1200px) {
   .schedule .bwrap {
     width: 25%;
   }
 }
 
-@media screen and (min-width: 1330px) {
+@media screen and (min-width: 1200px) {
   .schedule .bwrap {
     width: 20%;
   }
@@ -562,6 +576,16 @@ select {
 @media screen and (min-width: 980px) {
   .topmenu ul {
     width: 900px;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .schedule .bwrap {
+    width: 18%;
+  }
+
+  .schedule #days {
+    margin: 0 5%;
   }
 }
 
@@ -688,6 +712,7 @@ select {
 
 @media screen and (max-width: 480px) {
   .sidebarwrap .sidebar {
+    position: absolute;
     width: 100%;
   }
 
@@ -698,6 +723,7 @@ select {
 
 @media screen and (min-width: 480px) and (max-width: 700px) {
   .sidebarwrap .sidebar {
+    position: absolute;
     width: 100%;
   }
 
@@ -724,6 +750,7 @@ select {
   vertical-align: middle;
   background-color: #fff;
   border-radius: 10px;
+  height: 185px;
 }
 
 #calendar thead {

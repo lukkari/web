@@ -25,7 +25,8 @@ exports.index = function(req, res) {
 
   var date    = new Date(),
       dates   = calendar.get(date.getStudyWeek()),
-      weeknum = date.getStudyWeek();
+      weeknum = date.getStudyWeek(),
+      weeknow = weeknum;
 
   if(w)
     weeknum = +w.substr(1);
@@ -34,6 +35,7 @@ exports.index = function(req, res) {
                         title    : 'Schedule',
                         calendar : dates,
                         weeknum  : weeknum,
+                        weeknow  : weeknow,
                         logged   : req.isAuthenticated()
                       });
 };

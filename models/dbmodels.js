@@ -16,6 +16,10 @@ var Schema = mongoose.Schema;
 var subjectSchema = new Schema({
   name      : { type: String, default: '' },
   duration  : { type: Number, default: 0 },
+  days      : [{
+    date     : { type: Date,   default: 0 },
+    duration : { type: Number, default: 0 }
+  }],
   dates     : [{ type: Date }],
   rooms     : [{ type: Schema.Types.ObjectId, ref: 'Room' }],
   groups    : [{ type: Schema.Types.ObjectId, ref: 'Group' }],
@@ -36,6 +40,20 @@ subjectSchema.methods = {
 
     if(add)
       this.dates.push(d);
+
+    var cb = cb || null;
+    this.save(cb);
+  },
+
+  addDay : function (day, cb) {
+    var d   = new Date(day.date),
+        add = true;
+    for(var i = 0; i < this.days.length; i += 1)
+      if(this.days[i].date.getTime() === d.getTime())
+        add = false;
+
+    if(add)
+      this.days.push(day);
 
     var cb = cb || null;
     this.save(cb);

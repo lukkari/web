@@ -66,7 +66,7 @@ block content
         div.weekselector
           a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
           a.weekcontent(href='/') Week
-            span#weeknum(data-week='#{weeknum}') #{weeknum}
+            span#weeknum(data-week='#{weeknum}' data-weeknow='#{weeknow}') #{weeknum}
           a.neighbourweek#nextweek(href='/' data-week='#{weeknum+1}' data-local) Next
 
       div#days
@@ -82,7 +82,7 @@ block content
       div.container
         div#groupList
           div.search
-            input.text#groupFilter(type='text' placeholder='Type to filter groups' autofocus)
+            input.text#groupFilter(type='text' placeholder='Type to filter groups')
           div.list
 
         div#teacherList
@@ -104,11 +104,11 @@ block customFoot
         <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
         div.subject
           div.time
-            div.hour <%= getTime(subject.dates) %>
+            div.hour <%= getTime(subject.days) %>
             div.duration
-              span(class!='dur-<%= subject.duration %>')
-                i#duration <%= subject.duration %>
-                u hour<% if(subject.duration > 1) { %>s<% } %>
+              span(class!='dur-<%= getDur(subject.days) %>')
+                i#duration <%= getDur(subject.days) %>
+                u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
 
           div.info
             div.inner
@@ -131,6 +131,8 @@ block customFoot
             li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
             <% }); %>
 
+          div.klear
+
         <% }); %><% } else { %>
         div.noclasses No classes
         <% } %>
@@ -142,6 +144,7 @@ block customFoot
     li: a(href!='/<%= tourl %>' data-local)<%= name %>
 
   script(src='/js/libs/jquery-1.10.2.min.js')
+  script(src='/js/libs/jquery.equalheights.min.js')
   script(src='/js/libs/underscore-min.js')
   script(src='/js/libs/backbone-min.js')
   script(src='/js/app.js')
