@@ -15,12 +15,10 @@ var Schema = mongoose.Schema;
 
 var subjectSchema = new Schema({
   name      : { type: String, default: '' },
-  duration  : { type: Number, default: 0 },
   days      : [{
     date     : { type: Date,   default: 0 },
     duration : { type: Number, default: 0 }
   }],
-  dates     : [{ type: Date }],
   rooms     : [{ type: Schema.Types.ObjectId, ref: 'Room' }],
   groups    : [{ type: Schema.Types.ObjectId, ref: 'Group' }],
   teachers  : [{ type: Schema.Types.ObjectId, ref: 'Teacher' }],

@@ -340,12 +340,10 @@ var parser = function () {
                       // Check if subject exists
                       var data = {
                         name      : tmp2,
-                        duration  : j,
                         days      : [{
                           date     : date,
                           duration : j
                         }],
-                        dates     : [date],
                         rooms     : obj.rooms,
                         groups    : obj.groups,
                         teachers  : obj.teachers,
@@ -372,14 +370,6 @@ var parser = function () {
 
                                   next();
                                 });
-
-
-                                /*subject.addDate(data.dates[0], function (err) {
-                                  if(err)
-                                    console.log(err);
-
-                                  next();
-                                });*/
                               }
                               else {
                                 // If not found Save subject to the db
