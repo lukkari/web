@@ -95,7 +95,7 @@ module.exports = function (app, passport) {
   app.get( '/api/teachers',    api.getTeachers);
   app.get( '/api/schedule/:q', api.getSchedule);
   app.post('/api/messages',    api.sendMsg);
-  app.get( '/api/subject/:q',     api.getSubject);
+  app.get( '/api/subject/:q',  api.getSubject);
 
   // Main page
   app.get('/*',    routes.index);

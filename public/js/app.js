@@ -275,6 +275,8 @@
     render : function () {
       var tmpl = _.template(this.template),
           data = this.model.toJSON();
+
+      _.extend(data, viewHelper);
       this.$el.html(tmpl(data));
 
       return this;

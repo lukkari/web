@@ -158,7 +158,7 @@ block customFoot
       div.teachers
         ul
           <% _.each(teachers, function (teacher) { %>
-          li: a(href='#' data-local) <%= teacher.name %>
+          li: a(href!='<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
           <% }); %>
 
     div.row
@@ -166,7 +166,7 @@ block customFoot
       div.groups
         ul
           <% _.each(groups, function (group) { %>
-          li: a(href='#' data-local) <%= group.name %>
+          li: a(href!='<%= toUrl(group.name) %>' data-local) <%= group.name %>
           <% }); %>
 
     div.row
