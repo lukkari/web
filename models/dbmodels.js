@@ -248,11 +248,12 @@ var userSchema = new Schema({
   createdAt : { type : Date,   default : Date.now }
 });
 
-userSchema.pre('save', function (next) {
-  if(this.isNew) {
-    this.salt = this.makeSalt();
-    this.password = this.encryptPassword(this.password);
-  }
+userSchema.pre('save', function (next, done) {
+  if(!this.username.match(/^[0-9a-z\-\_]+$/i)) return done(new Error('Only characters, numbers, "_" and "-" in username'));
+  if(this.password.length < 3) return done(new Error('Password is too short'));
+
+  this.salt = this.makeSalt();
+  this.password = this.encryptPassword(this.password);
   next();
 });
 
@@ -283,3 +284,17 @@ userSchema.methods = {
 userSchema.index({ username: 1 }, { unique: true });
 
 mongoose.model('User', userSchema);
+
+
+/**
+ * ########################################################################3
+ * Users
+ */
+
+var UserTableSchema = new Schema({
+  subjects  : [{ type : Schema.Types.ObjectId, ref : 'Subject' }],
+  removed   : [{ type : Schema.Types.ObjectId, ref : 'Subject' }],
+  updatedAt : { type : Date, default : Date.now }
+});
+
+mongoose.model('UserTable', UserTableSchema);

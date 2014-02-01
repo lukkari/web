@@ -80,6 +80,11 @@ body {
   color: #888;
 }
 
+.manage .msg .contain i {
+  margin-left: 5px;
+  font-size: 0.7em;
+}
+
 .manage #error {
   color: #c00;
 }

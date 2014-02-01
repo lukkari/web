@@ -39,6 +39,8 @@ block content
           li Subjects:
             span #{count.subjects}
             a(href='/manage/clear/subjects' onclick='return confirm("Clear all subjects?");') clear
+          li Users:
+            span #{count.users}
           li Log:
             a.show(href='/manage/log' target='_blank') show
             a(href='/manage/clear/log' onclick='return confirm("Clear log?");') clear
@@ -51,10 +53,12 @@ block content
         h3 Messages
         div.msgs
           each message in messages
-            - var msg = decodeURI(message.message)
+            - var msg  = decodeURI(message.message)
+            - var from = decodeURI(message.from)
             div.msg
-              div.from= message.from
-              div.contain= msg
+              div.from= from
+              div.contain #{msg}
+                i= message.createdAt.toGMTString()
 
 block footlinks
   include ./layouts/footlinks/logged

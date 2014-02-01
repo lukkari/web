@@ -124,7 +124,7 @@
     },
 
     toUrl : function (name) {
-      return name.replace(/\s/g, '_').toLowerCase();
+      return encodeURIComponent(name.replace(/\s/g, '_').toLowerCase());
     },
 
     isToday : function (date) {
@@ -249,11 +249,46 @@
   });
 
 
+  var Subject = Backbone.Model.extend({
+    url : '/api/subject/',
+
+    initialize : function (options) {
+      this.url = this.url + encodeURIComponent(options.url);
+    }
+  });
+
+  var SubjectView = Backbone.View.extend({
+    el : $('.subjectpage article'),
+    template : $('#subjectTemplate').html(),
+
+    initialize : function (options) {
+      this.model = new Subject({ url : options.url });
+
+      var that = this;
+      this.model.fetch({
+        success : function () {
+          that.render();
+        }
+      });
+    },
+
+    render : function () {
+      var tmpl = _.template(this.template),
+          data = this.model.toJSON();
+      this.$el.html(tmpl(data));
+
+      return this;
+    }
+  });
+
+
   //##########################################################################
 
   var Router = Backbone.Router.extend({
     routes : {
       ''               : 'mainpage',
+      'back'           : 'goBack',
+      'subject/:q'     : 'subject',
       'w:w/:q(/)'      : 'search2',
       ':q(/)(w:w)(/)'  : 'search',
       '*other'         : 'unknown'
@@ -269,10 +304,32 @@
         el : $('#teacherList .list'),
         list: 'teacher'
       });
+
+      this.history = [];
+      Backbone.history.on('route', function() { this.history.push(window.location.pathname.substr(1)); }, this);
+    },
+
+    back : function () {
+      if(this.history.length > 1) {
+        this.navigate(this.history[this.history.length - 2], { trigger : true });
+        this.history = this.history.slice(0, this.history.length - 1);
+      }
+      else
+        this.navigate('', { trigger : true, replace : true });
     },
 
     mainpage : function () {
       pagesCtrl.toggle('mainpage');
+    },
+
+    goBack : function () {
+      this.back();
+    },
+
+    subject : function (q) {
+      pagesCtrl.toggle('subject');
+
+      var subject = new SubjectView({ url : q });
     },
 
     search2 : function (w, q) {
@@ -337,7 +394,8 @@
     var $pages = {
       mainpage : $('.mainpage'),
       schedule : $('.schedule'),
-      unknown  : $('.unknown')
+      unknown  : $('.unknown'),
+      subject  : $('.subjectpage')
     };
 
     function hideAll() {

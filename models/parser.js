@@ -235,12 +235,7 @@ var parser = function () {
             }
 
             var Subject = mongoose.model('Subject'),
-            result = {
-              week      : null,
-              count     : null,
-              subjects  : []
-            },
-            obj = {
+                obj = {
               groups    : [],
               teachers  : [],
               rooms     : [],
@@ -249,6 +244,7 @@ var parser = function () {
             }, tmp, tmp2, i, j, date,
             row = -1, col = 0,
             time,
+            count = 0,
             lastBusyRow = [],
             dates = [];
 
@@ -266,7 +262,6 @@ var parser = function () {
                 j = tmp.indexOf('...');
 
                 tmp2 = tmp.substr(i+1, j-i-1).trim().split('.');
-                result.week = parseInt(tmp.substr(i-2, 2));
                 date = new Date(parseInt(tmp2[2]), parseInt(tmp2[1])-1, parseInt(tmp2[0]));
 
                 //Prepare dates for each column
@@ -337,6 +332,8 @@ var parser = function () {
                       else
                         obj.coursenum = 0;
 
+                      tmp2 = tmp2.trim();
+
                       // Check if subject exists
                       var data = {
                         name      : tmp2,
@@ -387,7 +384,7 @@ var parser = function () {
                         data
                       );
 
-                      result.subjects.push(data);
+                      count += 1;
                     }
 
                     col += 1;
@@ -396,9 +393,7 @@ var parser = function () {
               }
             });
 
-            result.count = result.subjects.length;
-
-            callback(false, result);
+            callback(false, count);
             return true;
           }
         );

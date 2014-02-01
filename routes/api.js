@@ -112,3 +112,33 @@ exports.sendMsg = function (req, res) {
     });
   }
 };
+
+exports.getSubject = function (req, res) {
+
+  var q = decodeURIComponent(req.params.q);
+
+  if(q && q.length) {
+    var Subject = mongoose.model('Subject');
+    q = q.replace(/_/g, ' ');
+
+    Subject.find({ name : new RegExp(q, 'i') },
+                 { 'name'      : 1,
+                   'groups'    : 1,
+                   'teachers'  : 1,
+                   'days'      : 1
+                 })
+           .populate('groups', 'name')
+           .populate('teachers', 'name')
+           .exec(function (err, subject) {
+                    if(err)
+                      console.log(err);
+
+                    if(subject.length)
+                      subject = subject[0];
+
+                    return res.json(subject);
+                 });
+  }
+  else
+    return res.json(500, { error : 'Wrong request' });
+};

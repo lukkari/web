@@ -7,6 +7,12 @@ block content
       li: a#teacher(href='/' data-ref='Teachers') Teachers
 
 
+  div.subjectpage
+    div.inner
+      div.back: a(href='/back' data-local) Return
+      article
+
+
   div.mainpage
     h3 Schedule finder
     div.block Custom schedule of ICT-building
@@ -116,7 +122,7 @@ block customFoot
                 <% if(subject.rest) { %>
                 div.resttext Break
                 <% } else { %>
-                a(href="#") <%= subject.name %>
+                a(href!='/subject/<%= toUrl(subject.name) %>' data-local) <%= subject.name %>
                 <% } %>
 
               div.room <%= getRooms(subject.rooms) %>
@@ -142,6 +148,30 @@ block customFoot
 
   script#itemlinkTemplate(type='text/html')
     li: a(href!='/<%= tourl %>' data-local)<%= name %>
+
+  script#subjectTemplate(type='text/html')
+    div.row
+      h3 <%= name %>
+
+    div.row
+      h4 Teachers
+      div.teachers
+        ul
+          <% _.each(teachers, function (teacher) { %>
+          li: a(href='#' data-local) <%= teacher.name %>
+          <% }); %>
+
+    div.row
+      h4 Groups
+      div.groups
+        ul
+          <% _.each(groups, function (group) { %>
+          li: a(href='#' data-local) <%= group.name %>
+          <% }); %>
+
+    div.row
+      h4 When
+      div: i Will be available soon
 
   script(src='/js/libs/jquery-1.10.2.min.js')
   script(src='/js/libs/jquery.equalheights.min.js')

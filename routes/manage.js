@@ -22,13 +22,15 @@ exports.index = function (req, res) {
       Teacher = mongoose.model('Teacher'),
       Parse   = mongoose.model('Parse'),
       Subject = mongoose.model('Subject'),
+      User    = mongoose.model('User'),
       Contact = mongoose.model('Contact'),
       count = {
         rooms    : 0,
         groups   : 0,
         teachers : 0,
         parses   : 0,
-        subjects : 0
+        subjects : 0,
+        users    : 0
       },
       messages;
 
@@ -83,6 +85,17 @@ exports.index = function (req, res) {
             console.log(err);
           else
             count.subjects = num;
+
+          cb(null, true);
+        });
+      },
+
+      function (cb) {
+        User.count({}, function (err, num) {
+          if(err)
+            console.log(err);
+          else
+            count.users = num;
 
           cb(null, true);
         });
@@ -329,18 +342,18 @@ exports.runParse = function (req, res) {
     var origLink = parse.link.replace('{v}', parse.version);
     origLink = origLink.replace('{g}', group);
 
-    function runParse(num, prev) {
+    function runParse(num, pnum) {
       if(!num)
         return false;
 
       var link = origLink;
       link = link.replace('{s}', num);
 
-      parser.doSchedule(link, parse._id, function (err, result) {
+      parser.doSchedule(link, parse._id, function (err, number) {
         if(err) {
           console.log(err);
 
-          var counter = (prev.count) ? +prev.count : 0;
+          var counter = (pnum) ? +pnum : 0;
 
           parse.update({
               parsed  : true,
@@ -359,7 +372,7 @@ exports.runParse = function (req, res) {
           );
         }
         else
-          runParse(num + 1, result);
+          runParse(num + 1, number);
       });
     }
 

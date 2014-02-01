@@ -472,11 +472,11 @@ select {
   font-style: italic;
 }
 
-.schedule .subject .teachers li {
+.schedule .subject .teachers li, .subjectpage .teachers li {
   margin: 2px 0;
 }
 
-.schedule .subject .teachers li > a {
+.schedule .subject .teachers li > a, .subjectpage .teachers li > a {
   background: url('/design/teacher_icon.png') no-repeat left center;
   padding-left: 20px;
   color: #3A3D3F;
@@ -493,7 +493,7 @@ select {
   margin: 6px 4px 6px 0;
 }
 
-.schedule .subject .groups li > a {
+.schedule .subject .groups li > a, .subjectpage .groups li > a {
   border: 2px solid #dadada;
   border-radius: 5px;
   font-size: 0.9em;
@@ -502,7 +502,7 @@ select {
   color: #666;
 }
 
-.schedule .subject .groups li > a:hover {
+.schedule .subject .groups li > a:hover, .subjectpage .groups li > a:hover {
   text-decoration: none;
   border-color: #bbb;
   color: #444;
@@ -579,7 +579,7 @@ select {
   }
 }
 
-@media screen and (min-width: 1920px) {
+@media screen and (min-width: 1980px) {
   .schedule .bwrap {
     width: 18%;
   }
@@ -840,6 +840,7 @@ select {
 }
 
 .loginpage .container {
+  position: relative;
   clear: both;
   padding: 40px 10px 10px;
 }
@@ -866,7 +867,7 @@ select {
 }
 
 .loginpage #error:hover {
-  opacity: 0.7;
+  /*opacity: 0.7;*/
 }
 
 .loginpage .row {
@@ -911,4 +912,170 @@ select {
 .loginpage .button:hover {
   color: #000;
   background-color: #97B7CD;
+}
+
+.loginpage .note {
+  background-color: #ddd;
+  border: 1px solid #bbb;
+  color: #555;
+  font-size: 0.9em;
+  padding: 5px;
+  margin-top: 15px;
+}
+
+.loginpage form h3 {
+  margin-top: 20px;
+}
+
+.loginpage .row a {
+  display: block;
+  width: 480px;
+  padding: 7px 0;
+  color: #333;
+  font-size: 0.9em;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  background-color: #ccc;
+  transition: background-color 0.2s;
+}
+
+.loginpage .row a:hover {
+  color: #111;
+  background-color: #bbb;
+}
+
+.loginpage #confirm {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: -50px;
+  padding: 100px 50px;
+  margin: 0 auto;
+  background-color: #f7f7f7;
+}
+
+.loginpage #confirm .cancelbtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: 0;
+  background-color: #ddd;
+  padding: 7px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.loginpage #confirm .cancelbtn:hover {
+  background-color: #bbb;
+}
+
+.loginpage #confirm .text {
+  box-shadow: 0 0 20px 6px #ddd;
+}
+
+.loginpage #confirm .text:focus {
+  box-shadow: 0 0 20px 2px #C5D4DF;
+}
+
+
+/**
+ * #####################################################################
+ * Subject page
+ */
+
+.subjectpage {
+  display: none;
+}
+
+.subjectpage .inner {
+  width: 450px;
+  margin: 20px auto;
+}
+
+.subjectpage .back {
+  margin: 7px 0;
+}
+
+.subjectpage .back a {
+  font-size: 1.3em;
+  color: #555;
+  text-decoration: none;
+}
+
+.subjectpage .back a:hover {
+  color: #222;
+}
+
+.subjectpage .back a:before {
+  font-size: 1.2em;
+  color: #888;
+  padding-right: 4px;
+  content: '\2190';
+}
+
+.subjectpage .back a:hover:before {
+  color: #444;
+}
+
+.subjectpage article {
+  background-color: #fff;
+  padding: 10px 0;
+}
+
+.subjectpage .row {
+  padding: 0 15px;
+  border-left: 5px solid #BFD2E2;
+  margin: 4px 0;
+}
+
+.subjectpage .row:nth-child(4n+3) {
+  border-color: #ADDCAD;
+}
+
+.subjectpage .row:nth-child(4n+1) {
+  border-color: #D1ADDC;
+}
+
+.subjectpage .row:nth-child(4n+2) {
+  border-color: #ADC8DC;
+}
+
+.subjectpage .row:nth-child(4n) {
+  border-color: #DCD1AD;
+}
+
+.subjectpage h3 {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 1.3em;
+}
+
+.subjectpage h4 {
+  margin: 0;
+  color: #333;
+}
+
+.subjectpage .teachers {
+  padding: 2px 0 5px 10px;
+}
+
+.subjectpage .teachers li {
+  margin: 3px 0;
+}
+
+.subjectpage .teachers a {
+  font-size: 1.1em;
+}
+
+.subjectpage .groups {
+  padding: 0 0 7px 10px;
+}
+
+.subjectpage .groups li {
+  margin: 13px 0;
+}
+
+.subjectpage .groups a {
+  font-size: 1.1em;
 }

@@ -56,24 +56,27 @@ module.exports = function (app, passport) {
   app.put(   '/manage/parse/:id',   manage.clearParse);
 
   // Log in
-  app.get( '/login', users.init);
+  app.get( '/login', users.login);
   app.post('/login',
     passport.authenticate('local', {
       successRedirect: '/',
-      failureRedirect: '/login'
+      failureRedirect: '/login?wrong'
     })
   );
 
   // Sign up
-  app.get( '/signup', users.signup);
-  app.post('/signup', users.create);
+  app.get( '/signup',       users.signup);
+  app.post('/signup',       users.create);
 
   // Log out
   app.get('/logout', users.logout);
 
   // User page
-  app.all('/u*', ensureAuthenticated);
-  app.get('/u',  users.me);
+  app.all( '/u*',      ensureAuthenticated);
+  app.get( '/u',       users.me);
+  app.post('/u',       users.update);
+  app.get( '/u/group', users.selectGroup);
+  app.post('/u/group', users.addGroup);
 
   // "API"
   app.all('/api*', function(req, res, next) {
@@ -88,10 +91,11 @@ module.exports = function (app, passport) {
 
     next();
   });
-  app.get( '/api/groups',       api.getGroups);
-  app.get( '/api/teachers',     api.getTeachers);
-  app.get( '/api/schedule/:q',  api.getSchedule);
-  app.post('/api/messages',     api.sendMsg);
+  app.get( '/api/groups',      api.getGroups);
+  app.get( '/api/teachers',    api.getTeachers);
+  app.get( '/api/schedule/:q', api.getSchedule);
+  app.post('/api/messages',    api.sendMsg);
+  app.get( '/api/subject/:q',     api.getSubject);
 
   // Main page
   app.get('/*',    routes.index);
