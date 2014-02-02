@@ -182,22 +182,3 @@ exports.getSubject = function (req, res) {
   else
     return res.json(500, { error : 'Wrong request' });
 };
-
-exports.testCache = function (req, res) {
-
-  //cache.clear();
-
-  cache.get(req.path,
-    function (err, data) {
-      if(err)
-        console.log(err);
-
-      return res.json(data);
-    },
-
-    function () {
-      var obj = { data : 'roman1', time : 0 };
-      return obj;
-    }
-  );
-}

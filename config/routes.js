@@ -96,7 +96,6 @@ module.exports = function (app, passport) {
   app.get( '/api/schedule/:q', api.getSchedule);
   app.post('/api/messages',    api.sendMsg);
   app.get( '/api/subject/:q',  api.getSubject);
-  app.get( '/test/cache', api.testCache);
 
   // Main page
   app.get('/*',    routes.index);
