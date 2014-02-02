@@ -1,33 +1,57 @@
-var mongoose = require('mongoose');
-
-var week = require('../models/week.js');
+var mongoose = require('mongoose'),
+    week     = require('../models/week.js'),
+    fs       = require('fs'),
+    config   = require('../config/config')['development'],
+    cache    = require('../helpers/cache')(fs, config.cache);
 
 exports.getGroups = function (req, res) {
-  var Group   = mongoose.model('Group');
 
-  Group.getAll(function (err, group) {
-    if(err) {
-      console.log(err);
-      res.json(500, {error : { code : 500, msg : 'Unknown mistake' }});
+  cache.get(req.path,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      res.json(data);
+    },
+    function (send) {
+      var Group   = mongoose.model('Group');
+
+      Group.getAll(function (err, groups) {
+        if(err) {
+          console.log(err);
+          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+        }
+        else {
+          send(groups);
+        }
+      });
     }
-    else {
-      res.json(group);
-    }
-  });
+  );
 };
 
 exports.getTeachers = function (req, res) {
-  var Teacher   = mongoose.model('Teacher');
 
-  Teacher.getAll(function (err, teacher) {
-    if(err) {
-      console.log(err);
-      res.json(500, {error : { code : 500, msg : 'Unknown mistake' }});
+  cache.get(req.path,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      res.json(data);
+    },
+    function (send) {
+      var Teacher   = mongoose.model('Teacher');
+
+      Teacher.getAll(function (err, teacher) {
+        if(err) {
+          console.log(err);
+          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+        }
+        else {
+          send(teacher);
+        }
+      });
     }
-    else {
-      res.json(teacher);
-    }
-  });
+  );
 };
 
 exports.getSchedule = function (req, res) {
@@ -49,40 +73,56 @@ exports.getSchedule = function (req, res) {
 
       today = today.getDateOfISOWeek(w, today.getFullYear() + i);
     }
+    else
+      w = new Date().getStudyWeek();
 
-    var Group   = mongoose.model('Group'),
-        Teacher = mongoose.model('Teacher');
+    cache.get(req.path + w,
+      function (err, data) {
+        if(err)
+          console.log(err);
 
-    Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-      if(err) {
-        console.log(err);
-        res.json(500, { error : { code : 500, msg : 'Unknown mistake' }});
-      }
-      else {
-        if(group)
-          week.getSchedule(today, 'groups', group._id, function (err, data) {
-            res.json(data);
-          });
-        else {
-          Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-            if(err) {
-              console.log(err);
-              res.json(500, { error : { code : 500, msg : 'Unknown mistake' }});
-            }
+        var err = parseInt(err, 10);
+        if(err > 400)
+          res.json(err, data);
+        else
+          res.json(data);
+      },
+      function (send) {
+        var Group   = mongoose.model('Group'),
+            Teacher = mongoose.model('Teacher');
+
+        Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+          if(err) {
+            console.log(err);
+            send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+          }
+          else {
+            if(group)
+              week.getSchedule(today, 'groups', group._id, function (err, data) {
+                send(data);
+              });
             else {
-              if(teacher)
-                week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
-                  res.json(data);
-                });
-              else
-                res.json(404, { error : { code : 404, msg : 'Not found' }});
+              Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
+                if(err) {
+                  console.log(err);
+                  send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+                }
+                else {
+                  if(teacher)
+                    week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
+                      send(data);
+                    });
+                  else
+                    send({ error : { code : 404, msg : 'Not found' }}, 500);
+                }
+
+              });
             }
+          }
 
-          });
-        }
+        });
       }
-
-    });
+    );
   }
   else {
     res.json(500, { error : { code : 500, msg :'Wrong request' }});
@@ -142,3 +182,22 @@ exports.getSubject = function (req, res) {
   else
     return res.json(500, { error : 'Wrong request' });
 };
+
+exports.testCache = function (req, res) {
+
+  //cache.clear();
+
+  cache.get(req.path,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      return res.json(data);
+    },
+
+    function () {
+      var obj = { data : 'roman1', time : 0 };
+      return obj;
+    }
+  );
+}
