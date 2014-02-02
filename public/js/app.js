@@ -308,6 +308,14 @@
       });
 
       this.history = [];
+      this.schedule = {
+        urls  : [],
+        views : []
+      };
+      this.subjects = {
+        urls  : [],
+        views : []
+      };
       Backbone.history.on('route', function() { this.history.push(window.location.pathname.substr(1)); }, this);
     },
 
@@ -318,6 +326,14 @@
       }
       else
         this.navigate('', { trigger : true, replace : true });
+    },
+
+    findIn : function (obj, q) {
+      var i = 0;
+      if(obj.urls.length && ((i = obj.urls.indexOf(q)) !== -1))
+        return obj.views[i];
+
+      return false;
     },
 
     mainpage : function () {
@@ -331,7 +347,14 @@
     subject : function (q) {
       pagesCtrl.toggle('subject');
 
-      var subject = new SubjectView({ url : q });
+      var subject;
+      if(subject = this.findIn(this.subjects, q))
+        subject.render();
+      else {
+        subject = new SubjectView({ url : q });
+        this.subjects.urls.push(q);
+        this.subjects.views.push(subject);
+      }
     },
 
     search2 : function (w, q) {
@@ -348,7 +371,14 @@
 
       weekBar.set(q, w);
 
-      var schedule = new WeekView({ url : query })
+      var schedule;
+      if(schedule = this.findIn(this.schedule, query))
+        schedule.render();
+      else {
+        schedule = new WeekView({ url : query });
+        this.schedule.urls.push(query);
+        this.schedule.views.push(schedule);
+      }
     },
 
     unknown : function () {
@@ -493,17 +523,18 @@
     $("#calendar tr[data-link='w" + $('#weeknum').attr('data-week') + "']").addClass('selected');
 
     $('#calendar tbody tr').on('click', function () {
-      var navto = window.location.pathname,
+      var navto = window.location.pathname + location.hash,
           week  = $(this).attr('data-link'),
           match;
 
-
-      if(match = navto.match(/w[0-9]+/ig))
+      if(match = navto.match(/w[0-9]+/ig)) {
         navto = navto.replace(match, week);
+      }
       else
         navto += "/" + week;
 
       selectWeek(week.substr(1));
+      navto = navto.replace('#', '');
       router.navigate(navto, { trigger : true });
     });
 

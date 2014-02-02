@@ -250,7 +250,7 @@ var userSchema = new Schema({
 
 userSchema.pre('save', function (next, done) {
   if(!this.username.match(/^[0-9a-z\-\_]+$/i)) return done(new Error('Only characters, numbers, "_" and "-" in username'));
-  if(this.password.length < 3) return done(new Error('Password is too short'));
+  if(this.password.length < 4) return done(new Error('Password is too short, use more than 3 characters'));
 
   this.salt = this.makeSalt();
   this.password = this.encryptPassword(this.password);

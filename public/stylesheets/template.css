@@ -35,6 +35,7 @@ select {
   border: 1px solid #bbb;
   padding: 3px;
   width: 200px;
+  box-sizing: border-box;
 }
 
 .button {
@@ -181,13 +182,13 @@ select {
 
 .mainpage .contactform textarea {
   width: 35%;
-  height: 16px;
+  height: 25px;
   transition: height 0.3s, width 0.3s;
 }
 
 .mainpage .contactform textarea.big {
   width: 100%;
-  height: 32px;
+  height: 38px;
 }
 
 .mainpage .contactform #hiddenform {
@@ -856,7 +857,7 @@ select {
 
 .loginpage #error {
   display: block;
-  cursor: pointer;
+  /*cursor: pointer;*/
   background-color: #EABFBC;
   text-decoration: none;
   padding: 7px;
@@ -871,7 +872,6 @@ select {
 }
 
 .loginpage .row {
-  width: 500px;
   margin: 7px 0;
 }
 
@@ -880,10 +880,9 @@ select {
 }
 
 .loginpage .text {
-  width: 470px;
+  width: 100%;
   padding: 7px 5px;
   border: 0;
-  border-color: #ccc;
   box-shadow: 0 2px 6px -4px #212121;
   outline: none;
 }
@@ -895,14 +894,14 @@ select {
 
 .loginpage select {
   outline: none;
-  width: 480px;
+  width: 100%;
   padding: 3px 5px;
   margin: 3px 0;
 }
 
 .loginpage .button {
   display: block;
-  width: 480px;
+  width: 100%;
   padding: 7px 0;
   color: #333;
   outline: none;
@@ -949,10 +948,14 @@ select {
   display: none;
   position: absolute;
   top: 20px;
-  left: -50px;
-  padding: 100px 50px;
+  left: 0;
+  padding: 70px 50px 130px;
   margin: 0 auto;
   background-color: #f7f7f7;
+}
+
+.loginpage #confirm .subform {
+  width: 400px;
 }
 
 .loginpage #confirm .cancelbtn {

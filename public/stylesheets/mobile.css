@@ -1,0 +1,75 @@
+.topmenu ul {
+  width: 100%;
+}
+
+.mainpage {
+  width: 100%;
+}
+
+.mainpage .contactform textarea {
+  width: 100%;
+}
+
+.schedule .bwrap {
+  width: 100%;
+}
+
+.schedule .weekcontent {
+  width: 60%;
+}
+
+.schedule .neighbourweek {
+  width: 20%;
+}
+
+.sidebarwrap .sidebar {
+  position: absolute;
+  width: 100%;
+}
+
+.sidebarwrap .sidebar .closebtn {
+  padding: 10px 0;
+}
+
+.sidebarwrap .sidebar .list li {
+  width: 100%;
+}
+
+.subjectpage .inner {
+  width: 100%;
+}
+
+.loginpage {
+  width: 100%;
+}
+
+.loginpage .row {
+  width: 100%;
+}
+
+.loginpage .row a {
+  width: 100%;
+}
+
+.loginpage #confirm {
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 70px 0 160px;
+}
+
+.loginpage #confirm .subform {
+  box-sizing: border-box;
+  padding: 0 5px;
+  width: 100%;
+}
+
+#calendar table {
+  margin: 5px;
+  font-size: 85%;
+  height: 145px;
+}
+
+#calendar td, #calendar th {
+  padding: 3px 4px;
+}

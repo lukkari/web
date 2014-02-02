@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    User     = mongoose.model('User');
+    User     = mongoose.model('User'),
+    device   = require('../helpers/device');
 
 exports.login = function (req, res) {
 
@@ -9,8 +10,9 @@ exports.login = function (req, res) {
   var error = (req.param('wrong') !== undefined) ? true : false;
 
   res.render('users/login', {
-      title : 'Login',
-      error : error
+      title  : 'Login',
+      error  : error,
+      mobile : device.isMobile(req)
   });
 };
 
@@ -23,7 +25,8 @@ exports.signup = function (req, res) {
   res.render('users/signup', {
     title     : 'Sign up',
     user      : new User(),
-    error     : null
+    error     : null,
+    mobile    : device.isMobile(req)
   });
 
 };
@@ -46,7 +49,8 @@ exports.create = function (req, res) {
           title     : 'Sign up',
           error     : error,
           notfull   : notfull,
-          user      : user
+          user      : user,
+          mobile    : device.isMobile(req)
         });
       }
 
@@ -66,9 +70,10 @@ exports.logout = function (req, res) {
 
 exports.me = function (req, res) {
   res.render('users/profile', {
-    title : 'Edit your profile',
-    user  : req.user,
-    error : null
+    title  : 'Edit your profile',
+    user   : req.user,
+    error  : null,
+    mobile : device.isMobile(req)
   });
 };
 
@@ -93,7 +98,8 @@ exports.update = function (req, res) {
         return res.render('users/profile', {
           title     : 'Edit your profile',
           error     : error,
-          user      : req.user
+          user      : req.user,
+          mobile    : device.isMobile(req)
         });
       }
 
@@ -106,9 +112,10 @@ exports.update = function (req, res) {
   }
   else {
     return res.render('users/profile', {
-      title : 'Edit your profile',
-      user  : req.user,
-      error : 'Wrong password'
+      title  : 'Edit your profile',
+      user   : req.user,
+      error  : 'Wrong password',
+      mobile : device.isMobile(req)
     });
   }
 
@@ -128,9 +135,10 @@ exports.selectGroup = function (req, res) {
               console.log(err);
 
             return res.render('users/groupselect', {
-              title     : 'Select your group',
-              grouplist : groups,
-              curGroupId : '' + req.user.group
+              title      : 'Select your group',
+              grouplist  : groups,
+              curGroupId : '' + req.user.group,
+              mobile     : device.isMobile(req)
             });
           }
        );

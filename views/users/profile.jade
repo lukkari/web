@@ -1,0 +1,39 @@
+extends ../layouts/main
+
+block content
+  div.loginpage
+    div.homelink: a(href='/') Home
+    div.container
+      h3: label(for='username')= title
+      form(method='post' action='')
+        if error
+          a#error= error
+        form(method='post' action='')
+          div.row
+            input.text(type='text' id='username' name='username' value=user.username placeholder='Your username')
+          div.row
+            input.text(type='password' id='password' name='password' placeholder='Your new password')
+          div.row
+            input.button#toconfirm(type='button' value='Update')
+
+          h3 OR
+          div.row
+            a(href='/u/group') Select group
+
+          div#confirm
+            div.subform
+              input.cancelbtn(type='button' value='Cancel')
+              h3 Confirm yourself
+              div.row
+                input.text(type='password' id='oldpassword' name='oldpassword' placeholder='Type your old password')
+              div.row
+                input.button(type='submit' value='Proceed')
+
+    div.note You can edit your username and password using this form, if you will leave field blank it will stay the same.
+
+block footlinks
+  include ../layouts/footlinks/logged
+
+block customFoot
+  script(src='/js/libs/jquery-1.10.2.min.js')
+  script(src='/js/profile.js')

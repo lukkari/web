@@ -3,9 +3,9 @@
  * GET home page.
  */
 
-var mongoose = require('mongoose');
-
-var calendar = require('../models/calendar.js');
+var mongoose = require('mongoose'),
+    calendar = require('../models/calendar'),
+    device   = require('../helpers/device');
 
 //########################################################################
 /**
@@ -36,6 +36,7 @@ exports.index = function(req, res) {
                         calendar : dates,
                         weeknum  : weeknum,
                         weeknow  : weeknow,
-                        logged   : req.isAuthenticated()
+                        logged   : req.isAuthenticated(),
+                        mobile   : device.isMobile(req)
                       });
 };
