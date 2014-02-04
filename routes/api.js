@@ -60,6 +60,8 @@ exports.getNow = function (req, res) {
   if(search && search.length) {
     var today = new Date();
 
+    search = search.replace(/_/g, ' ');
+
     cache.get(req.path,
       function (err, data) {
         if(err)
