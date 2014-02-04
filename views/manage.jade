@@ -44,6 +44,8 @@ block content
           li Log:
             a.show(href='/manage/log' target='_blank') show
             a(href='/manage/clear/log' onclick='return confirm("Clear log?");') clear
+          li Cache:
+            a(href='/manage/clear/cache' onclick='return confirm("Clear cache?");') clear
 
       div.block
         h3 Log

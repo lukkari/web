@@ -45,6 +45,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 require(__dirname + '/helpers');
+require(__dirname + '/helpers/cache')(config.cache).clear();
 require(__dirname + '/models/dbmodels');
 require(__dirname + '/config/passport')(passport);
 

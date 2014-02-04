@@ -67,9 +67,19 @@
 #calendar table {
   margin: 5px;
   font-size: 85%;
-  height: 145px;
+  height: 147px;
 }
 
 #calendar td, #calendar th {
   padding: 3px 4px;
+}
+
+@media screen and (orientation: landscape) {
+  .schedule .bwrap {
+    width: 50%;
+  }
+
+  .sidebarwrap .sidebar .list li {
+    width: 50%;
+  }
 }

@@ -1,6 +1,7 @@
-var path = require('path');
+var path = require('path'),
+    fs   = require('fs');
 
-module.exports = function (fs, config) {
+module.exports = function (config) {
   var hashes = [],
       folder = path.resolve('./' + config.path),
       expire = config.expire;
@@ -52,35 +53,25 @@ module.exports = function (fs, config) {
     fs.readFile(folder + '/' + hashes[i], { encoding : 'utf8' }, function (err, data) {
       cb(err, JSON.parse(data));
     });
+  },
+
+  deleteData = function () {
+
+    fs.readdir(folder, function (err, files) {
+      if(err) return;
+
+      files.forEach(function (file) {
+        fs.unlinkSync(folder + '/' + file);
+      });
+    });
   };
 
-  fs.readdir(folder, function (err, files) {
-    if(err) return;
-
-    files.forEach(function (file) {
-      fs.unlinkSync(folder + '/' + file);
-    });
-  });
+  //deleteData();
 
   return {
     clear : function () {
       hashes.length = 0;
-      fs.readdir(folder, function (err, files) {
-        if(err)
-          console.log(err);
-
-        files.forEach(function (file) {
-          fs.unlink(folder + '/' + file, function (err) {
-            if(err) return;
-
-            var hash = parseInt(file, 10),
-                i    = hashes.indexOf(hash);
-
-            if(i === -1) return;
-            hashes.splice(i, 1);
-          });
-        });
-      });
+      deleteData();
     },
 
     get : function (url, cb, add) {

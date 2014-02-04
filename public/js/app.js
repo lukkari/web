@@ -176,24 +176,27 @@
           subjects = [];
       data.subjects.forEach(function (e) {
         if(prev) {
-          var date  = new Date(e.date),
+          var date  = new Date(e.days[0].date),
               pdate = new Date(prev.date),
               dur   = date.getHours() - pdate.getHours() - prev.duration;
 
           if(dur > 0)
             subjects.push({
               rest     : true,
-              duration : dur,
-              date     : new Date(date.getFullYear(),
-                                  date.getMonth(),
-                                  date.getDate(),
-                                  pdate.getHours() + prev.duration,
-                                  15
-                                 )
+              days     : [{
+                duration : dur,
+                date : new Date(date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate(),
+                                pdate.getHours() + prev.duration,
+                                15
+                               )
+              }]
             });
         }
+
         subjects.push(e);
-        prev = e;
+        prev = e.days[0];
       });
 
       data.subjects = subjects;
@@ -370,6 +373,7 @@
         query += '?w=' + w;
 
       weekBar.set(q, w);
+      $('#nowlink').attr('href', '/' + q + '/now');
 
       var schedule;
       if(schedule = this.findIn(this.schedule, query))
@@ -574,7 +578,7 @@
     }
   });
 
-  $('.topmenu li a').on('click', function (e) {
+  $('.topmenu li a:not(.helpmenutoggle)').on('click', function (e) {
     e.preventDefault();
     sideBar.show($(this).attr('id') + 'List');
   });
@@ -582,6 +586,17 @@
   $('.weekcontent').on('click', function (e) {
     e.preventDefault();
     $('#calendar').slideToggle('fast');
+  });
+
+  // helpmenu
+  $('.helpmenutoggle').on('click', function (e) {
+    e.preventDefault();
+    $('.helpmenu').slideToggle('fast');
+  });
+
+  $(document).on('click', function (e) {
+    if($(e.target).is('.helpmenutoggle')) return;
+    else $('.helpmenu').slideUp('fast');
   });
 
   // Contacts form

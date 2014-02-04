@@ -80,23 +80,26 @@ module.exports = function (app, passport) {
 
   // "API"
   app.all('/api*', function(req, res, next) {
-    if(!req.xhr) return res.json(null);
+    if(!req.xhr) return res.json('Only xhr requests');
 
     /**
      * For CORS
      *
     res.header('Access-Control-Allow-Origin',  req.headers.origin || "*");
     res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');*/
+    res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
+     */
 
     next();
   });
-  app.get( '/api/groups',      api.getGroups);
-  app.get( '/api/teachers',    api.getTeachers);
-  app.get( '/api/schedule/:q', api.getSchedule);
-  app.post('/api/messages',    api.sendMsg);
-  app.get( '/api/subject/:q',  api.getSubject);
+  app.get( '/api/groups',          api.getGroups);
+  app.get( '/api/teachers',        api.getTeachers);
+  app.get( '/api/schedule/:q',     api.getSchedule);
+  app.get( '/api/schedule/now/:q', api.getNow);
+  app.post('/api/messages',        api.sendMsg);
+  app.get( '/api/subject/:q',      api.getSubject);
 
   // Main page
-  app.get('/*',    routes.index);
+  app.get('/:q/now', routes.getNow);
+  app.get('/*',      routes.index);
 };

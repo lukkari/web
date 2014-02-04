@@ -9,7 +9,8 @@
      ic       = new iconv.Iconv('ISO-8859-1', 'utf-8'),
      async    = require('async'),
      fs       = require('fs'),
-     config   = require('../config/config')['development'];
+     config   = require('../config/config')['development'],
+     cache    = require('../helpers/cache')(config.cache);
 
 
 var parser   = require('../models/parser.js');
@@ -181,6 +182,11 @@ exports.clearModel = function (req, res) {
       fs.writeFile(__dirname + '/..' + config.log.path, '', function (err) {
         res.redirect('/manage');
       });
+      break;
+
+    case 'cache':
+      cache.clear();
+      res.redirect('/manage');
       break;
 
     default:

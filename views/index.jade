@@ -1,10 +1,20 @@
 extends ./layouts/main
 
 block content
+  div.helpmenu
+    ul
+      li: a(href='/' data-local) Home
+      li: a#nowlink(href='/') Today schedule
+      if logged
+        li: a(href='/u') Profile
+      else
+        li: a(href='/login') Login
+
   div.topmenu
     ul
       li: a#group(href='/' data-ref='Groups') Groups
       li: a#teacher(href='/' data-ref='Teachers') Teachers
+      li: a.helpmenutoggle(href='/') Links
 
 
   div.subjectpage
@@ -29,9 +39,16 @@ block content
         b Choose week
         div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
 
+        b Select today schedule
+        div.info After selecting your group schedule, you can access today schedule by clicking on links and then on today schedule link.
+          small  [made for mobiles]
+
       h4 Save links
       div.subblock You can save link and access it at any time. You will always see your current week timetable.
         div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
+
+      h4 Mistakes
+      div.subblock If you found some mistakes in schedule, please contact me as soon as possible in the form below.
 
       h4 Contacts
       div.subblock If you have any suggestions or questions, please, contact me.
@@ -41,6 +58,9 @@ block content
           div#hiddenform
             input.text#replyto(type='text' placeholder='Reply to or at least your name')
             input.button#send(type='button' value='Send')
+
+      div.subblock
+        div.note If you want to use API to fetch schedule, also contact me using this form.
 
   div.schedule
     article

@@ -40,3 +40,15 @@ exports.index = function(req, res) {
                         mobile   : device.isMobile(req)
                       });
 };
+
+exports.getNow = function(req, res) {
+
+  res.render('now', {
+                      title  : req.params.q + ' - now',
+                      link   : req.params.q,
+                      mobile : true,
+                      logged : req.isAuthenticated()
+                    }
+  );
+
+};

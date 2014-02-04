@@ -1,7 +1,10 @@
+* {
+  outline: none;
+}
+
 body {
   padding: 0;
   margin: 0;
-  background-color: #fff;
   font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #e9e9e9;
 }
@@ -87,11 +90,38 @@ select {
   border-radius: 3px;
 }
 
+.note {
+  background-color: #ddd;
+  border: 1px solid #bbb;
+  color: #555;
+  font-size: 0.9em;
+  padding: 5px;
+}
+
 
 /**
  * TOP MENU
  *
-**/
+ */
+
+.helpmenu {
+  display: none;
+  width: 100%;
+  background-color: #555;
+}
+
+.helpmenu li > a {
+  display: block;
+  color: #eee;
+  text-decoration: none;
+  font-size: 1.2em;
+  text-align: center;
+  padding: 7px 0;
+}
+
+.helpmenu li > a:hover {
+  background-color: #666;
+}
 
 .topmenu {
   width: 100%;
@@ -107,7 +137,11 @@ select {
 
 .topmenu ul > li {
   float: left;
-  width: 50%;
+  width: 40%;
+}
+
+.topmenu ul > li:last-child {
+  width: 20%;
 }
 
 .topmenu ul > li > a {
@@ -126,6 +160,17 @@ select {
 
 .topmenu ul > li > a:hover {
   background-color: #ecf0f1;
+}
+
+.topmenu ul > li > a.helpmenutoggle {
+  color: #000;
+  background-color: #eee;
+  transition: background-color 0.2s;
+}
+
+.topmenu ul > li > a.helpmenutoggle:hover {
+  color: #eee;
+  background-color: #555;
 }
 
 /**
@@ -191,8 +236,17 @@ select {
   height: 38px;
 }
 
+.mainpage .contactform textarea:focus, .mainpage .contactform .text:focus {
+  border-color: #555;
+}
+
 .mainpage .contactform #hiddenform {
   display: none;
+}
+
+.mainpage .contactform .button {
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 
@@ -855,6 +909,10 @@ select {
   border: 1px solid #E7C92D;
 }
 
+.loginpage .note {
+  margin-top: 15px;
+}
+
 .loginpage #error {
   display: block;
   /*cursor: pointer;*/
@@ -911,15 +969,6 @@ select {
 .loginpage .button:hover {
   color: #000;
   background-color: #97B7CD;
-}
-
-.loginpage .note {
-  background-color: #ddd;
-  border: 1px solid #bbb;
-  color: #555;
-  font-size: 0.9em;
-  padding: 5px;
-  margin-top: 15px;
 }
 
 .loginpage form h3 {
@@ -1081,4 +1130,51 @@ select {
 
 .subjectpage .groups a {
   font-size: 1.1em;
+}
+
+/**
+ * Now page
+ *
+ */
+
+.nowpage {
+  width: 100%;
+}
+
+.nowpage header a {
+  display: block;
+  padding: 10px 0;
+  text-align: center;
+  background-color: #f3f3f3;
+  box-shadow: 0 -4px 4px 4px #555;
+  color: #000;
+  text-decoration: none;
+  font-size: 1.2em;
+  transition: background-color 0.2s;
+}
+
+.nowpage header a:hover {
+  background-color: #B6D4E7;
+}
+
+.nowpage .schedule {
+  margin-top: 15px;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.nowpage .schedule .weekday {
+  background-color: #3498D8;
+  border-radius: 0;
+}
+
+.nowpage .schedule .ended {
+  opacity: 0.4;
+}
+
+.nowpage .schedule .now {
+  box-shadow: inset 6px 0 0 -4px rgba(39,174,96,1);
+  background-color: #EDFCF4;
 }
