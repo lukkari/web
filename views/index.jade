@@ -87,7 +87,7 @@ block content
                       - var tdClass = (day.old > 0) ? 'old' : ''
                       td(class=tdClass) #{day.day}
 
-          div.klear
+        div.klear
 
         div.weekselector
           a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
@@ -122,9 +122,7 @@ block customFoot
   script#weekdayTemplate(type='text/html')
     div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
       div.weekday <%= weekday.name %>
-        div.date
-          div.day <%= date.day %>
-          div.month <%= getMonth(date.month) %>
+        span.date <%= date.day %> <%= getMonth(date.month) %>
 
       div.container
         <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>

@@ -319,7 +319,9 @@
         urls  : [],
         views : []
       };
-      Backbone.history.on('route', function() { this.history.push(window.location.pathname.substr(1)); }, this);
+      Backbone.history.on('route', function() {
+          this.history.push(window.location.pathname.substr(1) + window.location.hash);
+        }, this);
     },
 
     back : function () {
