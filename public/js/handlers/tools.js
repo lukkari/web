@@ -99,7 +99,6 @@
         },
         docH    = $(document).height(),
         prev    = null,
-        handled = false,
 
     show = function (id) {
       prev && $list[prev].hide();
