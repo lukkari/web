@@ -1,19 +1,20 @@
 extends ./layouts/main
 
 block content
-  div.helpmenu
-    ul
-      li: a(href='/' data-local) Home
-      if logged
-        li: a(href='/u') Profile
-      else
-        li: a(href='/login') Login
+  header
+    div.helpmenu
+      ul
+        li: a(href='/' data-local) Home
+        if logged
+          li: a(href='/u') Profile
+        else
+          li: a(href='/login') Login
 
-  div.topmenu
-    ul
-      li: a#group(href='/' data-ref='Groups') Groups
-      li: a#teacher(href='/' data-ref='Teachers') Teachers
-      li: a.helpmenutoggle(href='/') Links
+    div.topmenu
+      ul
+        li: a#group(href='/' data-ref='Groups') Groups
+        li: a#teacher(href='/' data-ref='Teachers') Teachers
+        li: a.helpmenutoggle(href='/') Links
 
 
   div.subjectpage
@@ -62,6 +63,8 @@ block content
 
   div.schedule
     article
+      div.title: h2#scheduleTitle
+
       div.weekblock
         div#calendar
           each month in calendar

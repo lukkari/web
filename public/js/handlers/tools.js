@@ -148,6 +148,10 @@
         $nextweek.attr('href', q + '/w' + (+w + 1));
 
         app.calendar.select(w);
+      },
+
+      getWeekNum : function () {
+        return $weeknum.attr('data-week');
       }
     }
   }();

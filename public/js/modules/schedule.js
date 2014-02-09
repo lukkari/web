@@ -22,9 +22,9 @@
       return d.getHours() + ':' + d.getMinutes();
     },
 
-    getMonth : function (date) {
-      var d = new Date(date);
-      return months[d.getMonth()];
+    getMonth : function (m) {
+      if(m < 0) return 'Unknown';
+      return months[m];
     },
 
     toUrl : function (name) {
@@ -50,7 +50,7 @@
   window.app = window.app || {};
 
   window.app.WeekDay = Backbone.Model.extend({
-    defaults   : {
+    defaults : {
       week     : '',
       weekday  : '',
       date : {
@@ -62,14 +62,20 @@
   });
 
   window.app.Week = Backbone.Collection.extend({
-    model : app.WeekDay,
-    url   : '/api/schedule/',
+    model : app.WeekDay
+  });
+
+  window.app.Schedule = Backbone.Model.extend({
+    defaults : {
+      title    : '',
+      error    : null,
+      weekdays : []
+    },
+    urlRoot : '/api/schedule/',
 
     initialize : function (options) {
       options || (options = {});
-      this.url += options.url;
-
-      return this.fetch();
+      this.urlRoot += options.url;
     }
   });
 
@@ -87,7 +93,7 @@
       this.editable = options.editable;
     },
 
-    render    : function () {
+    render : function () {
 
       var tmpl = _.template(this.template),
           data = this.model.toJSON();
@@ -139,34 +145,21 @@
     noTmpl       : $('#noDays').html(),
     editable     : false,
 
-    initialize : function (options) {
+    initialize : function (data, options) {
+      data    || (data = {});
       options || (options = {});
       this.editable = options.editable || false;
-      this.collection = new app.Week(options);
-
-      var that = this;
-      this.collection.fetch({
-        success : function () {
-          that.render();
-        },
-
-        error   : function () {
-          that.showErr();
-        }
-      });
+      this.collection = new app.Week(data, options);
     },
 
     render : function () {
       var that = this;
 
-      if(this.collection.models.length < 2) this.showNoClasses();
-      else {
-        this.$el.empty();
-        _.each(this.collection.models, function (item) {
-          that.renderWeekDay(item);
-        }, this);
-        app.alignDays();
-      }
+      this.$el.empty();
+      _.each(this.collection.models, function (item) {
+        that.renderWeekDay(item);
+      }, this);
+      app.alignDays();
 
       return this;
     },
@@ -189,6 +182,48 @@
         editable : this.editable
       });
       this.$el.append(weekDayView.render().el);
+    }
+
+  });
+
+  window.app.ScheduleView = Backbone.View.extend({
+
+    model  : null,
+    week   : null,
+    $title : $('#scheduleTitle'),
+
+    initialize : function (options) {
+      options || (options = {});
+      this.model = new app.Schedule(options);
+
+      var that = this;
+      this.model.fetch({
+        success : function () {
+          that.week = new app.WeekView(that.model.attributes.weekdays, options);
+          that.render();
+        },
+
+        error   : function () {
+          that.week = new app.WeekView(null, options);
+          that.showErr();
+        }
+      });
+    },
+
+    render : function () {
+      this.$title.text(this.model.attributes.title);
+      this.week.render();
+
+      return this;
+    },
+
+    showErr : function () {
+      this.$title.text('');
+      this.week.showErr();
+    },
+
+    getTitle : function () {
+      return this.$title.text();
     }
 
   });

@@ -99,17 +99,16 @@
 
       var query = q;
 
-      if(w)
-        query += '?w=' + w;
-
       app.weekBar.set(q, w);
+      query += '?w=' + app.weekBar.getWeekNum();
+
       $('#nowlink').attr('href', '/' + q + '/now');
 
       var schedule;
       if(schedule = this.findIn(this.schedule, query))
         schedule.render();
       else {
-        schedule = new app.WeekView({ url : query });
+        schedule = new app.ScheduleView({ url : query });
         this.schedule.urls.push(query);
         this.schedule.views.push(schedule);
       }

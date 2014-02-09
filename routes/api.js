@@ -167,7 +167,7 @@ exports.getSchedule = function (req, res) {
         else {
           if(group)
             week.getSchedule(today, 'groups', group._id, function (err, data) {
-              send(data);
+              send({ title : group.name, weekdays : data });
             });
           else {
             Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
@@ -178,7 +178,7 @@ exports.getSchedule = function (req, res) {
               else {
                 if(teacher)
                   week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
-                    send(data);
+                    send({ title : teacher.name, weekdays : data });
                   });
                 else
                   send({ error : { code : 404, msg : 'Not found' }}, 404);
