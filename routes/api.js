@@ -55,64 +55,61 @@ exports.getTeachers = function (req, res) {
 };
 
 exports.getNow = function (req, res) {
+
   var search = req.params.q;
 
-  if(search && search.length) {
-    var today = new Date();
+  if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
 
-    search = search.replace(/_/g, ' ');
+  var today = new Date();
+  search = search.replace(/_/g, ' ');
 
-    cache.get(req.path,
-      function (err, data) {
-        if(err)
+  cache.get(req.path,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      var err = parseInt(err, 10);
+      if(err > 400)
+        res.json(err, data);
+      else
+        res.json(data);
+    },
+    function (send) {
+      var Group   = mongoose.model('Group'),
+          Teacher = mongoose.model('Teacher');
+
+      Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+        if(err) {
           console.log(err);
-
-        var err = parseInt(err, 10);
-        if(err > 400)
-          res.json(err, data);
-        else
-          res.json(data);
-      },
-      function (send) {
-        var Group   = mongoose.model('Group'),
-            Teacher = mongoose.model('Teacher');
-
-        Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-          if(err) {
-            console.log(err);
-            send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
-          }
+          send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+        }
+        else {
+          if(group)
+            weekday.getSubjects(today, 'groups', group._id, function (err, data) {
+              send(data);
+            });
           else {
-            if(group)
-              weekday.getSubjects(today, 'groups', group._id, function (err, data) {
-                send(data);
-              });
-            else {
-              Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-                if(err) {
-                  console.log(err);
-                  send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
-                }
-                else {
-                  if(teacher)
-                    weekday.getSubjects(today, 'teachers', teacher._id, function (err, data) {
-                      send(data);
-                    });
-                  else
-                    send({ error : { code : 404, msg : 'Not found' }}, 500);
-                }
+            Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
+              if(err) {
+                console.log(err);
+                send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+              }
+              else {
+                if(teacher)
+                  weekday.getSubjects(today, 'teachers', teacher._id, function (err, data) {
+                    send(data);
+                  });
+                else
+                  send({ error : { code : 404, msg : 'Not found' }}, 500);
+              }
 
-              });
-            }
+            });
           }
+        }
 
-        });
-      }
-    );
-  }
-  else {
-    res.json(500, { error : { code : 500, msg :'Wrong request' }});
-  }
+      });
+    }
+  );
 };
 
 exports.getSchedule = function (req, res) {
@@ -121,73 +118,79 @@ exports.getSchedule = function (req, res) {
       w      = req.param('w');
 
 
-  if(search && search.length) {
+  if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
 
-    search = search.replace(/_/g, ' ');
+  search = search.replace(/_/g, ' ');
+  var today = new Date();
 
-    var today = new Date();
+  if(w !== undefined) {
+    var i = 0;
+    if(today.getStudyWeek() > (w + 35))
+      i = 1;
 
-    if(w !== undefined) {
-      var i = 0;
-      if(today.getStudyWeek() > (w + 35))
-        i = 1;
+    today = today.getDateOfISOWeek(w, today.getFullYear() + i);
+  }
+  else
+    w = new Date().getStudyWeek();
 
-      today = today.getDateOfISOWeek(w, today.getFullYear() + i);
-    }
-    else
-      w = new Date().getStudyWeek();
+  if(search.toLowerCase() === 'my') {
 
-    cache.get(req.path + w,
-      function (err, data) {
-        if(err)
+    if(!req.isAuthenticated()) return res.json(404, { error : { code : 404, msg : 'Not found' }});
+
+    week.getSchedule(today, 'groups', req.user.group, function (err, data) {
+      return res.json(data);
+    });
+
+    return;
+  }
+
+  cache.get(req.path + w,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      var err = parseInt(err, 10);
+      if(err > 400)
+        res.json(err, data);
+      else
+        res.json(data);
+    },
+    function (send) {
+      var Group   = mongoose.model('Group'),
+          Teacher = mongoose.model('Teacher');
+
+      Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+        if(err) {
           console.log(err);
-
-        var err = parseInt(err, 10);
-        if(err > 400)
-          res.json(err, data);
-        else
-          res.json(data);
-      },
-      function (send) {
-        var Group   = mongoose.model('Group'),
-            Teacher = mongoose.model('Teacher');
-
-        Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-          if(err) {
-            console.log(err);
-            send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
-          }
+          send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+        }
+        else {
+          if(group)
+            week.getSchedule(today, 'groups', group._id, function (err, data) {
+              send(data);
+            });
           else {
-            if(group)
-              week.getSchedule(today, 'groups', group._id, function (err, data) {
-                send(data);
-              });
-            else {
-              Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-                if(err) {
-                  console.log(err);
-                  send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
-                }
-                else {
-                  if(teacher)
-                    week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
-                      send(data);
-                    });
-                  else
-                    send({ error : { code : 404, msg : 'Not found' }}, 500);
-                }
+            Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
+              if(err) {
+                console.log(err);
+                send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+              }
+              else {
+                if(teacher)
+                  week.getSchedule(today, 'teachers', teacher._id, function (err, data) {
+                    send(data);
+                  });
+                else
+                  send({ error : { code : 404, msg : 'Not found' }}, 404);
+              }
 
-              });
-            }
+            });
           }
+        }
 
-        });
-      }
-    );
-  }
-  else {
-    res.json(500, { error : { code : 500, msg :'Wrong request' }});
-  }
+      });
+    }
+  );
 
 };
 
@@ -197,21 +200,20 @@ exports.sendMsg = function (req, res) {
       from = encodeURI(req.param('from'));
 
   if(text.length < 2)
-    res.json(200, 'success');
-  else {
+    return res.json(200, 'success');
 
-    var Contact = mongoose.model('Contact'),
-        contact = new Contact({ message : text, from : from });
+  var Contact = mongoose.model('Contact'),
+      contact = new Contact({ message : text, from : from });
 
-    contact.save(function (err) {
-      if(err) {
-        console.log(err);
-        res.json(500, 'error');
-      }
-      else
-        res.json(200, 'success');
-    });
-  }
+  contact.save(function (err) {
+    if(err) {
+      console.log(err);
+      res.json(500, 'error');
+    }
+    else
+      res.json(200, 'success');
+  });
+
 };
 
 exports.getSubject = function (req, res) {

@@ -14,7 +14,10 @@ html
 
       div.footer
         span.footlinks
-          block footlinks
+          if logged
+            include ./footlinks/logged
+          else
+            include ./footlinks/unlogged
         span by
           a(href='https://github.com/zaynetro' target='_blank') zaynetro
           | 2014

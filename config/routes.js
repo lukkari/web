@@ -5,7 +5,7 @@ var routes = require('../routes/'),
 
 
 function handleManage(req, res) {
-  if(req.originalUrl.indexOf('manage')) {
+  if(req.originalUrl.indexOf('manage') !== -1) {
     routes.index(req, res);
     return true;
   }
@@ -14,12 +14,9 @@ function handleManage(req, res) {
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
+  if (req.isAuthenticated()) return next();
 
-  if(handleManage(req, res))
-    return;
+  if(handleManage(req, res)) return;
 
   res.set('X-Auth-Required', 'true');
   //res.redirect('/login/?returnTo=' + encodeURIComponent(req.originalUrl));
@@ -27,11 +24,9 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function ensureAdmin(req, res, next) {
-  if(req.user.roles.admin)
-    return next();
+  if(req.user.roles.admin) return next();
 
-  if(handleManage(req, res))
-    return;
+  if(handleManage(req, res)) return;
 
   res.set('X-Auth-Required', 'true');
   //res.redirect('/login/?returnTo=' + encodeURIComponent(req.originalUrl));
@@ -54,6 +49,8 @@ module.exports = function (app, passport) {
   app.get(   '/manage/parse/:id',   manage.runParse);
   app.delete('/manage/parse/:id',   manage.deleteParse);
   app.put(   '/manage/parse/:id',   manage.clearParse);
+
+  app.post('/manage/building', manage.addBuilding);
 
   // Log in
   app.get( '/login', users.login);
@@ -98,6 +95,10 @@ module.exports = function (app, passport) {
   app.get( '/api/schedule/now/:q', api.getNow);
   app.post('/api/messages',        api.sendMsg);
   app.get( '/api/subject/:q',      api.getSubject);
+
+  // Experiments
+  app.get('/editor', ensureAuthenticated);
+  app.get('/editor', routes.editor);
 
   // Main page
   app.get('/:q/now', routes.getNow);

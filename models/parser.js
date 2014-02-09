@@ -125,7 +125,7 @@ var parser = function () {
       return true;
     },
 
-    doStaff: function (url, callback) {
+    doStaff: function (url, house, callback) {
       if(url.length < 2)
         return callback('Url is too short');
 
@@ -148,64 +148,70 @@ var parser = function () {
               return false;
             }
 
-            var result = {
-              rooms    : [],
-              teachers : [],
-              groups   : []
-            }, tmp, tmp2, i, j;
+            var count = {
+              groups   : 0,
+              teachers : 0,
+              rooms    : 0
+            }, tmp, tmp2, i = -1, j;
 
-            i = -1;
-            window.$('td[bgcolor]').each( function () {
-              tmp = window.$(this).find('b').eq(0).text();
+            window.$('td[bgcolor], td[size], td[valign]').each( function () {
+              tmp = window.$(this).find('b').eq(0).text().trim();
 
-              if(i > 2)
-                return;
+              if(i > 2) return;
 
               var Group   = mongoose.model('Group'),
                   Teacher = mongoose.model('Teacher'),
                   Room    = mongoose.model('Room');
 
-              if(tmp.length > 0)
-                i += 1;
+              if(tmp.length > 0) i += 1;
               else {
                 tmp2 = window.$(this).find('a').eq(0).text().trim();
                 // Put elements to array in chronological order
                 switch(i) {
                   case 0:
-                    var group = new Group({ name: tmp2 });
+                    var group = new Group({
+                      name     : tmp2,
+                      building : house
+                    });
                     group.save(function (err, group, num) {
                       if(err)
                         console.log(err);
+
+                      count.groups += 1;
                     });
-                    result.groups.push(tmp2);
                     break;
 
                   case 1:
-                    var teacher = new Teacher({ name: tmp2 });
+                    var teacher = new Teacher({
+                      name     : tmp2,
+                      building : house
+                    });
                     teacher.save(function (err, teacher, num) {
                       if(err)
                         console.log(err);
+
+                      count.teachers += 1;
                     });
-                    result.teachers.push(tmp2);
                     break;
 
                   case 2:
-                    var room = new Room({ name: tmp2 });
+                    var room = new Room({
+                      name     : tmp2,
+                      building : house
+                    });
                     room.save(function (err, room, num) {
                       if(err)
                         console.log(err);
-                    });
-                    result.rooms.push(tmp2);
-                    break;
 
-                  default:
+                      count.rooms += 1;
+                    });
                     break;
                 }
+                console.log(i + '-' +tmp2);
               }
             });
 
-            callback(false, result);
-            return true;
+            return callback(false, count);
           }
         );
       });

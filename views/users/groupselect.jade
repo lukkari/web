@@ -4,16 +4,13 @@ block content
   div.loginpage
     div.homelink: a(href='/') Home
     div.container
+      div.row: a(href='/u') Profile
       h3: label(for='username')= title
       form(method='post' action='')
         div.row
           select(name='group' id='group')
-              each group in grouplist
-                - var selected = (group.id === curGroupId);
-                option(value=group.id selected=selected)= group.name
+            each group in grouplist
+              - var selected = (group.id === curGroupId);
+              option(value=group.id selected=selected)=group.name
         div.row
           input.button(type='submit' value='Proceed')
-
-
-block footlinks
-  include ../layouts/footlinks/logged

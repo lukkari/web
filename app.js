@@ -13,7 +13,7 @@ var express    = require('express'),
     config     = require('./config/config')['development'],
     mongoose   = require('mongoose'),
     logPath    = __dirname + config.log.path,
-    logfile    = fs.createWriteStream(logPath, {flags: 'a'}),
+    logfile    = fs.createWriteStream(logPath, {flags: 'a+'}),
     loggingOptions = {
       format : config.log.format,
       stream : logfile

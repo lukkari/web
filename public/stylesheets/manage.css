@@ -113,6 +113,10 @@ body {
   width: 150px;
 }
 
+.manage .addparseform input.small {
+  width: 70px;
+}
+
 .manage .addparseform select {
   margin: 3px;
 }

@@ -92,16 +92,15 @@
      .done(function (data) {
       $that.children('.long')
            .addClass('done')
-           .delay(2000)
-           .queue(function () {
-            $(this).removeClass('done');
-            $(this).val('');
-           });
-      console.log(data);
+           .val('');
      })
      .fail(function (data) {
        $('#error').text(data.responseText);
      });
+  });
+
+  $('#addparse').children('.long').on('focus', function () {
+    $(this).removeClass('done');
   });
 
 })(jQuery);

@@ -18,20 +18,22 @@ parser.init(request, jsdom, ic);
 
 exports.index = function (req, res) {
 
-  var Room    = mongoose.model('Room'),
-      Group   = mongoose.model('Group'),
-      Teacher = mongoose.model('Teacher'),
-      Parse   = mongoose.model('Parse'),
-      Subject = mongoose.model('Subject'),
-      User    = mongoose.model('User'),
-      Contact = mongoose.model('Contact'),
+  var Room     = mongoose.model('Room'),
+      Group    = mongoose.model('Group'),
+      Teacher  = mongoose.model('Teacher'),
+      Parse    = mongoose.model('Parse'),
+      Subject  = mongoose.model('Subject'),
+      User     = mongoose.model('User'),
+      Contact  = mongoose.model('Contact'),
+      Building = mongoose.model('Building'),
       count = {
-        rooms    : 0,
-        groups   : 0,
-        teachers : 0,
-        parses   : 0,
-        subjects : 0,
-        users    : 0
+        rooms     : 0,
+        groups    : 0,
+        teachers  : 0,
+        parses    : 0,
+        subjects  : 0,
+        users     : 0,
+        buildings : 0
       },
       messages;
 
@@ -114,6 +116,17 @@ exports.index = function (req, res) {
 
                   cb(null, true);
                })
+      },
+
+      function (cb) {
+        Building.count({}, function (err, num) {
+          if(err)
+            console.log(err);
+          else
+            count.buildings = num;
+
+          cb(null, true);
+        });
       }
 
     ],
@@ -131,7 +144,8 @@ exports.index = function (req, res) {
                 + ' GMT' + (date.getTimezoneOffset() / 60),
         week  : date.getStudyWeek(),
         count : count,
-        messages : messages
+        messages : messages,
+        logged : true
       });
     }
   );
@@ -189,6 +203,10 @@ exports.clearModel = function (req, res) {
       res.redirect('/manage');
       break;
 
+    case 'buildings':
+      doClear(mongoose.model('Building'));
+      break;
+
     default:
       res.redirect('/manage');
   }
@@ -209,11 +227,13 @@ exports.parse = function(req, res) {
   if(error)
     error = error.replace(/_/g, ' ');
 
-  var Group = mongoose.model('Group'),
-      Parse = mongoose.model('Parse'),
-      list = {
-        groups : [],
-        parses : []
+  var Group    = mongoose.model('Group'),
+      Parse    = mongoose.model('Parse'),
+      Building = mongoose.model('Building'),
+      list     = {
+        groups    : [],
+        parses    : [],
+        buildings : []
       }
 
   async.parallel([
@@ -240,6 +260,19 @@ exports.parse = function(req, res) {
               cb(false, null);
             }
           });
+      },
+
+      function (cb) {
+        Building.find({})
+          .sort({ name : 1 })
+          .exec(function (err, buildings) {
+            if(err)
+              console.log(err);
+            else {
+              list.buildings = buildings;
+              cb(false, null);
+            }
+          });
       }
     ],
 
@@ -248,7 +281,9 @@ exports.parse = function(req, res) {
                             title     : 'Parse',
                             grouplist : list.groups,
                             parselist : list.parses,
-                            error     : error
+                            buildings : list.buildings,
+                            error     : error,
+                            logged    : true
                           });
     }
   );
@@ -285,7 +320,8 @@ exports.addParse = function (req, res) {
 
 exports.staffParse = function (req, res) {
 
-  var url = req.body.link;
+  var url   = req.body.link,
+      house = req.body.building;
 
   function returnRes(err) {
     if(req.xhr) {
@@ -300,13 +336,14 @@ exports.staffParse = function (req, res) {
     }
   }
 
-  if(!url || !url.length)
+  if(!url || !url.length || !house)
     return returnRes('empty');
 
-  parser.doStaff(url, function (err, result) {
-    var addon = '';
+  parser.doStaff(url, house, function (err, result) {
     if(err)
       console.log(err);
+
+    console.log(result);
 
     return returnRes(err);
   });
@@ -468,4 +505,18 @@ exports.clearParse = function (req, res) {
 
   });
 
+};
+
+
+exports.addBuilding = function (req, res) {
+
+  var Building = mongoose.model('Building'),
+      building = new Building(req.body);
+
+  building.save(function (err) {
+    if(err)
+      console.log(err);
+
+    return res.redirect('/manage');
+  });
 };

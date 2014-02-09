@@ -4,7 +4,6 @@ block content
   div.helpmenu
     ul
       li: a(href='/' data-local) Home
-      li: a#nowlink(href='/') Today schedule
       if logged
         li: a(href='/u') Profile
       else
@@ -32,9 +31,8 @@ block content
       h4 Basics
       div.subblock
         b Choose schedule
-        div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher.
-          s To filter list start typing group name or teacher.
-          | You can quickly access your teachers timetable by clicking on them in your schedule.
+        div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher. To filter list start typing group name or teacher. You can quickly access your teachers timetable by clicking on them in your schedule.
+          i  Search by room is planned.
 
         b Choose week
         div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
@@ -50,14 +48,14 @@ block content
       h4 Mistakes
       div.subblock If you found some mistakes in schedule, please contact me as soon as possible in the form below.
 
-      h4 Contacts
-      div.subblock If you have any suggestions or questions, please, contact me.
-        div.contactform
-          div.success#sent Thank you for texting me
-          textarea.text#message(placeholder='Input your message')
-          div#hiddenform
-            input.text#replyto(type='text' placeholder='Reply to or at least your name')
-            input.button#send(type='button' value='Send')
+    h3 Contacts
+    div.block If you have any suggestions or questions, please, contact me.
+      div.contactform
+        div.success#sent Thank you for texting me
+        textarea.text#message(placeholder='Input your message')
+        div#hiddenform
+          input.text#replyto(type='text' placeholder='Reply to or at least your name')
+          input.button#send(type='button' value='Send')
 
       div.subblock
         div.note If you want to use API to fetch schedule, also contact me using this form.
@@ -87,7 +85,7 @@ block content
                       - var tdClass = (day.old > 0) ? 'old' : ''
                       td(class=tdClass) #{day.day}
 
-        div.klear
+          div.klear
 
         div.weekselector
           a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
@@ -107,15 +105,7 @@ block content
       a.closebtn(href='/') Close
       div.container
         div#groupList
-          div.search
-            input.text#groupFilter(type='text' placeholder='Type to filter groups')
-          div.list
-
         div#teacherList
-          div.search
-            input.text#teacherFilter(type='text' placeholder='Type to filter teachers')
-          div.list
-      div.klear
 
 
 block customFoot
@@ -127,6 +117,12 @@ block customFoot
       div.container
         <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
         div.subject
+          <% if(editable) { %>
+          div.controlbar
+            a.editlink(href='/') Edit
+            a.removelink(href='/') Remove
+          <% } %>
+
           div.time
             div.hour <%= getTime(subject.days) %>
             div.duration
@@ -159,10 +155,52 @@ block customFoot
 
         <% }); %><% } else { %>
         div.noclasses No classes
+        <% } if (editable) { %>
+        div.addsubject: button Add
         <% } %>
 
+  script#subjectEditTemplate(type='type/html')
+    div.time
+      div.hour <%= getTime(subject.days) %>
+      div.duration
+        span(class!='dur-<%= getDur(subject.days) %>')
+          i#duration <%= getDur(subject.days) %>
+          u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
+
+    div.info
+      div.inner
+        div.name
+          <% if(subject.rest) { %>
+          div.resttext Break
+          <% } else { %>
+          a(href!='/subject/<%= toUrl(subject.name) %>' data-local) <%= subject.name %>
+          <% } %>
+
+        div.room <%= getRooms(subject.rooms) %>
+
+        ul.teachers
+          <% _.each(subject.teachers, function (teacher) { %>
+          li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
+          <% }); %>
+
+    ul.groups
+      <% _.each(subject.groups, function (group) { %>
+      li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
+      <% }); %>
+
+    div.klear
+
   script#weekNotFound(type='text/html')
-    div.notfound Not found
+    div.notfound Nothing found
+
+  script#noDays(type='text/html')
+    div.notfound No classes during this week
+
+  script#listTemplate(type='text/html')
+    div.search
+      input.text(id!='<%= title %>List' type='text' placeholder!='Type to filter <%= title %>s')
+    div.list
+    div.klear
 
   script#itemlinkTemplate(type='text/html')
     li: a(href!='/<%= tourl %>' data-local)<%= name %>
@@ -192,14 +230,11 @@ block customFoot
       div: i Will be available soon
 
   script(src='/js/libs/jquery-1.10.2.min.js')
-  script(src='/js/libs/jquery.equalheights.min.js')
   script(src='/js/libs/underscore-min.js')
   script(src='/js/libs/backbone-min.js')
-  script(src='/js/app.js')
-
-
-block footlinks
-  if logged
-    include ./layouts/footlinks/logged
-  else
-    include ./layouts/footlinks/unlogged
+  script(src='/js/handlers/tools.js')
+  script(src='/js/handlers/mainpage.js')
+  script(src='/js/modules/navlinks.js')
+  script(src='/js/modules/schedule.js')
+  script(src='/js/modules/subject.js')
+  script(src='/js/app/mainpage.js')

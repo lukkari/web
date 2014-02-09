@@ -3,9 +3,8 @@
  */
 
 var mongoose = require('mongoose'),
-    crypto   = require('crypto');
-
-var Schema = mongoose.Schema;
+    crypto   = require('crypto'),
+    Schema   = mongoose.Schema;
 
 
 /**
@@ -14,17 +13,18 @@ var Schema = mongoose.Schema;
  */
 
 var subjectSchema = new Schema({
-  name      : { type: String, default: '' },
+  name      : { type : String, default : '' },
   days      : [{
-    date     : { type: Date,   default: 0 },
-    duration : { type: Number, default: 0 }
+    date     : { type : Date,   default : 0 },
+    duration : { type : Number, default : 0 }
   }],
-  rooms     : [{ type: Schema.Types.ObjectId, ref: 'Room' }],
-  groups    : [{ type: Schema.Types.ObjectId, ref: 'Group' }],
-  teachers  : [{ type: Schema.Types.ObjectId, ref: 'Teacher' }],
-  coursenum : { type: String, default: '' },
-  parse     : { type: Schema.Types.ObjectId, ref: 'Parse' },
-  createdAt : { type: Date, default: Date.now }
+  rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
+  groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
+  teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
+  coursenum : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
+  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  createdAt : { type : Date, default : Date.now }
 });
 
 
@@ -67,10 +67,10 @@ mongoose.model('Subject', subjectSchema);
  */
 
 var roomSchema = new Schema({
-  name      : { type: String, default: '' },
-  building  : { type: String, default: '' },
-  capacity  : { type: Number, default: 0 },
-  createdAt : { type: Date,   default: Date.now }
+  name      : { type : String, default : '' },
+  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  capacity  : { type : Number, default : 0 },
+  createdAt : { type : Date,   default : Date.now }
 });
 
 roomSchema.statics = {
@@ -78,7 +78,7 @@ roomSchema.statics = {
   /**
    * Return all rooms in ascendant order
    */
-  getAll: function (cb) {
+  getAll : function (cb) {
     this.find({})
       .sort({'name': 1})
       .exec(cb);
@@ -97,8 +97,9 @@ mongoose.model('Room', roomSchema);
  */
 
 var teacherSchema = new Schema({
-  name      : { type: String, default: '' },
-  createdAt : { type: Date,   default: Date.now }
+  name      : { type : String, default : '' },
+  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  createdAt : { type : Date,   default : Date.now }
 });
 
 teacherSchema.statics = {
@@ -106,7 +107,7 @@ teacherSchema.statics = {
   /**
    * Return all teachers in ascendant order
    */
-  getAll: function (cb) {
+  getAll : function (cb) {
     this.find({})
       .sort({'name': 1})
       .exec(cb);
@@ -114,7 +115,7 @@ teacherSchema.statics = {
 
 };
 
-teacherSchema.index({ name: 1 }, { unique: true });
+teacherSchema.index({ name : 1 }, { unique : true });
 
 mongoose.model('Teacher', teacherSchema);
 
@@ -125,8 +126,9 @@ mongoose.model('Teacher', teacherSchema);
  */
 
 var groupSchema = new Schema({
-  name      : { type: String, default: '' },
-  createdAt : { type: Date,   default: Date.now }
+  name      : { type : String, default : '' },
+  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  createdAt : { type : Date,   default : Date.now }
 });
 
 groupSchema.statics = {
@@ -134,7 +136,7 @@ groupSchema.statics = {
   /**
    * Return all groups in ascendant order
    */
-  getAll: function (cb) {
+  getAll : function (cb) {
     this.find({})
       .sort({'name': 1})
       .exec(cb);
@@ -153,19 +155,19 @@ mongoose.model('Group', groupSchema);
  */
 
 var parseSchema = new Schema({
-  link        : { type: String,  default: '' },
-  group       : { type: Schema.Types.ObjectId, ref: 'Group' },
-  customName  : { type: String,  default: '' },
-  startNum    : { type: Number,  default: 0 },
-  version     : { type: Number,  default: 0 },
-  parsed      : { type: Boolean, default: false },
-  description : { type: String,  default: '' },
-  building    : { type: String,  default: '' },
+  link        : { type : String,  default : '' },
+  group       : { type : Schema.Types.ObjectId, ref : 'Group' },
+  customName  : { type : String,  default : '' },
+  startNum    : { type : Number,  default : 0 },
+  version     : { type : Number,  default : 0 },
+  parsed      : { type : Boolean, default : false },
+  description : { type : String,  default : '' },
+  building    : { type : String,  default : '' },
   outcome     : {
-    weeks    : { type: Number, default: 0 },
-    subjects : { type: Number, default: 0 }
+    weeks    : { type : Number, default : 0 },
+    subjects : { type : Number, default : 0 }
   },
-  createdAt   : { type: Date,    default: Date.now }
+  createdAt   : { type : Date,    default : Date.now }
 });
 
 parseSchema.pre('save', function (next, done) {
@@ -200,12 +202,13 @@ parseSchema.pre('save', function (next, done) {
     var Group = mongoose.model('Group'),
         that = this;
     Group.findOne({ name: new RegExp(groupname, "i") }, function (err, group) {
-      if(err)
-        console.log(err);
-      else {
+      if(err) console.log(err);
+
+      if(group) {
         that.group = group._id;
         next();
       }
+      else done('No group found');
     });
   }
 
@@ -260,15 +263,15 @@ userSchema.pre('save', function (next, done) {
 
 userSchema.methods = {
 
-  authenticate: function (plainText) {
+  authenticate : function (plainText) {
     return this.encryptPassword(plainText) === this.password;
   },
 
-  makeSalt: function () {
+  makeSalt : function () {
     return Math.round((new Date().valueOf() * Math.random())) + '';
   },
 
-  encryptPassword: function (password) {
+  encryptPassword : function (password) {
     if (!password) return '';
     var encrypred;
     try {
@@ -281,13 +284,13 @@ userSchema.methods = {
   }
 }
 
-userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ username : 1 }, { unique : true });
 
 mongoose.model('User', userSchema);
 
 
 /**
- * ########################################################################3
+ * ########################################################################
  * Users
  */
 
@@ -298,3 +301,17 @@ var UserTableSchema = new Schema({
 });
 
 mongoose.model('UserTable', UserTableSchema);
+
+
+/**
+ * #########################################################################
+ * Buildings
+ */
+
+var BuildingSchema = new Schema({
+  name        : { type : String, default : '' },
+  description : { type : String, default : '' },
+  createdAt   : { type : Date,   default : Date.now }
+});
+
+mongoose.model('Building', BuildingSchema);

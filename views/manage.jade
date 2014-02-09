@@ -24,6 +24,9 @@ block content
       div.block
         h3 Database statistics
         ul
+          li Buildings:
+            span #{count.buildings}
+            a(href='/manage/clear/buildings' onclick='return confirm("Clear all buildings?");') clear
           li Groups:
             span #{count.groups}
             a(href='/manage/clear/groups' onclick='return confirm("Clear all groups?");') clear
@@ -48,8 +51,10 @@ block content
             a(href='/manage/clear/cache' onclick='return confirm("Clear cache?");') clear
 
       div.block
-        h3 Log
-        textarea(readonly) Some text will be here
+        h3 Add building
+        form(method='post' action='/manage/building')
+          input.text(type='text' name='name' placeholder='building name')
+          input.button(type='submit' value='Add')
 
       div.block
         h3 Messages
@@ -61,6 +66,3 @@ block content
               div.from= from
               div.contain #{msg}
                 i= message.createdAt.toGMTString()
-
-block footlinks
-  include ./layouts/footlinks/logged

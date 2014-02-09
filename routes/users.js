@@ -12,7 +12,8 @@ exports.login = function (req, res) {
   res.render('users/login', {
       title  : 'Login',
       error  : error,
-      mobile : device.isMobile(req)
+      mobile : device.isMobile(req),
+      logged : false
   });
 };
 
@@ -26,7 +27,8 @@ exports.signup = function (req, res) {
     title     : 'Sign up',
     user      : new User(),
     error     : null,
-    mobile    : device.isMobile(req)
+    mobile    : device.isMobile(req),
+    logged    : false
   });
 
 };
@@ -50,7 +52,8 @@ exports.create = function (req, res) {
           error     : error,
           notfull   : notfull,
           user      : user,
-          mobile    : device.isMobile(req)
+          mobile    : device.isMobile(req),
+          logged    : false
         });
       }
 
@@ -70,10 +73,11 @@ exports.logout = function (req, res) {
 
 exports.me = function (req, res) {
   res.render('users/profile', {
-    title  : 'Edit your profile',
+    title  : 'Profile',
     user   : req.user,
     error  : null,
-    mobile : device.isMobile(req)
+    mobile : device.isMobile(req),
+    logged : true
   });
 };
 
@@ -96,10 +100,11 @@ exports.update = function (req, res) {
         var error   = (err !== undefined) ? err.message : false;
 
         return res.render('users/profile', {
-          title     : 'Edit your profile',
+          title     : 'Profile',
           error     : error,
           user      : req.user,
-          mobile    : device.isMobile(req)
+          mobile    : device.isMobile(req),
+          logged    : true
         });
       }
 
@@ -112,10 +117,11 @@ exports.update = function (req, res) {
   }
   else {
     return res.render('users/profile', {
-      title  : 'Edit your profile',
+      title  : 'Profile',
       user   : req.user,
       error  : 'Wrong password',
-      mobile : device.isMobile(req)
+      mobile : device.isMobile(req),
+      logged : true
     });
   }
 
@@ -126,10 +132,22 @@ exports.selectGroup = function (req, res) {
   if(!req.isAuthenticated())
     return res.redirect('/');
 
-  var Group = mongoose.model('Group');
+  var Group    = mongoose.model('Group'),
+      Building = mongoose.model('Building'),
+      result   = {};
 
-  Group.find({}, { name : 1 })
-       .sort({ name : 1 })
+  /*Building.find({}, { name : 1 }, function (err, buildings) {
+    if(err)
+      console.log(err);
+
+    buildings.forEach(function (el) {
+
+    })
+  });*/
+
+  Group.find({}, { name : 1, building : 1 })
+       .populate('building', 'name')
+       .sort({ 'building.name' : 1 })
        .exec(function (err, groups) {
             if(err)
               console.log(err);
@@ -138,7 +156,8 @@ exports.selectGroup = function (req, res) {
               title      : 'Select your group',
               grouplist  : groups,
               curGroupId : '' + req.user.group,
-              mobile     : device.isMobile(req)
+              mobile     : device.isMobile(req),
+              logged     : true
             });
           }
        );

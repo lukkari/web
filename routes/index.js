@@ -38,7 +38,8 @@ exports.index = function(req, res) {
                         weeknow  : weeknow,
                         logged   : req.isAuthenticated(),
                         mobile   : device.isMobile(req)
-                      });
+                      }
+  );
 };
 
 exports.getNow = function(req, res) {
@@ -51,4 +52,13 @@ exports.getNow = function(req, res) {
                     }
   );
 
+};
+
+exports.editor = function (req, res) {
+
+  res.render('editor', {
+                          title  : 'Editor',
+                          logged : true
+                       }
+  );
 };
