@@ -91,6 +91,8 @@
       close();
     });
 
+    $('.sidebarwrap .sidebar').height($(document).height());
+
     var $container   = $('.sidebar .container'),
         $sidebarwrap = $('.sidebarwrap'),
         $sidebar     = $('.sidebarwrap .sidebar');
