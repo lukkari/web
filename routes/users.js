@@ -171,6 +171,6 @@ exports.addGroup = function (req, res) {
     if(err)
       console.log(err);
 
-    return res.redirect('/')
+    return res.redirect('/my')
   });
 };

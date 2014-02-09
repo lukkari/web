@@ -40,16 +40,15 @@ block content
 
         b Select today schedule
         div.info After selecting your group schedule, you can access today schedule by clicking on links and then on today schedule link.
-          small  [made for mobiles]
 
       h4 Save links
       div.subblock You can save link and access it at any time. You will always see your current week timetable.
         div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
 
       h4 Mistakes
-      div.subblock If you found some mistakes in schedule, please contact me as soon as possible in the form below.
+      div.subblock This is not official timetable, therefore if you found some mistakes in schedule, please contact me as soon as possible in the form below.
 
-    h3 Contacts
+    h3: label(for='message') Contacts
     div.block If you have any suggestions or questions, please, contact me.
       div.contactform
         div.success#sent Thank you for texting me
@@ -161,37 +160,6 @@ block customFoot
         <% } if (editable) { %>
         div.addsubject: button Add
         <% } %>
-
-  script#subjectEditTemplate(type='type/html')
-    div.time
-      div.hour <%= getTime(subject.days) %>
-      div.duration
-        span(class!='dur-<%= getDur(subject.days) %>')
-          i#duration <%= getDur(subject.days) %>
-          u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
-
-    div.info
-      div.inner
-        div.name
-          <% if(subject.rest) { %>
-          div.resttext Break
-          <% } else { %>
-          a(href!='/subject/<%= toUrl(subject.name) %>' data-local) <%= subject.name %>
-          <% } %>
-
-        div.room <%= getRooms(subject.rooms) %>
-
-        ul.teachers
-          <% _.each(subject.teachers, function (teacher) { %>
-          li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
-          <% }); %>
-
-    ul.groups
-      <% _.each(subject.groups, function (group) { %>
-      li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
-      <% }); %>
-
-    div.klear
 
   script#weekNotFound(type='text/html')
     div.notfound Nothing found

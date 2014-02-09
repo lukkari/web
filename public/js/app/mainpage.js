@@ -15,15 +15,17 @@
     },
 
     initialize : function () {
-      var groups = new app.ListView({
-        el : $('#groupList'),
-        list : 'group'
-      });
+      setTimeout(function () {
+        var groups = new app.ListView({
+          el : $('#groupList'),
+          list : 'group'
+        });
 
-      var teachers = new app.ListView({
-        el : $('#teacherList'),
-        list: 'teacher'
-      });
+        var teachers = new app.ListView({
+          el : $('#teacherList'),
+          list: 'teacher'
+        });
+      }, 500);
 
       this.history = [];
       this.schedule = {
@@ -73,8 +75,16 @@
       app.pagesCtrl.toggle('schedule');
       app.weekBar.set('my', w);
       var q = 'my';
-      if(w) q += '?w=' + w;
-      var schedule = new app.WeekView({ url : q, editable : edit })
+      q += '?w=' + app.weekBar.getWeekNum();
+
+      var schedule;
+      if(schedule = this.findIn(this.schedule, q))
+        schedule.render();
+      else {
+        schedule = new app.ScheduleView({ url : q, editable : edit });
+        this.schedule.urls.push(q);
+        this.schedule.views.push(schedule);
+      }
     },
 
     subject : function (q) {

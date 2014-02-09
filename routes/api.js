@@ -138,7 +138,7 @@ exports.getSchedule = function (req, res) {
     if(!req.isAuthenticated()) return res.json(404, { error : { code : 404, msg : 'Not found' }});
 
     week.getSchedule(today, 'groups', req.user.group, function (err, data) {
-      return res.json(data);
+      return res.json({ title : 'My schedule', weekdays : data });
     });
 
     return;

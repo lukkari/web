@@ -91,27 +91,34 @@
       close();
     });
 
-    $('.sidebarwrap .sidebar').height($(document).height());
+    var $sidebarwrap = $('.sidebarwrap'),
+        $sidebar     = $('.sidebarwrap .sidebar'),
+        $list        =  {
+          groupList   : $('#groupList'),
+          teacherList : $('#teacherList')
+        },
+        docH    = $(document).height(),
+        prev    = null,
+        handled = false,
 
-    var $container   = $('.sidebar .container'),
-        $sidebarwrap = $('.sidebarwrap'),
-        $sidebar     = $('.sidebarwrap .sidebar');
-
-    function show(id) {
-      $container.children('div').hide();
-      $('#'+id).show();
+    show = function (id) {
+      prev && $list[prev].hide();
+      $list[id].show();
+      prev = id;
 
       if(parseInt($sidebar.css('left')) > -100)
         $sidebar.css('left', -$sidebar.width());
 
       $sidebarwrap.fadeIn('fast');
       $sidebar.css('left', 0);
-    }
 
-    function close() {
+      if($sidebar.height() < docH) $sidebar.height(docH);
+    },
+
+    close = function () {
       $sidebarwrap.fadeOut('fast');
       $sidebar.css('left', -700);
-    }
+    };
 
     return {
       show : function (id) {
