@@ -66,7 +66,7 @@
       subject  : null
     },
 
-    curpage  = null;
+    curpage  = null,
 
     hideAll = function () {
       if(!curpage) return;
@@ -329,19 +329,7 @@
 
       $('#nowlink').attr('href', '/my/now');
 
-      var schedule;
-      if(edit) {
-        schedule = new app.ScheduleView({ url : q, editable : edit });
-        return;
-      }
-
-      if(schedule = this.findIn(this.schedule, q))
-        schedule.render();
-      else {
-        schedule = new app.ScheduleView({ url : q, editable : edit });
-        this.schedule.urls.push(q);
-        this.schedule.views.push(schedule);
-      }
+      var schedule = new app.ScheduleView({ url : q, editable : edit });
     },
 
     subject : function (q) {

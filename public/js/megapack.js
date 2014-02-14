@@ -590,7 +590,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       subject  : null
     },
 
-    curpage  = null;
+    curpage  = null,
 
     hideAll = function () {
       if(!curpage) return;

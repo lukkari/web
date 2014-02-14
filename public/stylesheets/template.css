@@ -1049,7 +1049,7 @@ select {
 
 .subjectpopup {
   display: none;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -1064,7 +1064,7 @@ select {
 }
 
 .subjectpopup .inner {
-  position: fixed;
+  position: absolute;
   top: 30px;
   left: 50%;
   margin: 0;
@@ -1074,12 +1074,7 @@ select {
 }
 
 @media screen and (max-width: 700px) {
-  .subjectpopup {
-    position: absolute;
-  }
-
   .subjectpopup .inner {
-    position: absolute;
     top: 0;
     left: 0;
     height: 100%;

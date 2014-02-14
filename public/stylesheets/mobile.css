@@ -85,12 +85,7 @@
 }
 
 @media screen and (max-width: 700px) {
-  .subjectpopup {
-    position: absolute;
-  }
-
   .subjectpopup .inner {
-    position: absolute;
     top: 0;
     left: 0;
     height: 100%;
