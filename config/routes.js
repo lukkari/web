@@ -56,7 +56,7 @@ module.exports = function (app, passport) {
   app.get( '/login', users.login);
   app.post('/login',
     passport.authenticate('local', {
-      successRedirect: '/',
+      successRedirect: '/my',
       failureRedirect: '/login?wrong'
     })
   );
@@ -89,12 +89,15 @@ module.exports = function (app, passport) {
 
     next();
   });
-  app.get( '/api/groups',          api.getGroups);
-  app.get( '/api/teachers',        api.getTeachers);
-  app.get( '/api/schedule/:q',     api.getSchedule);
-  app.get( '/api/schedule/now/:q', api.getNow);
-  app.post('/api/messages',        api.sendMsg);
-  app.get( '/api/subject/:q',      api.getSubject);
+  app.get(   '/api/groups',          api.getGroups);
+  app.get(   '/api/teachers',        api.getTeachers);
+  app.get(   '/api/schedule/:q',     api.getSchedule);
+  app.get(   '/api/schedule/now/:q', api.getNow);
+  app.post(  '/api/messages',        api.sendMsg);
+  app.get(   '/api/subject/:q',      api.getSubject);
+  app.delete('/api/subject/:q',      api.removeSubject);
+  app.post(  '/api/subject/:q',      api.addSubject);
+  app.get(   '/api/subject/short/:q',api.getSubjects);
 
   // Experiments
   app.get('/editor', ensureAuthenticated);

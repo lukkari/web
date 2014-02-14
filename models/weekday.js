@@ -8,8 +8,10 @@ var weekDay = function () {
       days    = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return {
-    getSubjects : function (pdate, ptype, ptypeid, cb) {
-      var date    = new Date(pdate);
+    getSubjects : function (options) {
+      options || (options = {});
+
+      var date    = new Date(options.date);
 
       var data = {
         week     : date.getWeek(),
@@ -27,24 +29,76 @@ var weekDay = function () {
       var start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
           end   = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
 
+      /**
+       {
+          $and : [{
+              days : {
+                $elemMatch : {
+                  date : {
+                    $gte : start,
+                    $lt : end
+                  }
+                }
+              }
+            },
+            {
+              $nin : options.usertable.removed
+            },
+            {
+              $or : [{
+                  groups : typeid
+                },
+                {
+                  _id : options.usertable.subjects
+                }
+              ]
+            }
+          ]
+        }
+       */
+
+      options.usertable || (options.usertable = {});
+
+      var qtype = {},
+          qrem  = null,
+          qadd  = null;
+      qtype[options.type] = options.typeid;
+
       var query = {
-        'days' : {
-          $elemMatch : {
-            'date' : {
-              $gte : start,
-              $lt  : end
+        '$and' : [{
+            'days' : {
+              '$elemMatch' : {
+                'date' : {
+                  $gte : start,
+                  $lt  : end
+                }
+              }
             }
           }
-        }
+        ]
+      };
+
+      if(options.usertable.removed) {
+        query['$and'].push({
+          '_id' : {
+            '$nin' : options.usertable.removed
+          }
+        });
       }
-      switch(ptype) {
-        case 'groups':
-          query.groups = mongoose.Types.ObjectId(ptypeid.toString());
-          break;
-        case 'teachers':
-          query.teachers = mongoose.Types.ObjectId(ptypeid.toString());
-          break;
+
+      if(options.usertable.subjects) {
+        query['$and'].push({
+          '$or' : [
+            {
+              '_id' : {
+                '$in' : options.usertable.subjects
+              }
+            },
+            qtype
+          ]
+        });
       }
+      else query['$and'].push(qtype);
 
       Subject.find(query,
                   {
@@ -60,8 +114,9 @@ var weekDay = function () {
              .sort({ 'days.date' : 1 })
              .exec(function (err, subjects) {
                 data.subjects = subjects;
-                cb(err, data);
-             });
+                if(typeof options.cb === 'function') options.cb(err, data);
+             }
+      );
     }
   }
 

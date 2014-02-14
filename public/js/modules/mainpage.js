@@ -108,6 +108,8 @@
         that.renderItem(item);
       }, this);
 
+      app.sideBar.setHeight();
+
       return this;
     },
 
@@ -128,6 +130,98 @@
     }
   });
 
+
+  window.app.AddSubjects = Backbone.Model.extend({
+    url : '/api/subject/short/',
+
+    initialize : function (options) {
+      options || (options = {});
+      this.url += options.url;
+    }
+  });
+
+  window.app.AddSubjectView = Backbone.View.extend({
+    tag       : 'div',
+    className : 'form',
+    template  : $('#subjectPopupTemplate').html(),
+    listTmpl  : $('#subjectPopupListTemplate').html(),
+    $popup    : $('.subjectpopup'),
+    subjects  : null,
+
+    events : {
+      'keyup .text'   : 'search',
+      'click li'      : 'select'
+    },
+
+    initialize : function () {
+      this.subjects = new app.AddSubjects();
+      this.$popup.fadeIn('fast');
+      this.addEvents();
+      this.render();
+    },
+
+    render : function () {
+      var tmpl = _.template(this.template);
+      this.$popup.find('.container').html(this.$el.html(tmpl()));
+      this.$el.find('.text').focus();
+      return this;
+    },
+
+    renderList : function () {
+      var tmpl = _.template(this.listTmpl);
+      if(this.subjects.attributes && this.subjects.attributes.data)
+        this.$el.find('.found').html(tmpl(this.subjects.attributes));
+      else
+        this.$el.find('.found').html(tmpl({ data : [] }));
+      return this;
+    },
+
+    addEvents : function () {
+      var that = this;
+      this.$popup.find('.closebtn, .bg').on('click', function () {
+        that.close();
+      });
+    },
+
+    search : function (e) {
+      var that = this;
+      this.subjects = new app.AddSubjects({ url : $(e.target).val() });
+      this.subjects.fetch({
+        success : function () {
+          that.renderList();
+        }
+      });
+    },
+
+    select : function (e) {
+      this.addSubject($(e.target).attr('data-link'));
+      this.close();
+    },
+
+    close : function () {
+      this.$popup.fadeOut('fast');
+    },
+
+    addSubject : function (id) {
+      $.ajax({
+          type : 'POST',
+          url  : '/api/subject/' + id,
+          data : 'id=' + encodeURIComponent(id)
+        })
+        .done(function (data) {
+          window.app.router.getMy('edit');
+        })
+        .fail(function (data) {
+          alert('Unable to add subject, try to refresh your page');
+        });
+    }
+
+  });
+
+  /**
+   * ##############################################3
+   * Schedule
+   */
 
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -171,11 +265,6 @@
     }
   };
 
-  /**
-   * ##############################################3
-   * Schedule
-   */
-
   window.app.WeekDay = Backbone.Model.extend({
     defaults : {
       week     : '',
@@ -213,7 +302,8 @@
     editable  : false,
 
     events : {
-      'click .addsubject button' : 'showForm'
+      'click .addsubject button' : 'showForm',
+      'click .controlbar button' : 'removeTopic'
     },
 
     initialize : function (options) {
@@ -262,7 +352,26 @@
     },
 
     showForm : function () {
-      console.log('test');
+      var form = new app.AddSubjectView();
+    },
+
+    removeTopic : function (e) {
+      $el = $(e.target);
+      $.ajax({
+          type : 'DELETE',
+          url  : '/api/subject/' + $el.attr('data-link'),
+          data : '',
+          beforeSend : function () {
+            $el.parents('.subject').slideUp('fast');
+          }
+        })
+        .done(function () {
+          window.app.router.getMy('edit');
+        })
+        .fail(function (data) {
+          $el.parents('.subject').show();
+          alert('Unable to remove, try to refresh your page');
+        });
     }
   });
 
@@ -271,6 +380,7 @@
     errTmpl      : $('#weekNotFound').html(),
     noTmpl       : $('#noDays').html(),
     editable     : false,
+    subjectUrl   : '/api/subject',
 
     initialize : function (data, options) {
       data    || (data = {});

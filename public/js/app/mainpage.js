@@ -14,6 +14,7 @@
 
     append = function (options) {
       options || (options = {});
+
       options.islocal = options.islocal ? ' data-local' : '';
 
       var el = $('<li><a id="'+options.id+'" href="'+options.url+'"'+options.islocal+'>'+options.label+'</a></li>');
@@ -53,17 +54,19 @@
 
     links = {
       mainpage : null,
-      schedule : {
-        url     : '/',
-        id      : 'nowlink',
-        label   : 'Today schedule',
-        islocal : false
-      },
+      schedule : [
+        {
+          url     : '/',
+          id      : 'nowlink',
+          label   : 'Today schedule',
+          islocal : false
+        }
+      ],
       unknown  : null,
       subject  : null
     },
 
-    curpage  = null,
+    curpage  = null;
 
     hideAll = function () {
       if(!curpage) return;
@@ -105,24 +108,29 @@
         docH    = $(document).height(),
         prev    = null,
 
-    show = function (id) {
-      prev && $list[prev].hide();
-      $list[id].show();
-      prev = id;
+        show = function (id) {
+          prev && $list[prev].hide();
+          $list[id].show();
+          prev = id;
 
-      if(parseInt($sidebar.css('left')) > -100)
-        $sidebar.css('left', -$sidebar.width());
+          if(parseInt($sidebar.css('left')) > -100)
+            $sidebar.css('left', -$sidebar.width());
 
-      $sidebarwrap.fadeIn('fast');
-      $sidebar.css('left', 0);
+          $sidebarwrap.fadeIn('fast');
+          $sidebar.css('left', 0);
 
-      if($sidebar.height() < docH) $sidebar.height(docH);
-    },
+          setHeight();
+        },
 
-    close = function () {
-      $sidebarwrap.fadeOut('fast');
-      $sidebar.css('left', -700);
-    };
+        close = function () {
+          $sidebarwrap.fadeOut('fast');
+          $sidebar.css('left', -700);
+        },
+
+        setHeight = function () {
+          $sidebar.css('height','auto');
+          if($sidebar.height() <= docH) $sidebar.height(docH);
+        };
 
     return {
       show : function (id) {
@@ -131,6 +139,10 @@
 
       close : function () {
         close();
+      },
+
+      setHeight : function () {
+        setHeight();
       }
     }
 
@@ -253,7 +265,7 @@
     },
 
     initialize : function () {
-      setTimeout(function () {
+      $(function () {
         var groups = new app.ListView({
           el : $('#groupList'),
           list : 'group'
@@ -263,7 +275,7 @@
           el : $('#teacherList'),
           list: 'teacher'
         });
-      }, 500);
+      });
 
       this.history = [];
       this.schedule = {
@@ -315,7 +327,14 @@
       var q = 'my';
       q += '?w=' + app.weekBar.getWeekNum();
 
+      $('#nowlink').attr('href', '/my/now');
+
       var schedule;
+      if(edit) {
+        schedule = new app.ScheduleView({ url : q, editable : edit });
+        return;
+      }
+
       if(schedule = this.findIn(this.schedule, q))
         schedule.render();
       else {
@@ -420,17 +439,18 @@
 
   $('#send').on('click', function(e) {
     $.ajax({
-      type : "POST",
-      url  : "/api/messages",
-      data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val()),
-      success : function (data) {
+        type : "POST",
+        url  : "/api/messages",
+        data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val())
+      })
+    .done(function (data) {
         $('#sent').slideDown('fast', function() {
           setTimeout(function () {
             $('#sent').fadeOut('slow');
           }, 4000);
         });
       }
-    });
+    );
 
     $('#hiddenform').slideUp('fast');
     $('#message').removeClass('big');

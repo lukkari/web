@@ -1,5 +1,8 @@
 extends ./layouts/main
 
+block customHead
+  link(rel='stylesheet', href='/stylesheets/template.css')
+
 block content
   header
     div.helpmenu
@@ -7,6 +10,8 @@ block content
         li: a(href='/' data-local) Home
         if logged
           li: a(href='/u') Profile
+          li: a(href='/my' data-local) My schedule
+          li: a(href='/my/edit' data-local) Edit my schedule
         else
           li: a(href='/login') Login
 
@@ -44,6 +49,9 @@ block content
       h4 Save links
       div.subblock You can save link and access it at any time. You will always see your current week timetable.
         div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
+
+      h4 User accounts
+      div.subblock With user account you can manage your schedule by adding and removing subjects.
 
       h4 Mistakes
       div.subblock This is not official timetable, therefore if you found some mistakes in schedule, please contact me as soon as possible in the form below.
@@ -109,6 +117,12 @@ block content
         div#groupList
         div#teacherList
 
+  div.subjectpopup
+    div.bg
+    div.inner
+      button.closebtn Close
+      div.container
+
 
 block customFoot
   script#weekdayTemplate(type='text/html')
@@ -121,8 +135,7 @@ block customFoot
         div.subject
           <% if(editable) { %>
           div.controlbar
-            a.editlink(href='/') Edit
-            a.removelink(href='/') Remove
+            button.removelink(data-link!='<%= subject._id %>') Remove
           <% } %>
 
           div.time
@@ -200,6 +213,16 @@ block customFoot
       h4 When
       div: i Will be available soon
 
-  script(src='/js/libs/libs.js')
-  script(src='/js/modules/mainpage.js')
-  script(src='/js/app/mainpage.js')
+  script#subjectPopupTemplate(type='text/html')
+    div.row
+      input.text(type='text' id='subject' placeholder='Start typing subject name')
+    div.row
+      ul.found
+    div.note Start typing subject name you want to add, after clicking on it, course would be added automatically.
+
+  script#subjectPopupListTemplate(type='text/html')
+    <% _.each(data, function (subject) { %>
+    li(data-link!='<%= subject._id %>'): <%= subject.name %>
+    <% }); %>
+
+  script(src='/js/app.min.js' async)

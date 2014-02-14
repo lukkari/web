@@ -3,8 +3,10 @@ var weekDay  = require('./weekday.js');
 var week = function () {
 
   return {
-    getSchedule : function (pdate, ptype, ptypeid, cb) {
-      var date = new Date(pdate);
+    getSchedule : function (options) {
+      options || (options = {});
+
+      var date = new Date(options.date);
 
       // If saturday or sunday get next week
       if((date.getDay() == 0) || date.getDay() == 6)
@@ -16,11 +18,12 @@ var week = function () {
           count = 0;
 
       for(var i = 0; i < 5; i += 1) {
-        weekDay.getSubjects(
-          new Date(date.getFullYear(), date.getMonth(), date.getDate() + i),
-          ptype,
-          ptypeid,
-          function (err, subjects) {
+        weekDay.getSubjects({
+          date   : new Date(date.getFullYear(), date.getMonth(), date.getDate() + i),
+          type   : options.type,
+          typeid : options.typeid,
+          usertable : options.usertable,
+          cb : function (err, subjects) {
             data.push(subjects);
             count += 1;
 
@@ -30,10 +33,10 @@ var week = function () {
                 return a.weekday.num - b.weekday.num;
               });
 
-              cb(err, data);
+              options.cb(err, data);
             }
           }
-        );
+        });
       }
     }
   }

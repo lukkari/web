@@ -1,5 +1,8 @@
 extends ../layouts/main
 
+block customHead
+  link(rel='stylesheet', href='/stylesheets/auth.css')
+
 block content
   div.loginpage
     div.homelink: a(href='/') Home
