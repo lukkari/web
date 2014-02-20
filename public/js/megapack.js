@@ -923,67 +923,70 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
    * Handlers
    */
 
-  $(document).on('click', 'a[data-local]', function (e) {
+  $(document).ready(function () {
 
-    var href = $(this).attr('href');
-    var protocol = this.protocol + '//';
+    $(document).on('click', 'a[data-local]', function (e) {
+      var href = $(this).attr('href');
+      var protocol = this.protocol + '//';
 
-    if(href.slice(protocol.length) !== protocol) {
-      e.preventDefault();
-      app.router.navigate(href, true);
-    }
-  });
-
-  $('.topmenu li a:not(.helpmenutoggle)').on('click', function (e) {
-    e.preventDefault();
-    app.sideBar.show($(this).attr('id') + 'List');
-  });
-
-  $('.weekcontent').on('click', function (e) {
-    e.preventDefault();
-    $('#calendar').slideToggle('fast');
-  });
-
-  // helpmenu
-  $('.helpmenutoggle').on('click', function (e) {
-    e.preventDefault();
-    $('.helpmenu').slideToggle('fast');
-  });
-
-  $(document).on('click', function (e) {
-    if($(e.target).is('.helpmenutoggle')) return;
-    else $('.helpmenu').slideUp('fast');
-  });
-
-  // Contacts form
-  $('#message').on('focus', function (e) {
-    $(this).addClass('big');
-    $('#hiddenform').slideDown('fast');
-  });
-
-  $('#send').on('click', function(e) {
-    $.ajax({
-        type : "POST",
-        url  : "/api/messages",
-        data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val())
-      })
-    .done(function (data) {
-        $('#sent').slideDown('fast', function() {
-          setTimeout(function () {
-            $('#sent').fadeOut('slow');
-          }, 4000);
-        });
+      if(href.slice(protocol.length) !== protocol) {
+        e.preventDefault();
+        app.router.navigate(href, true);
       }
-    );
+    });
 
-    $('#hiddenform').slideUp('fast');
-    $('#message').removeClass('big');
-    $('#replyto').val('');
-    $('#message').val('');
-  });
+    $('.topmenu li a:not(.helpmenutoggle)').on('click', function (e) {
+      e.preventDefault();
+      app.sideBar.show($(this).attr('id') + 'List');
+    });
 
-  $(window).resize(function () {
-    app.alignDays();
+    $('.weekcontent').on('click', function (e) {
+      e.preventDefault();
+      $('#calendar').slideToggle('fast');
+    });
+
+    // helpmenu
+    $('.helpmenutoggle').on('click', function (e) {
+      e.preventDefault();
+      $('.helpmenu').slideToggle('fast');
+    });
+
+    $(document).on('click', function (e) {
+      if($(e.target).is('.helpmenutoggle')) return;
+      else $('.helpmenu').slideUp('fast');
+    });
+
+    // Contacts form
+    $('#message').on('focus', function (e) {
+      $(this).addClass('big');
+      $('#hiddenform').slideDown('fast');
+    });
+
+    $('#send').on('click', function(e) {
+      $.ajax({
+          type : "POST",
+          url  : "/api/messages",
+          data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val())
+        })
+      .done(function (data) {
+          $('#sent').slideDown('fast', function() {
+            setTimeout(function () {
+              $('#sent').fadeOut('slow');
+            }, 4000);
+          });
+        }
+      );
+
+      $('#hiddenform').slideUp('fast');
+      $('#message').removeClass('big');
+      $('#replyto').val('');
+      $('#message').val('');
+    });
+
+    $(window).resize(function () {
+      app.alignDays();
+    });
+
   });
 
 })(jQuery);
