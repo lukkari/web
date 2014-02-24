@@ -14,229 +14,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 
 ;(function ($) {
 
-  window.app = window.app || {};
-
-  /**
-   * ###########################################
-   * Navlinks
-   */
-
-  window.app.ItemLink = Backbone.Model.extend({
-  });
-
-  window.app.GroupList = Backbone.Collection.extend({
-    model : app.ItemLink,
-    url   : '/api/groups',
-
-    search : function (letters) {
-      if(letters == "") return this.models;
-
-      var pattern = new RegExp(letters, "gi");
-      return this.filter(function(data) {
-        return data.get("name").match(pattern);
-      });
-    }
-  });
-
-  window.app.TeacherList = Backbone.Collection.extend({
-    model : app.ItemLink,
-    url   : '/api/teachers',
-
-    search : function (letters) {
-      if(letters == "") return this.models;
-
-      var pattern = new RegExp(letters, "gi");
-      return this.filter(function(data) {
-        return data.get("name").match(pattern);
-      });
-    }
-  });
-
-  window.app.ItemLinkView = Backbone.View.extend({
-    tagName   : 'ul',
-    template  : $('#itemlinkTemplate').html(),
-
-    render : function () {
-      var tmpl = _.template(this.template);
-
-      var data = this.model.toJSON();
-      data.tourl = data.name.toLowerCase().replace(/\s/g, "_");
-      this.$el.html(tmpl(data));
-      return this;
-    }
-  });
-
-  window.app.ListView = Backbone.View.extend({
-
-    template : $('#listTemplate').html(),
-
-    events : {
-      'click a'     : 'closeList',
-      'keyup .text' : 'searchFilter'
-    },
-
-    initialize : function (options) {
-      options || (options = {});
-
-      switch (options.list) {
-        case 'group' :
-          this.collection = new app.GroupList();
-          break;
-        case 'teacher' :
-          this.collection = new app.TeacherList();
-          break;
-        default:
-          return;
-      }
-
-      this.title = options.list;
-
-      var that = this;
-      this.collection.fetch({
-        success : function () {
-          that.render();
-        }
-      });
-    },
-
-    render : function () {
-      var that = this;
-
-      var tmpl = _.template(this.template);
-      this.$el.html(tmpl({ title : this.title }));
-
-      _.each(this.collection.models, function (item) {
-        that.renderItem(item);
-      }, this);
-
-      return this;
-    },
-
-    renderList : function (data) {
-      data || (data = []);
-
-      var that = this;
-
-      this.$el.children('.list').empty();
-      _.each(data, function (item) {
-        that.renderItem(item);
-      }, this);
-
-      app.sideBar.setHeight();
-
-      return this;
-    },
-
-    renderItem : function (item) {
-      var itemLinkView = new app.ItemLinkView({
-        model: item
-      });
-      this.$el.children('.list').append(itemLinkView.render().el);
-    },
-
-    closeList : function (e) {
-      app.sideBar.close();
-    },
-
-    searchFilter : function (e) {
-      var letters = this.$el.find('.text').val();
-      this.renderList(this.collection.search(letters));
-    }
-  });
-
-
-  window.app.AddSubjects = Backbone.Model.extend({
-    url : '/api/subject/short/',
-
-    initialize : function (options) {
-      options || (options = {});
-      this.url += options.url;
-    }
-  });
-
-  window.app.AddSubjectView = Backbone.View.extend({
-    tag       : 'div',
-    className : 'form',
-    template  : $('#subjectPopupTemplate').html(),
-    listTmpl  : $('#subjectPopupListTemplate').html(),
-    $popup    : $('.subjectpopup'),
-    subjects  : null,
-
-    events : {
-      'keyup .text'   : 'search',
-      'click li'      : 'select'
-    },
-
-    initialize : function () {
-      this.subjects = new app.AddSubjects();
-      this.$popup.fadeIn('fast');
-      this.addEvents();
-      this.render();
-    },
-
-    render : function () {
-      var tmpl = _.template(this.template);
-      this.$popup.find('.container').html(this.$el.html(tmpl()));
-      this.$el.find('.text').focus();
-      return this;
-    },
-
-    renderList : function () {
-      var tmpl = _.template(this.listTmpl);
-      if(this.subjects.attributes && this.subjects.attributes.data)
-        this.$el.find('.found').html(tmpl(this.subjects.attributes));
-      else
-        this.$el.find('.found').html(tmpl({ data : [] }));
-      return this;
-    },
-
-    addEvents : function () {
-      var that = this;
-      this.$popup.find('.closebtn, .bg').on('click', function () {
-        that.close();
-      });
-    },
-
-    search : function (e) {
-      var that = this;
-      this.subjects = new app.AddSubjects({ url : $(e.target).val() });
-      this.subjects.fetch({
-        success : function () {
-          that.renderList();
-        }
-      });
-    },
-
-    select : function (e) {
-      this.addSubject($(e.target).attr('data-link'));
-      this.close();
-    },
-
-    close : function () {
-      this.$popup.fadeOut('fast');
-    },
-
-    addSubject : function (id) {
-      $.ajax({
-          type : 'POST',
-          url  : '/api/subject/' + id,
-          data : 'id=' + encodeURIComponent(id)
-        })
-        .done(function (data) {
-          window.app.router.getMy('edit');
-        })
-        .fail(function (data) {
-          alert('Unable to add subject, try to refresh your page');
-        });
-    }
-
-  });
-
-  /**
-   * ##############################################3
-   * Schedule
-   */
-
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   var viewHelper = {
@@ -259,69 +36,59 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       return d.getHours() + ':' + d.getMinutes();
     },
 
-    getMonth : function (m) {
-      if(m < 0) return 'Unknown';
-      return months[m];
+    getMonth : function (date) {
+      var d = new Date(date);
+      return months[d.getMonth()];
     },
 
     toUrl : function (name) {
       return encodeURIComponent(name.replace(/\s/g, '_').toLowerCase());
     },
 
-    isToday : function (date) {
-      var d = new Date();
-      return (d.getDate() == date.day) && (d.getMonth() == date.month)
-    },
-
     getDur : function (day) {
       if(!day || !day.length) return '0';
       return day[0].duration;
+    },
+
+    getStatus : function (day) {
+      if(!day || !day.length) return '';
+
+      var h   = new Date().getHours(),
+          d   = new Date(day[0].date).getHours(),
+          dur = day[0].duration;
+
+      if(h >= (d + dur)) return 'ended';
+      if((h >= d) && (h < (d + dur))) return 'now';
+
+      return '';
     }
   };
 
-  window.app.WeekDay = Backbone.Model.extend({
-    defaults : {
-      week     : '',
-      weekday  : '',
-      date : {
-        day   : '',
-        month : ''
-      },
-      subjects : []
-    }
-  });
-
-  window.app.Week = Backbone.Collection.extend({
-    model : app.WeekDay
-  });
-
-  window.app.Schedule = Backbone.Model.extend({
-    defaults : {
-      title    : '',
-      error    : null,
-      weekdays : []
-    },
-    urlRoot : '/api/schedule/',
+  var WeekDay = Backbone.Model.extend({
+    url : '/api/schedule/now/',
 
     initialize : function (options) {
-      options || (options = {});
-      this.urlRoot += options.url;
+      this.url = this.url + encodeURIComponent(options.url);
     }
   });
 
-  window.app.WeekDayView = Backbone.View.extend({
-    tagName   : 'div',
-    className : 'bwrap',
+  var WeekDayView = Backbone.View.extend({
+    el        : $('.schedule'),
     template  : $('#weekdayTemplate').html(),
-    editable  : false,
-
-    events : {
-      'click .addsubject button' : 'showForm',
-      'click .controlbar button' : 'removeTopic'
-    },
+    errTmpl   : $('#weekNotFound').html(),
 
     initialize : function (options) {
-      this.editable = options.editable;
+      this.model = new WeekDay({ url : options.url });
+
+      var that = this;
+      this.model.fetch({
+        success : function () {
+          that.render();
+        },
+        error   : function () {
+          that.showErr();
+        }
+      });
     },
 
     render : function () {
@@ -329,8 +96,11 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       var tmpl = _.template(this.template),
           data = this.model.toJSON();
 
-      var prev    = null,
-          subjects = [];
+      var prev     = null,
+          subjects = [],
+          now      = new Date(),
+          status   = 'ended';
+
       data.subjects.forEach(function (e) {
         if(prev) {
           var date  = new Date(e.days[0].date),
@@ -357,7 +127,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       });
 
       data.subjects = subjects;
-      data.editable = this.editable;
 
       _.extend(data, viewHelper);
 
@@ -365,628 +134,18 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       return this;
     },
 
-    showForm : function () {
-      var form = new app.AddSubjectView();
-    },
-
-    removeTopic : function (e) {
-      $el = $(e.target);
-      $.ajax({
-          type : 'DELETE',
-          url  : '/api/subject/' + $el.attr('data-link'),
-          data : '',
-          beforeSend : function () {
-            $el.parents('.subject').slideUp('fast');
-          }
-        })
-        .done(function () {
-          window.app.router.getMy('edit');
-        })
-        .fail(function (data) {
-          $el.parents('.subject').show();
-          alert('Unable to remove, try to refresh your page');
-        });
-    }
-  });
-
-  window.app.WeekView = Backbone.View.extend({
-    el           : $('#days'),
-    errTmpl      : $('#weekNotFound').html(),
-    noTmpl       : $('#noDays').html(),
-    editable     : false,
-    subjectUrl   : '/api/subject',
-
-    initialize : function (data, options) {
-      data    || (data = {});
-      options || (options = {});
-      this.editable = options.editable || false;
-      this.collection = new app.Week(data, options);
-    },
-
-    render : function () {
-      var that = this;
-
-      this.$el.empty();
-      _.each(this.collection.models, function (item) {
-        that.renderWeekDay(item);
-      }, this);
-      app.alignDays();
-
-      return this;
-    },
-
     showErr : function () {
       this.$el.empty();
       var tmpl = _.template(this.errTmpl);
       this.$el.html(tmpl());
-    },
-
-    showNoClasses : function () {
-      this.$el.empty();
-      var tmpl = _.template(this.noTmpl);
-      this.$el.html(tmpl());
-    },
-
-    renderWeekDay : function (item) {
-      var weekDayView = new app.WeekDayView({
-        model    : item,
-        editable : this.editable
-      });
-      this.$el.append(weekDayView.render().el);
-    }
-
-  });
-
-  window.app.ScheduleView = Backbone.View.extend({
-
-    model  : null,
-    week   : null,
-    $title : $('#scheduleTitle'),
-
-    initialize : function (options) {
-      options || (options = {});
-      this.model = new app.Schedule(options);
-
-      var that = this;
-      this.model.fetch({
-        success : function () {
-          that.week = new app.WeekView(that.model.attributes.weekdays, options);
-          that.render();
-        },
-
-        error   : function () {
-          that.week = new app.WeekView(null, options);
-          that.showErr();
-        }
-      });
-    },
-
-    render : function () {
-      this.$title.text(this.model.attributes.title);
-      this.week.render();
-
-      return this;
-    },
-
-    showErr : function () {
-      this.$title.text('');
-      this.week.showErr();
-    },
-
-    getTitle : function () {
-      return this.$title.text();
-    }
-
-  });
-
-  /**
-   * ##########################################
-   * Subject
-   */
-
-  var subjectHelper = {
-    toUrl : function (name) {
-      return encodeURIComponent(name.replace(/\s/g, '_').toLowerCase());
-    }
-  };
-
-  window.app = window.app || {};
-
-  window.app.Subject = Backbone.Model.extend({
-    url : '/api/subject/',
-
-    initialize : function (options) {
-      this.url = this.url + encodeURIComponent(options.url);
     }
   });
 
-  window.app.SubjectView = Backbone.View.extend({
-    el : $('.subjectpage article'),
-    template : $('#subjectTemplate').html(),
-
-    initialize : function (options) {
-      this.model = new app.Subject({ url : options.url });
-
-      var that = this;
-      this.model.fetch({
-        success : function () {
-          that.render();
-        }
-      });
-    },
-
-    render : function () {
-      var tmpl = _.template(this.template),
-          data = this.model.toJSON();
-
-      _.extend(data, subjectHelper);
-      this.$el.html(tmpl(data));
-
-      return this;
-    }
-  });
-
-  /**
-   * ############################################
-   * Tools
-   */
-
-  window.app.helpMenu = function () {
-
-    var $helpmenu = $('.helpmenu').children('ul'),
-    counter = 0,
-
-    append = function (options) {
-      options || (options = {});
-
-      options.islocal = options.islocal ? ' data-local' : '';
-
-      var el = $('<li><a id="'+options.id+'" href="'+options.url+'"'+options.islocal+'>'+options.label+'</a></li>');
-      $helpmenu.append(el);
-      counter += 1;
-    };
-
-    return {
-      append : function (items) {
-        if(!items) return;
-
-        if(Array.isArray(items)) {
-          items.forEach(function (el) {
-            append(el);
-          });
-        }
-        else append(items);
-      },
-
-      detach : function () {
-        for(var i = 0; i < counter; i += 1)
-          $helpmenu.children().last().remove();
-
-        counter = 0;
-      }
-    };
-  }();
-
-  window.app.pagesCtrl = function () {
-
-    var $pages = {
-      mainpage : $('.mainpage'),
-      schedule : $('.schedule'),
-      unknown  : $('.unknown'),
-      subject  : $('.subjectpage')
-    },
-
-    links = {
-      mainpage : null,
-      schedule : [
-        {
-          url     : '/',
-          id      : 'nowlink',
-          label   : 'Today schedule',
-          islocal : false
-        }
-      ],
-      unknown  : null,
-      subject  : null
-    },
-
-    curpage  = null,
-
-    hideAll = function () {
-      if(!curpage) return;
-
-      $pages[curpage].hide();
-      app.helpMenu.detach();
-    };
-
-    return {
-      toggle : function (page) {
-        if(curpage == page) return;
-
-        hideAll();
-        curpage = page;
-        $pages[page].show();
-        app.helpMenu.append(links[page]);
-      }
-    }
-
-  }();
-
-  window.app.sideBar = function () {
-
-    $('.sidebarwrap .closebtn').on('click', function (e) {
-      e.preventDefault();
-      close();
-    });
-
-    $('.sidebarwrap .bg').on('click', function () {
-      close();
-    });
-
-    var $sidebarwrap = $('.sidebarwrap'),
-        $sidebar     = $('.sidebarwrap .sidebar'),
-        $list        =  {
-          groupList   : $('#groupList'),
-          teacherList : $('#teacherList')
-        },
-        docH    = $(document).height(),
-        prev    = null,
-
-        show = function (id) {
-          prev && $list[prev].hide();
-          $list[id].show();
-          prev = id;
-
-          if(parseInt($sidebar.css('left')) > -100)
-            $sidebar.css('left', -$sidebar.width());
-
-          $sidebarwrap.fadeIn('fast');
-          $sidebar.css('left', 0);
-
-          setHeight();
-        },
-
-        close = function () {
-          $sidebarwrap.fadeOut('fast');
-          $sidebar.css('left', -700);
-        },
-
-        setHeight = function () {
-          $sidebar.css('height','auto');
-          if($sidebar.height() <= docH) $sidebar.height(docH);
-        };
-
-    return {
-      show : function (id) {
-        show(id);
-      },
-
-      close : function () {
-        close();
-      },
-
-      setHeight : function () {
-        setHeight();
-      }
-    }
-
-  }();
-
-  window.app.weekBar = function () {
-
-    var $weeknum  = $('#weeknum'),
-        $getWNum  = $('#ca')
-        $prevweek = $('#prevweek'),
-        $nextweek = $('#nextweek');
-
-    return {
-      set : function (q, w) {
-        q = '/' + q;
-
-        var w = w || parseInt($weeknum.attr('data-weeknow'));
-        $weeknum.text(w);
-        $weeknum.attr('data-week', w);
-
-        if(w > 1)
-          $prevweek.attr('href', q + '/w' + (+w - 1));
-        else
-          $prevweek.attr('href', q + '/w' + w);
-
-        $nextweek.attr('href', q + '/w' + (+w + 1));
-
-        app.calendar.select(w);
-      },
-
-      getWeekNum : function () {
-        return $weeknum.attr('data-week');
-      }
-    }
-  }();
-
-
-  window.app.calendar = function () {
-    var prevw;
-
-    $("#calendar tr[data-link='w" + $('#weeknum').attr('data-week') + "']").addClass('selected');
-
-    $('#calendar tbody tr').on('click', function () {
-      var navto = window.location.pathname + location.hash,
-          week  = $(this).attr('data-link'),
-          match;
-
-      if(match = navto.match(/w[0-9]+/ig)) {
-        navto = navto.replace(match, week);
-      }
-      else
-        navto += "/" + week;
-
-      selectWeek(week.substr(1));
-      navto = navto.replace('#', '');
-      app.router.navigate(navto, { trigger : true });
-    });
-
-    function selectWeek (w) {
-      if(w !== prevw) {
-        prevw = w;
-        $('#calendar tr.selected').removeClass('selected');
-        $("#calendar tr[data-link='w"+ w +"']").addClass('selected');
-      }
-    }
-
-    return {
-      select : function (w) {
-        if(w)
-          selectWeek(w);
-      }
-    }
-
-  }();
-
-
-  window.app.alignDays = function () {
-
-    var alignBlocks = function ($blocks) {
-      var maxH = 0;
-      $blocks.each(function () {
-        maxH = ($(this).height() > maxH) ? $(this).height() : maxH;
-      });
-      $blocks.height(maxH);
-    },
-
-      $blocks = $('.bwrap'),
-      docW = $(document).width(),
-      currW = $blocks.eq(1).width(),
-      cols = Math.round(docW / currW),
-      rows = Math.ceil($blocks.length / cols);
-
-    if(cols < 2) {
-      $blocks.css("height", "auto");
-      return true;
-    }
-
-    for(var i = 0; i < rows; i += 1) {
-      alignBlocks($blocks.slice(i*cols, (i+1)*cols));
-    }
-
-    return true;
-  }
-
-  /**
-   * #############################################################
-   * Router
-   */
-
-  window.app.Router = Backbone.Router.extend({
-    routes : {
-      ''               : 'mainpage',
-      'my/w:w(/)'      : 'getMyWeek',
-      'my(/:edit)'     : 'getMy',
-      'back'           : 'goBack',
-      'subject/:q'     : 'subject',
-      'w:w/:q(/)'      : 'search2',
-      ':q(/w:w)(/)'    : 'search',
-      '*other'         : 'unknown'
-    },
-
-    initialize : function () {
-      $(function () {
-        var groups = new app.ListView({
-          el : $('#groupList'),
-          list : 'group'
-        });
-
-        var teachers = new app.ListView({
-          el : $('#teacherList'),
-          list: 'teacher'
-        });
-      });
-
-      this.history = [];
-      this.schedule = {
-        urls  : [],
-        views : []
-      };
-      this.subjects = {
-        urls  : [],
-        views : []
-      };
-      Backbone.history.on('route', function() {
-          this.history.push(window.location.pathname.substr(1) + window.location.hash);
-        }, this);
-    },
-
-    back : function () {
-      if(this.history.length > 1) {
-        this.navigate(this.history[this.history.length - 2], { trigger : true });
-        this.history = this.history.slice(0, this.history.length - 1);
-      }
-      else
-        this.navigate('', { trigger : true, replace : true });
-    },
-
-    findIn : function (obj, q) {
-      var i = 0;
-      if(obj.urls.length && ((i = obj.urls.indexOf(q)) !== -1))
-        return obj.views[i];
-
-      return false;
-    },
-
-    mainpage : function () {
-      app.pagesCtrl.toggle('mainpage');
-    },
-
-    goBack : function () {
-      this.back();
-    },
-
-    getMyWeek : function (w) {
-      this.getMy(false, w);
-    },
-
-    getMy : function (edit, w) {
-      edit = (edit === 'edit');
-      app.pagesCtrl.toggle('schedule');
-      app.weekBar.set('my', w);
-      var q = 'my';
-      q += '?w=' + app.weekBar.getWeekNum();
-
-      $('#nowlink').attr('href', '/my/now');
-
-      var schedule;
-      if(edit) {
-        schedule = new app.ScheduleView({ url : q, editable : edit });
-        return;
-      }
-
-      if(schedule = this.findIn(this.schedule, q))
-        schedule.render();
-      else {
-        schedule = new app.ScheduleView({ url : q, editable : edit });
-        this.schedule.urls.push(q);
-        this.schedule.views.push(schedule);
-      }
-    },
-
-    subject : function (q) {
-      app.pagesCtrl.toggle('subject');
-
-      var subject;
-      if(subject = this.findIn(this.subjects, q))
-        subject.render();
-      else {
-        subject = new app.SubjectView({ url : q });
-        this.subjects.urls.push(q);
-        this.subjects.views.push(subject);
-      }
-    },
-
-    search2 : function (w, q) {
-      this.search(q, w);
-    },
-
-    search : function (q, w) {
-      app.pagesCtrl.toggle('schedule');
-
-      var query = q;
-
-      app.weekBar.set(q, w);
-      query += '?w=' + app.weekBar.getWeekNum();
-
-      $('#nowlink').attr('href', '/' + q + '/now');
-
-      var schedule;
-      if(schedule = this.findIn(this.schedule, query))
-        schedule.render();
-      else {
-        schedule = new app.ScheduleView({ url : query });
-        this.schedule.urls.push(query);
-        this.schedule.views.push(schedule);
-      }
-    },
-
-    unknown : function () {
-      app.pagesCtrl.toggle('unknown');
-    }
-  });
-
-  /**
-   * ######################################################
-   * Init
-   */
-
-  /**
-   * ####################################################
-   * Handlers
-   */
+  var url = window.location.pathname;
+  url = url.split('/')[1];
 
   $(document).ready(function () {
-
-    window.app.router = new app.Router();
-    Backbone.history.start({ pushState: true });
-
-    $(document).on('click', 'a[data-local]', function (e) {
-      var href = $(this).attr('href');
-      var protocol = this.protocol + '//';
-
-      if(href.slice(protocol.length) !== protocol) {
-        e.preventDefault();
-        app.router.navigate(href, true);
-      }
-    });
-
-    $('.topmenu li a:not(.helpmenutoggle)').on('click', function (e) {
-      e.preventDefault();
-      app.sideBar.show($(this).attr('id') + 'List');
-    });
-
-    $('.weekcontent').on('click', function (e) {
-      e.preventDefault();
-      $('#calendar').slideToggle('fast');
-    });
-
-    // helpmenu
-    $('.helpmenutoggle').on('click', function (e) {
-      e.preventDefault();
-      $('.helpmenu').slideToggle('fast');
-    });
-
-    $(document).on('click', function (e) {
-      if($(e.target).is('.helpmenutoggle')) return;
-      else $('.helpmenu').slideUp('fast');
-    });
-
-    // Contacts form
-    $('#message').on('focus', function (e) {
-      $(this).addClass('big');
-      $('#hiddenform').slideDown('fast');
-    });
-
-    $('#send').on('click', function(e) {
-      $.ajax({
-          type : "POST",
-          url  : "/api/messages",
-          data : "msg=" + encodeURIComponent($('#message').val()) + "&from=" + encodeURIComponent($('#replyto').val())
-        })
-      .done(function (data) {
-          $('#sent').slideDown('fast', function() {
-            setTimeout(function () {
-              $('#sent').fadeOut('slow');
-            }, 4000);
-          });
-        }
-      );
-
-      $('#hiddenform').slideUp('fast');
-      $('#message').removeClass('big');
-      $('#replyto').val('');
-      $('#message').val('');
-    });
-
-    $(window).resize(function () {
-      app.alignDays();
-    });
-
+    var schedule = new WeekDayView({ url : url });
   });
 
 })(jQuery);
