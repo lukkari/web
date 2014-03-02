@@ -223,6 +223,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
           data : 'id=' + encodeURIComponent(id)
         })
         .done(function (data) {
+          window.app.router.clearCache();
           window.app.router.getMy('edit');
         })
         .fail(function (data) {
@@ -380,6 +381,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
           }
         })
         .done(function () {
+          window.app.router.clearCache();
           window.app.router.getMy('edit');
         })
         .fail(function (data) {
@@ -781,6 +783,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
       ''               : 'mainpage',
       'my/w:w(/)'      : 'getMyWeek',
       'my(/:edit)'     : 'getMy',
+      'my/edit/w:w(/)' : 'getMyEdit',
       'back'           : 'goBack',
       'subject/:q'     : 'subject',
       'w:w/:q(/)'      : 'search2',
@@ -847,9 +850,12 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
     getMy : function (edit, w) {
       edit = (edit === 'edit');
       app.pagesCtrl.toggle('schedule');
-      app.weekBar.set('my', w);
+
+      if(w == null) w = app.weekBar.getWeekNum();
+      if(edit) app.weekBar.set('my/edit', w);
+      else app.weekBar.set('my', w);
       var q = 'my';
-      q += '?w=' + app.weekBar.getWeekNum();
+      q += '?w=' +w;
 
       $('#nowlink').attr('href', '/my/now');
 
@@ -866,6 +872,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
         this.schedule.urls.push(q);
         this.schedule.views.push(schedule);
       }
+    },
+
+    getMyEdit : function (w) {
+      this.getMy('edit', w);
     },
 
     subject : function (q) {
@@ -907,6 +917,17 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 
     unknown : function () {
       app.pagesCtrl.toggle('unknown');
+    },
+
+    clearCache : function () {
+      this.schedule = {
+        urls  : [],
+        views : []
+      };
+      this.subjects = {
+        urls  : [],
+        views : []
+      };
     }
   });
 

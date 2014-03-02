@@ -1,7 +1,3 @@
-* {
-  outline: none;
-}
-
 body {
   padding: 0;
   margin: 0;
@@ -91,6 +87,10 @@ select {
   color: #555;
   font-size: 0.9em;
   padding: 5px;
+}
+
+a:focus, input:focus {
+  outline: none;
 }
 
 

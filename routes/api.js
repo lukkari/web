@@ -61,7 +61,7 @@ exports.getNow = function (req, res) {
   if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
 
   var today = new Date();
-  search = search.replace(/_/g, ' ');
+  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
 
   if(search.toLowerCase() === 'my') {
 
@@ -153,7 +153,7 @@ exports.getSchedule = function (req, res) {
 
   if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
 
-  search = search.replace(/_/g, ' ');
+  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
   var today = new Date();
 
   if(w !== undefined) {
@@ -203,6 +203,8 @@ exports.getSchedule = function (req, res) {
     function (send) {
       var Group   = mongoose.model('Group'),
           Teacher = mongoose.model('Teacher');
+
+      console.log(search)
 
       Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
         if(err) {
