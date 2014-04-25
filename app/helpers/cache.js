@@ -66,8 +66,6 @@ module.exports = function (config) {
     });
   };
 
-  //deleteData();
-
   return {
     clear : function () {
       hashes.length = 0;

@@ -1,10 +1,9 @@
-
 /*
  * GET home page.
  */
 
 var mongoose = require('mongoose'),
-    calendar = require('../models/calendar'),
+    calendar = require('../helpers/models/calendar'),
     device   = require('../helpers/device');
 
 //########################################################################
@@ -17,19 +16,16 @@ exports.index = function(req, res) {
   var uri = req.params[0],
       w;
 
-  if(uri)
-    w = uri.match(/w{1}[0-9]{1,2}/ig);
+  if(uri) w = uri.match(/w{1}[0-9]{1,2}/ig);
 
-  if(w && (typeof w === 'object'))
-    w = w[0];
+  if(w && (typeof w === 'object')) w = w[0];
 
   var date    = new Date(),
       dates   = calendar.get(date.getStudyWeek()),
       weeknum = date.getStudyWeek(),
       weeknow = weeknum;
 
-  if(w)
-    weeknum = +w.substr(1);
+  if(w) weeknum = +w.substr(1);
 
   res.render('index', {
                         title    : 'Schedule',

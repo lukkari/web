@@ -9,11 +9,11 @@
      ic       = new iconv.Iconv('ISO-8859-1', 'utf-8'),
      async    = require('async'),
      fs       = require('fs'),
-     config   = require('../config/config')['development'],
+     config   = require('../config/config').development,
      cache    = require('../helpers/cache')(config.cache);
 
 
-var parser   = require('../models/parser.js');
+var parser   = require('../helpers/models/parser');
 parser.init(request, jsdom, ic);
 
 exports.index = function (req, res) {
@@ -115,7 +115,7 @@ exports.index = function (req, res) {
                     messages = data;
 
                   cb(null, true);
-               })
+               });
       },
 
       function (cb) {
@@ -136,12 +136,12 @@ exports.index = function (req, res) {
       var date = new Date();
       res.render('manage', {
         title : 'Manage',
-        date  : date.getDate()
-                + '.' + parseInt(date.getMonth()+1)
-                + '.' + date.getFullYear()
-                + ' ' + date.getHours()
-                + ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes())
-                + ' GMT' + (date.getTimezoneOffset() / 60),
+        date  : date.getDate() + 
+                '.' + parseInt(date.getMonth()+1) +
+                '.' + date.getFullYear() +
+                ' ' + date.getHours() +
+                ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes()) +
+                ' GMT' + (date.getTimezoneOffset() / 60),
         week  : date.getStudyWeek(),
         count : count,
         messages : messages,
@@ -221,11 +221,8 @@ exports.clearModel = function (req, res) {
 
 exports.parse = function(req, res) {
 
-  var list;
-
   var error = req.param('error');
-  if(error)
-    error = error.replace(/_/g, ' ');
+  if(error) error = error.replace(/_/g, ' ');
 
   var Group    = mongoose.model('Group'),
       Parse    = mongoose.model('Parse'),
@@ -234,7 +231,7 @@ exports.parse = function(req, res) {
         groups    : [],
         parses    : [],
         buildings : []
-      }
+      };
 
   async.parallel([
       function (cb) {

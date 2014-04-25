@@ -13,12 +13,9 @@ html
 
       div.footer
         span.footlinks
-          if logged
-            include ./footlinks/logged
-          else
-            include ./footlinks/unlogged
+          include ./footlinks/unlogged
         span by
-          a(href='https://github.com/zaynetro' target='_blank') zaynetro
+          a(href='//zaynetro.github.io' target='_blank') zaynetro
           | 2014
 
     block customFoot

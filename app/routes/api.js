@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
-    week     = require('../models/week.js'),
-    weekday  = require('../models/weekday.js'),
-    config   = require('../config/config')['development'],
+    week     = require('../helpers/models/week'),
+    weekday  = require('../helpers/models/weekday'),
+    config   = require('../config/config').development,
     cache    = require('../helpers/cache')(config.cache);
 
 exports.getGroups = function (req, res) {
@@ -91,7 +91,7 @@ exports.getNow = function (req, res) {
       if(err)
         console.log(err);
 
-      var err = parseInt(err, 10);
+      err = parseInt(err, 10);
       if(err > 400)
         res.json(err, data);
       else
@@ -194,7 +194,7 @@ exports.getSchedule = function (req, res) {
       if(err)
         console.log(err);
 
-      var err = parseInt(err, 10);
+      err = parseInt(err, 10);
       if(err > 400)
         res.json(err, data);
       else
@@ -203,8 +203,6 @@ exports.getSchedule = function (req, res) {
     function (send) {
       var Group   = mongoose.model('Group'),
           Teacher = mongoose.model('Teacher');
-
-      console.log(search)
 
       Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
         if(err) {

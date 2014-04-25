@@ -38,8 +38,8 @@ exports.create = function (req, res) {
 
   User.count({}, function (err, count) {
 
-    if(count == 0)
-      user.roles.admin = true;
+    if(count === 0) user.roles.admin = true;
+    else return;
 
     user.save(function (err) {
       if(err) {
@@ -56,7 +56,7 @@ exports.create = function (req, res) {
           logged    : false
         });
       }
-
+      
       req.logIn(user, function (err) {
         if(err) console.log(err);
         return res.redirect('/u/group');
@@ -64,6 +64,14 @@ exports.create = function (req, res) {
     });
 
   });
+
+  /*return res.render('users/signup', {
+    title : 'Sign up',
+    user      : new User(),
+    error     : null,
+    mobile    : device.isMobile(req),
+    logged    : false
+  });*/
 };
 
 exports.logout = function (req, res) {
@@ -97,7 +105,7 @@ exports.update = function (req, res) {
       if(err) {
         console.log(err);
 
-        var error   = (err !== undefined) ? err.message : false;
+        var error   = (err.message !== undefined) ? err.message : false;
 
         return res.render('users/profile', {
           title     : 'Profile',
@@ -171,6 +179,6 @@ exports.addGroup = function (req, res) {
     if(err)
       console.log(err);
 
-    return res.redirect('/my')
+    return res.redirect('/my');
   });
 };

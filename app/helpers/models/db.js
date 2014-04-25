@@ -39,7 +39,7 @@ subjectSchema.methods = {
     if(add)
       this.dates.push(d);
 
-    var cb = cb || null;
+    cb = cb || null;
     this.save(cb);
   },
 
@@ -53,10 +53,10 @@ subjectSchema.methods = {
     if(add)
       this.days.push(day);
 
-    var cb = cb || null;
+    cb = cb || null;
     this.save(cb);
   }
-}
+};
 
 mongoose.model('Subject', subjectSchema);
 
@@ -229,7 +229,7 @@ var contactSchema = new Schema({
   createdAt : { type : Date,   default : Date.now }
 });
 
-contactSchema.index({ "createdAt" : 1 }, { expireAfterSeconds : (60*60*24*30) });
+contactSchema.index({ "createdAt" : 1 }, { expireAfterSeconds : (60*60*24*60) });
 
 mongoose.model('Contact', contactSchema);
 
@@ -282,7 +282,7 @@ userSchema.methods = {
       return '';
     }
   }
-}
+};
 
 userSchema.index({ username : 1 }, { unique : true });
 

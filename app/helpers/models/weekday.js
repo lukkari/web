@@ -9,7 +9,7 @@ var weekDay = function () {
 
   return {
     getSubjects : function (options) {
-      options || (options = {});
+      options = options || {};
 
       var date    = new Date(options.date);
 
@@ -24,7 +24,7 @@ var weekDay = function () {
           month : date.getMonth()
         },
         subjects : []
-      }
+      };
 
       var start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
           end   = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
@@ -57,7 +57,7 @@ var weekDay = function () {
         }
        */
 
-      options.usertable || (options.usertable = {});
+      options.usertable = options.usertable || {};
 
       var qtype = {},
           qrem  = null,
@@ -79,7 +79,7 @@ var weekDay = function () {
       };
 
       if(options.usertable.removed) {
-        query['$and'].push({
+        query.$and.push({
           '_id' : {
             '$nin' : options.usertable.removed
           }
@@ -87,7 +87,7 @@ var weekDay = function () {
       }
 
       if(options.usertable.subjects) {
-        query['$and'].push({
+        query.$and.push({
           '$or' : [
             {
               '_id' : {
@@ -98,7 +98,7 @@ var weekDay = function () {
           ]
         });
       }
-      else query['$and'].push(qtype);
+      else query.$and.push(qtype);
 
       Subject.find(query,
                   {
@@ -118,7 +118,7 @@ var weekDay = function () {
              }
       );
     }
-  }
+  };
 
 }();
 

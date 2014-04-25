@@ -34,7 +34,7 @@ var calendar = function () {
               cal.dates.push(tmp);
             }
           }
-          var tmp = {
+          tmp = {
             days : []
           };
         }
@@ -76,7 +76,7 @@ var calendar = function () {
 
       return res;
     }
-  }
+  };
 
 }();
 

@@ -1,89 +1,89 @@
 /**
- * Module dependencies.
+ * App.js
+ * Server setup
  */
 
+// Application directory
+var appdir = __dirname + '/app';
 
-var express    = require('express'),
-    MongoStore = require('connect-mongo')(express),
-    passport   = require('passport'),
-    routes     = require('./routes'),
-    http       = require('http'),
-    path       = require('path'),
-    fs         = require('fs'),
-    config     = require('./config/config')['development'],
-    mongoose   = require('mongoose'),
-    logPath    = __dirname + config.log.path,
+// Get required modules
+var express      = require('express'),
+    passport     = require('passport'),
+    path         = require('path'),
+    fs           = require('fs'),
+    mongoose     = require('mongoose'),
+    morgan       = require('morgan'),
+    bodyParser   = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    session      = require('express-session'),
+    MongoStore   = require('connect-mongo')({ session : session });
+
+// Get app files
+var config     = require(appdir + '/config/config').development,
+    logPath    = appdir + config.log.path,
     logfile    = fs.createWriteStream(logPath, {flags: 'a+'}),
     loggingOptions = {
       format : config.log.format,
       stream : logfile
     };
 
+// Specify app's port
+var port = process.env.PORT || 3000;
 
-
-//create express app
 var app = express();
 
-//setup the web server
-app.server = http.createServer(app);
-
-
+// DB connection
 var connect = function () {
   mongoose.connect(config.db);
 };
 
 connect();
 
-// Error handler
 mongoose.connection.on('error', function (err) {
   console.log(err);
 });
 
-// Reconnect when closed
-mongoose.connection.on('disconnected', function () {
+mongoose.connection.on('disconnected', function (err) {
   connect();
 });
 
-require(__dirname + '/helpers');
-require(__dirname + '/helpers/cache')(config.cache).clear();
-require(__dirname + '/models/dbmodels');
-require(__dirname + '/config/passport')(passport);
+// Add helpers files
+require(appdir + '/helpers');
+require(appdir + '/helpers/cache')(config.cache).clear();
+require(appdir + '/helpers/models/db');
+require(appdir + '/config/passport')(passport);
+
+// app settings
+app.disable('x-powered-by')
+   .set('port', port)
+   .set('views', path.join(appdir, 'views'))
+   .set('view engine', 'jade')
+
+   .use(express.static(path.join(appdir, 'public')))
+   //.use(express.favicon(appdir + '/public/design/favicon.ico'))
+   .use(bodyParser())
+/**
+ * To INCLUDE:
+ * compress ?
+ */
+   .use(morgan(loggingOptions))
+   .use(cookieParser())
+   .use(session({
+      secret : config.app.name,
+      store  : new MongoStore({ url : config.db })
+    }))
+   .use(passport.initialize())
+   .use(passport.session());
 
 
-app.configure(function () {
-  // settings
-  app.disable('x-powered-by');
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', path.join(__dirname, 'views'));
-  app.set('view engine', 'jade');
+// development only
+if ('development' == app.get('env')) {
+  //app.use(express.errorHandler());
+}
 
-  // middleware
-  app.use(express.compress());
-  app.use(express.logger(loggingOptions));
-  app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
-  app.use(express.logger('dev'));
-  app.use(express.static(path.join(__dirname, 'public')));
-  app.use(express.json());
-  app.use(express.urlencoded());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser());
-  app.use(express.session({
-    secret : config.app.name,
-    store  : new MongoStore({ url : config.db })
-  }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
+// Register routes
+require(appdir + '/config/router')(app, passport);
 
-  // development only
-  if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-  }
-});
-
-require(__dirname + '/config/routes')(app, passport);
-
-
-app.server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+// Start the server
+app.listen(port);
+console.log('Server is running on port ' + port);
