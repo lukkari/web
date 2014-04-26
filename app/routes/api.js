@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
     week     = require('../helpers/models/week'),
     weekday  = require('../helpers/models/weekday'),
-    config   = require('../config/config').development,
+    config   = require('../config/config'),
     cache    = require('../helpers/cache')(config.cache);
 
 exports.getGroups = function (req, res) {

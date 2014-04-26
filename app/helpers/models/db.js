@@ -1,5 +1,6 @@
 /**
  * DB Models
+ *
  */
 
 var mongoose = require('mongoose'),
@@ -8,7 +9,6 @@ var mongoose = require('mongoose'),
 
 
 /**
- * ##########################################################################
  * Subject (schedule item)
  */
 
@@ -26,6 +26,20 @@ var subjectSchema = new Schema({
   parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
   createdAt : { type : Date, default : Date.now }
 });
+
+/**
+ * New vesion
+ *
+
+var subjectSchema = new Schema({
+  name      : { type : String, default : '' },
+  coursenum : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
+  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  createdAt : { type : Date, default : Date.now }
+});
+
+*/
 
 
 subjectSchema.methods = {
@@ -60,9 +74,23 @@ subjectSchema.methods = {
 
 mongoose.model('Subject', subjectSchema);
 
+/**
+ * Daytime entry
+ */
+var entrySchema = new Schema({
+  subject   : { type : Schema.Types.ObjectId, ref : 'Subject' },
+  date      : { type : Date,   default : 0 },
+  duration  : { type : Number, default : 0 },
+  rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
+  groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
+  teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
+  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  createdAt : { type : Date, default : Date.now }
+});
+
+mongoose.model('Entry', entrySchema);
 
 /**
- * ##########################################################################
  * Room
  */
 
@@ -79,20 +107,20 @@ roomSchema.statics = {
    * Return all rooms in ascendant order
    */
   getAll : function (cb) {
-    this.find({})
-      .sort({'name': 1})
+    this
+      .find({})
+      .sort({ 'name' : 1 })
       .exec(cb);
   }
 
 };
 
-roomSchema.index({ name: 1 }, { unique: true });
+roomSchema.index({ name : 1 }, { unique : true });
 
 mongoose.model('Room', roomSchema);
 
 
 /**
- * ##########################################################################
  * Teacher
  */
 
@@ -108,8 +136,9 @@ teacherSchema.statics = {
    * Return all teachers in ascendant order
    */
   getAll : function (cb) {
-    this.find({})
-      .sort({'name': 1})
+    this
+      .find({})
+      .sort({ 'name' : 1 })
       .exec(cb);
   }
 
@@ -121,7 +150,6 @@ mongoose.model('Teacher', teacherSchema);
 
 
 /**
- * ##########################################################################
  * Group
  */
 
@@ -137,20 +165,20 @@ groupSchema.statics = {
    * Return all groups in ascendant order
    */
   getAll : function (cb) {
-    this.find({})
-      .sort({'name': 1})
+    this
+      .find({})
+      .sort({ 'name' : 1 })
       .exec(cb);
   }
 
 };
 
-groupSchema.index({ name: 1 }, { unique: true });
+groupSchema.index({ name : 1 }, { unique : true });
 
 mongoose.model('Group', groupSchema);
 
 
 /**
- * ##########################################################################
  * Parse
  */
 
@@ -218,7 +246,6 @@ mongoose.model('Parse', parseSchema);
 
 
 /**
- * ########################################################################3
  * Messages from the main page
  */
 
@@ -235,7 +262,6 @@ mongoose.model('Contact', contactSchema);
 
 
 /**
- * ########################################################################3
  * Users
  */
 
@@ -290,7 +316,6 @@ mongoose.model('User', userSchema);
 
 
 /**
- * ########################################################################
  * Users
  */
 
@@ -305,7 +330,6 @@ mongoose.model('UserTable', UserTableSchema);
 
 
 /**
- * #########################################################################
  * Buildings
  */
 

@@ -39,7 +39,16 @@ exports.create = function (req, res) {
   User.count({}, function (err, count) {
 
     if(count === 0) user.roles.admin = true;
-    else return;
+    // Remove after adding users support
+    else {
+      return res.render('users/signup', {
+        title : 'Sign up',
+        user      : new User(),
+        error     : null,
+        mobile    : device.isMobile(req),
+        logged    : false
+      });
+    }
 
     user.save(function (err) {
       if(err) {
@@ -64,14 +73,6 @@ exports.create = function (req, res) {
     });
 
   });
-
-  /*return res.render('users/signup', {
-    title : 'Sign up',
-    user      : new User(),
-    error     : null,
-    mobile    : device.isMobile(req),
-    logged    : false
-  });*/
 };
 
 exports.logout = function (req, res) {

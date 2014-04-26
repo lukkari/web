@@ -3,18 +3,11 @@
  */
 
  var mongoose = require('mongoose'),
-     request  = require('request'),
-     jsdom    = require('jsdom'),
-     iconv    = require('iconv'),
-     ic       = new iconv.Iconv('ISO-8859-1', 'utf-8'),
      async    = require('async'),
      fs       = require('fs'),
-     config   = require('../config/config').development,
-     cache    = require('../helpers/cache')(config.cache);
-
-
-var parser   = require('../helpers/models/parser');
-parser.init(request, jsdom, ic);
+     config   = require('../config/config'),
+     cache    = require('../helpers/cache')(config.cache),
+     parser   = require('../helpers/models/parser');
 
 exports.index = function (req, res) {
 
@@ -136,7 +129,7 @@ exports.index = function (req, res) {
       var date = new Date();
       res.render('manage', {
         title : 'Manage',
-        date  : date.getDate() + 
+        date  : date.getDate() +
                 '.' + parseInt(date.getMonth()+1) +
                 '.' + date.getFullYear() +
                 ' ' + date.getHours() +
@@ -322,26 +315,21 @@ exports.staffParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err)
-        res.json(500, err);
-      else
-        res.json('success');
+      if(err) return res.json(500, err);
+      return res.json('success');
     }
     else {
       var addon = err ? '?error='+err.replace(/\s/g, '_') : '';
-      res.redirect('/manage/parse' + addon);
+      return res.redirect('/manage/parse' + addon);
     }
   }
 
-  if(!url || !url.length || !house)
-    return returnRes('empty');
+  if(!url || !url.length || !house) return returnRes('empty');
 
   parser.doStaff(url, house, function (err, result) {
-    if(err)
-      console.log(err);
+    if(err) console.log(err);
 
     console.log(result);
-
     return returnRes(err);
   });
 };
@@ -404,15 +392,13 @@ exports.runParse = function (req, res) {
             },
 
             function (err) {
-              if(err)
-                console.log(err);
+              if(err) console.log(err);
 
               returnRes(null);
             }
           );
         }
-        else
-          runParse(num + 1, number);
+        else runParse(num + 1, number);
       });
     }
 
@@ -428,14 +414,12 @@ exports.deleteParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err)
-        res.json(500, { error : err });
-      else
-        res.json('success');
+      if(err) return res.json(500, { error : err });
+      return res.json('success');
     }
     else {
       var addon = err ? '?error='+err.replace(/\s/g, '_') : '';
-      res.redirect('/manage/parse' + addon);
+      return res.redirect('/manage/parse' + addon);
     }
   }
 
@@ -448,9 +432,7 @@ exports.deleteParse = function (req, res) {
 
       Parse.where('_id', req.params.id).findOneAndRemove(function (err, result) {
         var addon = '';
-        if(err) {
-          console.log(err);
-        }
+        if(err) console.log(err);
 
         returnRes(err);
       });
@@ -466,14 +448,12 @@ exports.clearParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err)
-        res.json(500, { error : err });
-      else
-        res.json('success');
+      if(err) return res.json(500, { error : err });
+      return res.json('success');
     }
     else {
       var addon = err ? '?error='+err.replace(/\s/g, '_') : '';
-      res.redirect('/manage/parse' + addon);
+      return res.redirect('/manage/parse' + addon);
     }
   }
 
@@ -493,8 +473,7 @@ exports.clearParse = function (req, res) {
         },
 
         function (err, parse) {
-          if(err)
-            console.log(err);
+          if(err) console.log(err);
 
           returnRes(err);
         }
@@ -511,8 +490,7 @@ exports.addBuilding = function (req, res) {
       building = new Building(req.body);
 
   building.save(function (err) {
-    if(err)
-      console.log(err);
+    if(err) console.log(err);
 
     return res.redirect('/manage');
   });

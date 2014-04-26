@@ -19,7 +19,7 @@ var express      = require('express'),
     MongoStore   = require('connect-mongo')({ session : session });
 
 // Get app files
-var config     = require(appdir + '/config/config').development,
+var config     = require(appdir + '/config/config'),
     logPath    = appdir + config.log.path,
     logfile    = fs.createWriteStream(logPath, {flags: 'a+'}),
     loggingOptions = {

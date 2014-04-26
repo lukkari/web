@@ -1,12 +1,20 @@
-var mongoose = require('mongoose');
+/**
+ * Parser of schedule by link
+ * Parser of staff (get all groups, teachers and rooms)
+ */
+
+var mongoose = require('mongoose'),
+    request  = require('request'),
+    jsdom    = require('jsdom'),
+    iconv    = require('iconv'),
+    ic       = new iconv.Iconv('ISO-8859-1', 'utf-8');
 
 var parser = function () {
-  var request, jsdom, ic, html, g_err;
 
   var staff = {
-    "groups": [],
-    "teachers": [],
-    "rooms": []
+    "groups"   : [],
+    "teachers" : [],
+    "rooms"    : []
   };
 
   function renewStaff() {
@@ -56,10 +64,8 @@ var parser = function () {
 
           callback(false, body);
         }
-        else if (error)
-          callback(error);
-        else
-          callback('Parse stopped [page not found]');
+        else if(error) callback(error);
+        else callback('Parse stopped [page not found]');
       });
   }
 
@@ -105,32 +111,14 @@ var parser = function () {
 
         return;
       }
-    }
+    };
 
   }();
 
   return {
-    init: function (_request, _jsdom, _ic) {
-      if(_request === null || _jsdom === null || _ic === null) {
-        g_err = true;
-        return false;
-      }
-
-      request = _request;
-      jsdom   = _jsdom;
-      ic      = _ic;
-      lastres = null;
-      g_err   = false;
-
-      return true;
-    },
 
     doStaff: function (url, house, callback) {
-      if(url.length < 2)
-        return callback('Url is too short');
-
-      if(g_err)
-        return callback('Init error');
+      if(url.length < 2) return callback('Url is too short');
 
       doParse(url, function (error, result) {
         if(error) {
@@ -174,8 +162,7 @@ var parser = function () {
                       building : house
                     });
                     group.save(function (err, group, num) {
-                      if(err)
-                        console.log(err);
+                      if(err) console.log(err);
 
                       count.groups += 1;
                     });
@@ -187,8 +174,7 @@ var parser = function () {
                       building : house
                     });
                     teacher.save(function (err, teacher, num) {
-                      if(err)
-                        console.log(err);
+                      if(err) console.log(err);
 
                       count.teachers += 1;
                     });
@@ -200,8 +186,7 @@ var parser = function () {
                       building : house
                     });
                     room.save(function (err, room, num) {
-                      if(err)
-                        console.log(err);
+                      if(err) console.log(err);
 
                       count.rooms += 1;
                     });
@@ -218,11 +203,9 @@ var parser = function () {
     },
 
     doSchedule: function (url, parseId, callback) {
-      if(url.length < 2)
-        return callback('Url is too short');
+      if(url.length < 2) return callback('Url is too short');
 
-      if(g_err)
-        return callback('Init error');
+      if(g_err) return callback('Init error');
 
       doParse(url, function (error, result) {
         if(error) {
@@ -254,14 +237,15 @@ var parser = function () {
             lastBusyRow = [],
             dates = [];
 
-            for(i = 0; i < 5; i += 1)
+            for(i = 0; i < 5; i += 1) {
               lastBusyRow[i] = 0;
+            }
 
             i = 0;
 
             window.$("table[bgcolor] tr").each( function (index) {
 
-              if(index == 0) {
+              if(index === 0) {
                 // Parse date
                 tmp = window.$(this).find('b').text();
                 i = tmp.indexOf(':');
@@ -271,8 +255,9 @@ var parser = function () {
                 date = new Date(parseInt(tmp2[2]), parseInt(tmp2[1])-1, parseInt(tmp2[0]));
 
                 //Prepare dates for each column
-                for(i = 0; i < 5; i += 1)
+                for(i = 0; i < 5; i += 1) {
                   dates[i] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + i).getTime();
+                }
 
               }
 
@@ -298,8 +283,7 @@ var parser = function () {
                   else {
                     // Find duration
                     j = parseInt(window.$(this).attr('rowspan'));
-                    if(!j || j < 1)
-                      j = 1;
+                    if(!j || j < 1) j = 1;
 
                     // Check if col is busy
                     while(lastBusyRow[col] > row) {
@@ -316,9 +300,9 @@ var parser = function () {
                     tmp2 = tmp2.replace(/\/\//gm, "");
 
                     if(tmp2.length > 0) {
-                      date = new Date().setTime(dates[col]
-                                                + parseInt(time[0]) * 60 * 60 * 1000
-                                                + parseInt(time[1]) * 60 * 1000);
+                      date = new Date().setTime(dates[col] +
+                                                parseInt(time[0]) * 60 * 60 * 1000 +
+                                                parseInt(time[1]) * 60 * 1000);
 
                       // Find group, teacher, room and subject and remove from the string
                       obj.groups = inStrInArr(tmp2, staff.groups);
@@ -335,8 +319,7 @@ var parser = function () {
                         obj.coursenum = obj.coursenum[0];
                         tmp2 = tmp2.replace(obj.coursenum, '');
                       }
-                      else
-                        obj.coursenum = 0;
+                      else obj.coursenum = 0;
 
                       tmp2 = tmp2.trim();
 
@@ -363,23 +346,20 @@ var parser = function () {
                             })
                           .sort({ createdAt : 1 })
                           .exec(function (err, subject) {
-                              if(err)
-                                console.log(err);
+                              if(err) console.log(err);
 
                               if(subject) {
                                 subject.addDay(data.days[0], function (err) {
-                                  if(err)
-                                    console.log(err);
+                                  if(err) console.log(err);
 
                                   next();
                                 });
                               }
                               else {
                                 // If not found Save subject to the db
-                                var subject = new Subject(data);
+                                subject = new Subject(data);
                                 subject.save(function (err) {
-                                  if(err)
-                                    console.log(err);
+                                  if(err) console.log(err);
 
                                   next();
                                 });
