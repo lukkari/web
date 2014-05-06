@@ -4,8 +4,7 @@ var mongoose = require('mongoose'),
 
 exports.login = function (req, res) {
 
-  if(req.isAuthenticated())
-    return res.redirect('/');
+  if(req.isAuthenticated()) return res.redirect('/');
 
   var error = (req.param('wrong') !== undefined) ? true : false;
 
@@ -65,7 +64,7 @@ exports.create = function (req, res) {
           logged    : false
         });
       }
-      
+
       req.logIn(user, function (err) {
         if(err) console.log(err);
         return res.redirect('/u/group');

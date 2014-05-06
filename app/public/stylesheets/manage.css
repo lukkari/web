@@ -1,11 +1,7 @@
-* {
-  outline: none;
-}
-
 body {
   padding: 0;
   margin: 0;
-  font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 100% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #fff;
 }
 
@@ -20,6 +16,12 @@ a:hover {
 }
 
 .klear {
+  clear: both;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
   clear: both;
 }
 
@@ -53,6 +55,10 @@ select {
 .button:hover {
   cursor: pointer;
   background-color: #bdc3c7;
+}
+
+.text, .button {
+  outline: none;
 }
 
 .footer {
@@ -93,87 +99,138 @@ select {
   padding: 5px;
 }
 
+#notfound {
+  padding: 2em 3em;
+  margin: 0.5em 0;
+  font-size: 1.1em;
+  background-color: #eee;
+}
+
 .manage {
-  width: 700px;
-  margin: 10px auto;
+  width: 100%;
+  height: 100%;
 }
 
-.manage .easylinks {
-  border-left: 5px solid #57B6F0;
-  padding: 3px 0 3px 10px;
+.manage .sidebar {
+  width: 15%;
+  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
+  float: left;
 }
 
-.manage .easylinks ul > li {
-  margin: 3px 0;
+.manage .links {
+  padding: 3em 0 0 2em;
 }
 
-.manage .easylinks li > a {
-  font-size: 15px;
+.manage .links li {
+  margin: 0.5em 0;
+  font-size: 1.2em;
 }
 
 .manage .container {
-  margin: 20px 0;
-}
-
-.manage .block {
-  margin-top: 10px;
-}
-
-.manage .block h3 {
-  border-bottom: 2px solid #53CE85;
-}
-
-.manage .block ul > li {
-  margin: 3px 0;
-}
-
-.manage .block li > span {
-  padding-left: 5px;
-  font-style: italic;
-}
-
-.manage .block li > a {
-  font-size: 12px;
-  margin-left: 7px;
-}
-
-.manage .block li > a.show {
-  text-decoration: none;
-  background-color: #ddd;
-  color: #000;
-  border: 1px solid #777;
-  padding: 1px 5px;
-}
-
-.manage .block li > a.show:hover {
-  background-color: #bbb;
-}
-
-.manage .msg {
-  margin: 2px 0;
-  padding: 0 5px;
-  clear: left;
-  border-left: 3px solid #59A6D4;
-}
-
-.manage .msg:nth-child(2n) {
-  border-left: 3px solid #59A6D4;
-}
-
-.manage .msg:nth-child(2n+1) {
-  border-left: 3px solid #BF59D4;
-}
-
-.manage .msg .from {
   float: left;
-  font-size: 0.9em;
-  padding-right: 10px;
-  color: #888;
+  width: 85%;
+  box-sizing: border-box;
+  padding: 0 2em;
 }
 
-.manage .msg .contain i {
-  margin-left: 5px;
-  font-size: 0.7em;
+.manage .container h2 {
+  margin: 1.5em 0 0.5em 0;
+  clear: both;
+}
+
+.manage .container .info li {
+  margin: 0.3em 0;
+}
+
+.manage .container .info li span {
+  padding-left: 0.3em;
+}
+
+.manage .container .models li {
+  float: left;
+  margin: 0.2em 1em;
+}
+
+.manage .container .models li > a.modellink {
+  width: 200px;
+  display: block;
+  padding: 1em 0;
+  text-align: center;
+  font-size: 1em;
+  color: #000;
+  text-decoration: none;
+  background-color: #C4E1F5;
+  transition: background-color 0.2s;
+}
+
+.manage .container .models li > a.modellink:hover {
+  background-color: #8BC2E8;
+}
+
+.manage .container .models li > a.modellink .name:after {
+  content: ':';
+}
+
+.manage .container .models li > a.modellink .count {
+  padding-left: 0.2em;
+}
+
+.manage .container .models li > a.clearlink {
+  display: block;
+  width: 200px;
+  text-align: center;
+  padding: 0.2em 0;
+  color: #fff;
+  background-color: #F2837C;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s,
+              background-color 0.2s;
+}
+
+.manage .container .models li > a.clearlink:hover {
+  background-color: #ED564C;
+}
+
+.manage .container .models li:hover > a.clearlink {
+  visibility: visible;
+  opacity: 1;
+}
+
+.manage .container .msg {
+  margin: 1em 0;
+  padding: 0.2em 0.3em;
+  clear: left;
+  border-left: 3px solid #2980b9;
+}
+
+.manage .container .msg:nth-child(2n) {
+  border-left: 3px solid #2980b9;
+}
+
+.manage .container .msg:nth-child(2n+1) {
+  border-left: 3px solid #8e44ad;
+}
+
+.manage .container .msg .from {
+  font-size: 0.9em;
+  color: #888;
+  padding: 0.2em 0;
+}
+
+.manage .container .msg .from i {
+  color: #000;
+  margin-left: 1em;
+  font-size: 0.8em;
+}
+
+.manage .container .msg .contain {
+  max-width: 800px;
+  line-height: 1.3;
+  padding: 0.3em 0 0 0.4em;
 }
 
 .manage #error {
@@ -192,7 +249,7 @@ select {
   background: url('/design/success_icon.png') no-repeat center right;
 }
 
-.manage .addparseporm .empty {
+.manage .addparseform .empty {
   background-image: none;
 }
 
@@ -299,4 +356,115 @@ select {
   font-size: 13px;
   padding: 2px 40px;
   color: #888;
+}
+
+.manage .modellist .searchbox {
+  background-color: #eee;
+  font-size: 0.9em;
+  font-family: Consolas, monospace;
+}
+
+.manage .modellist .searchbox .labels {
+  padding-left: 1em;
+}
+
+.manage .modellist .searchbox .nopadding {
+  padding: 0;
+}
+
+.manage .modellist .searchbox .text {
+  min-width: 300px;
+  border: 0;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  font-family: Consolas, monospace;
+}
+
+.manage .modellist .searchbox .button {
+  width: 100%;
+  padding: 0.5em 0;
+}
+
+.manage .modellist #notfound {
+  display: none;
+  margin: 1em 0 0;
+}
+
+.manage .modellist ul .row {
+  margin: 1em 0;
+}
+
+.manage .modellist .number {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.manage .modellist .model {
+  position: relative;
+}
+
+.manage .modellist pre {
+  font-size: 0.9em;
+  font-family: Consolas, monospace;
+  color: #000;
+  background-color: #eee;
+  padding: 0.2em 0.3em;
+  margin: 0;
+  transition: background-color 0.2s;
+}
+
+.manage .modellist .model:hover > pre {
+  background-color: #ddd;
+}
+
+.manage .modellist .actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.manage .modellist .actions li {
+  float: left;
+  margin: 0 0.6em 0.2em 0;
+}
+
+.manage .modellist .actions li > a {
+  display: block;
+  padding: 0.3em 0.6em;
+  color: #fff;
+  border-radius: 0.3em;
+  text-decoration: none;
+}
+
+.manage .modellist .actions li > a.delete {
+  background: #e74c3c;
+}
+
+.manage .modellist .actions li > a.delete:hover {
+  background: #DE3321;
+}
+
+.manage .modellist .actions li > a.edit {
+  background: #f1c40f;
+}
+
+.manage .modellist .actions li > a.edit:hover {
+  background: #E3B705;
+}
+
+.manage .pagination li {
+  float: left;
+}
+
+.manage .pagination li > a {
+  display: block;
+  padding: 0.2em 0.5em;
+  color: #000;
+  font-size: 1.2em;
+  background-color: #ddd;
+}
+
+.manage .pagination li.current > a {
+  background-color: #fff;
 }

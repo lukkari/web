@@ -34,6 +34,20 @@ function ensureAdmin(req, res, next) {
   res.redirect('/login');
 }
 
+function ensureXhr(req, res, next) {
+  //if(!req.xhr) return res.json({ error : 'Only xhr requests' });
+
+  /**
+   * For CORS
+   *
+  res.header('Access-Control-Allow-Origin',  req.headers.origin || "*");
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
+   */
+
+  next();
+}
+
 // Set up router
 module.exports = function (app, passport) {
 
@@ -42,9 +56,11 @@ module.exports = function (app, passport) {
     .use(ensureAuthenticated)
     .use(ensureAdmin)
 
-    .get('/',              manage.index)
-    .get('/log',           manage.showLog)
-    .get('//clear/:model', manage.clearModel)
+    .get('/',             manage.index)
+    .get('/log',          manage.showLog)
+    .get('/model/:model', manage.model)
+    .get('/model/:model/page/:page', manage.model)
+    .get('/clear/:model', manage.clearModel)
 
     .get( '/parse',       manage.parse)
     .post('/parse/add',   manage.addParse)
@@ -56,7 +72,15 @@ module.exports = function (app, passport) {
 
     .post('/building', manage.addBuilding);
 
-  
+  var manageApiRouter = express.Router();
+  manageApiRouter
+    .use(ensureAuthenticated)
+    .use(ensureAdmin)
+    .use(ensureXhr)
+
+    .get('/model/:model/config', manage.apiModelConfig)
+    .get('/model/:model', manage.apiModel);
+
   var userRouter = express.Router();
   userRouter
     // User page
@@ -69,23 +93,11 @@ module.exports = function (app, passport) {
     // Log out
     .get('/logout', users.logout);
 
-  
+
   var apiRouter = express.Router();
   apiRouter
     // "API"
-    .use(function(req, res, next) {
-      if(!req.xhr) return res.json('Only xhr requests');
-
-      /**
-       * For CORS
-       *
-      res.header('Access-Control-Allow-Origin',  req.headers.origin || "*");
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
-       */
-
-      next();
-    })
+    .use(ensureXhr)
     .get(   '/groups',          api.getGroups)
     .get(   '/teachers',        api.getTeachers)
     .get(   '/schedule/:q',     api.getSchedule)
@@ -114,7 +126,7 @@ module.exports = function (app, passport) {
     // Sign up
     .get( '/signup', users.signup)
     .post('/signup', users.create)
-  
+
     // Main page
     .get('/:q/now', routes.getNow)
     .get('/*',      routes.index);
@@ -122,6 +134,7 @@ module.exports = function (app, passport) {
   // Add all routers
   app
     .use('/manage', manageRouter)
+    .use('/manage/api', manageApiRouter)
     .use('/u', userRouter)
     .use('/api', apiRouter)
     .use('/', homeRouter);

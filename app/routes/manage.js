@@ -7,147 +7,96 @@
      fs       = require('fs'),
      config   = require('../config/config'),
      cache    = require('../helpers/cache')(config.cache),
-     parser   = require('../helpers/models/parser');
+     parser   = require('../helpers/parsers/parser');
+
+/**
+ * Counts documents in any collection by model
+ * @param  {string}   name [model name]
+ * @param  {Function} cb   [callback with error and number of documents]
+ */
+function countCollection (name, cb) {
+  if(!name || !name.length) return cb(new Error('Wrong model name'));
+
+  try {
+    var Model = mongoose.model(name);
+    if(!Model) return cb(new Error('Model does not exit'));
+
+    Model.count({}, function (err, num) {
+      if(err) return cb(err);
+
+      cb(null, num);
+    });
+  } catch(e) {
+    cb(e);
+  }
+}
 
 exports.index = function (req, res) {
 
-  var Room     = mongoose.model('Room'),
-      Group    = mongoose.model('Group'),
-      Teacher  = mongoose.model('Teacher'),
-      Parse    = mongoose.model('Parse'),
-      Subject  = mongoose.model('Subject'),
-      User     = mongoose.model('User'),
-      Contact  = mongoose.model('Contact'),
-      Building = mongoose.model('Building'),
-      count = {
-        rooms     : 0,
-        groups    : 0,
-        teachers  : 0,
-        parses    : 0,
-        subjects  : 0,
-        users     : 0,
-        buildings : 0
-      },
-      messages;
+  var Contact  = mongoose.model('Contact'),
+      models   = [],
+      messages,
+      modelslist = Object.keys(mongoose.connection.base.models);
 
   async.parallel([
       function (cb) {
-        Room.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.rooms = num;
+        var l = modelslist.length,
+            i = 0;
 
-          cb(null, true);
+        modelslist.forEach(function (el) {
+          countCollection(el, function (err, num) {
+            if(err) {
+              console.log(err);
+              num = 0;
+            }
+            models.push({
+              name  : el.capitalize(),
+              count : num
+            });
+            i += 1;
+            if(i >= l) cb(null);
+          });
         });
       },
 
       function (cb) {
-        Group.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.groups = num;
+        Contact
+          .find({})
+          .sort({ createdAt : -1 })
+          .limit(50)
+          .exec(function (err, data) {
+            if(err) console.log(err);
+            else messages = data;
 
-          cb(null, true);
-        });
-      },
-
-      function (cb) {
-        Teacher.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.teachers = num;
-
-          cb(null, true);
-        });
-      },
-
-      function (cb) {
-        Parse.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.parses = num;
-
-          cb(null, true);
-        });
-      },
-
-      function (cb) {
-        Subject.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.subjects = num;
-
-          cb(null, true);
-        });
-      },
-
-      function (cb) {
-        User.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.users = num;
-
-          cb(null, true);
-        });
-      },
-
-      function (cb) {
-        Contact.find({})
-               .sort({ createdAt : -1 })
-               .limit(50)
-               .exec(function (err, data) {
-                  if(err)
-                    console.log(err);
-                  else
-                    messages = data;
-
-                  cb(null, true);
-               });
-      },
-
-      function (cb) {
-        Building.count({}, function (err, num) {
-          if(err)
-            console.log(err);
-          else
-            count.buildings = num;
-
-          cb(null, true);
-        });
+            cb(null);
+          });
       }
-
     ],
 
-    function (err, result) {
-
+    function (err) {
       var date = new Date();
-      res.render('manage', {
-        title : 'Manage',
-        date  : date.getDate() +
-                '.' + parseInt(date.getMonth()+1) +
-                '.' + date.getFullYear() +
-                ' ' + date.getHours() +
-                ':' + ((date.getMinutes() > 9) ? date.getMinutes() : '0' + date.getMinutes()) +
-                ' GMT' + (date.getTimezoneOffset() / 60),
-        week  : date.getStudyWeek(),
-        count : count,
+      res.render('manage/index', {
+        title  : 'Manage',
+        date   : date,
+        week   : date.getStudyWeek(),
+        models : models,
         messages : messages,
         logged : true
       });
     }
   );
-
 };
 
 exports.showLog = function (req, res) {
   res.set('Content-Type', 'text/plain');
   res.send(fs.readFileSync(__dirname + '/..' + config.log.path));
+};
+
+exports.model = function (req, res) {
+
+  res.render('manage/model', {
+    title : 'Model'
+  });
 };
 
 exports.clearModel = function (req, res) {
@@ -163,47 +112,29 @@ exports.clearModel = function (req, res) {
     );
   }
 
-  switch(req.params.model) {
+  var model = req.params.model;
+  if(!model || !model.length) return res.redirect('/manage');
 
-    case 'groups':
-      doClear(mongoose.model('Group'));
-      break;
+  if(model.toLowerCase() == 'log') {
+    fs.writeFile(__dirname + '/..' + config.log.path, '');
+  } else if(model.toLowerCase() == 'cache') {
+    cache.clear();
+  } else {
+    try {
+      var Model = mongoose.model(model.capitalize());
+      Model
+        .find({})
+        .remove( function (err) {
+          if(err) console.log(err);
+        }
+      );
+    } catch(e) {
+      console.log(e);
+    }
 
-    case 'teachers':
-      doClear(mongoose.model('Teacher'));
-      break;
-
-    case 'rooms':
-      doClear(mongoose.model('Room'));
-      break;
-
-    case 'parses':
-      doClear(mongoose.model('Parse'));
-      break;
-
-    case 'subjects':
-      doClear(mongoose.model('Subject'));
-      break;
-
-    case 'log':
-      fs.writeFile(__dirname + '/..' + config.log.path, '', function (err) {
-        res.redirect('/manage');
-      });
-      break;
-
-    case 'cache':
-      cache.clear();
-      res.redirect('/manage');
-      break;
-
-    case 'buildings':
-      doClear(mongoose.model('Building'));
-      break;
-
-    default:
-      res.redirect('/manage');
   }
 
+  return res.redirect('/manage');
 };
 
 
@@ -267,7 +198,7 @@ exports.parse = function(req, res) {
     ],
 
     function (err, result) {
-      res.render('parse', {
+      res.render('manage/parse', {
                             title     : 'Parse',
                             grouplist : list.groups,
                             parselist : list.parses,
@@ -300,8 +231,7 @@ exports.addParse = function (req, res) {
 
   parse.save(function (err, parse) {
     var addon = '';
-    if(err)
-      console.log(err);
+    if(err) console.log(err);
 
     return returnRes(err, parse);
   });
@@ -483,7 +413,6 @@ exports.clearParse = function (req, res) {
 
 };
 
-
 exports.addBuilding = function (req, res) {
 
   var Building = mongoose.model('Building'),
@@ -494,4 +423,58 @@ exports.addBuilding = function (req, res) {
 
     return res.redirect('/manage');
   });
+};
+
+/**
+ * API
+ *
+ */
+
+exports.apiModel = function (req, res) {
+
+  try {
+    var
+      model = mongoose.model(req.params.model),
+      page  = req.param('page'),
+      limit = 1;
+
+    page = page && (page > 0) ? +page : 1;
+
+    model
+      .find({})
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ 'createdAt' : -1 })
+      .exec(
+        function (err, docs) {
+        if(err) {
+          console.log(err);
+          return res.json(500, err);
+        }
+        res.json(docs);
+      });
+  } catch(e) {
+    return res.json(500, { error : "Model doesn't exist" });
+  }
+};
+
+exports.apiModelConfig = function (req, res) {
+
+  try {
+    var model = mongoose.model(req.params.model);
+
+    model.count({}, function (err, count) {
+      if(err) {
+        console.log(err);
+        return res.json(500, err);
+      }
+      res.json({
+        count  : count,
+        name   : model.modelName,
+        schema : model.schema.paths
+      });
+    });
+  } catch (e) {
+    return res.json(500, { error : "Model doesn't exist" });
+  }
 };

@@ -39,6 +39,20 @@ var subjectSchema = new Schema({
   createdAt : { type : Date, default : Date.now }
 });
 
+subjectSchema.methods = {
+
+  addEntry : function (entry, cb) {
+    if(typeof entry !== 'object') return cb(new Error('Wrong entry'));
+
+    var e = entry;
+    e.subject = this._id;
+
+    mongoose.model('Entry').save(e, function (err, entry) {
+      cb(err, entry);
+    });
+  }
+};
+
 */
 
 
@@ -76,7 +90,7 @@ mongoose.model('Subject', subjectSchema);
 
 /**
  * Daytime entry
- */
+
 var entrySchema = new Schema({
   subject   : { type : Schema.Types.ObjectId, ref : 'Subject' },
   date      : { type : Date,   default : 0 },
@@ -89,6 +103,8 @@ var entrySchema = new Schema({
 });
 
 mongoose.model('Entry', entrySchema);
+
+*/
 
 /**
  * Room
@@ -267,7 +283,7 @@ mongoose.model('Contact', contactSchema);
 
 var userSchema = new Schema({
   username  : { type : String, default : '', required : true },
-  password  : { type : String, default : '', required : true},
+  password  : { type : String, default : '', required : true },
   salt      : { type : String, default : '' },
   email     : { type : String, default : '' },
   group     : { type : Schema.Types.ObjectId, ref : 'Group' },

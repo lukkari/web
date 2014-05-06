@@ -73,8 +73,7 @@ var parser = function () {
   function inStrInArr(str, arr) {
     var tmp = [];
     arr.forEach( function (value) {
-      if(str.indexOf(value.name) > 0)
-        tmp.push(value);
+      if(str.indexOf(value.name) > 0) tmp.push(value);
     });
 
     return tmp;
@@ -192,7 +191,6 @@ var parser = function () {
                     });
                     break;
                 }
-                console.log(i + '-' +tmp2);
               }
             });
 

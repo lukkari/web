@@ -30,6 +30,12 @@ select {
   padding: 2px 0;
 }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .text {
   border: 1px solid #bbb;
   padding: 3px;

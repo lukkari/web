@@ -1,35 +1,44 @@
 {
-  "name"    : "lukkari",
-  "version" : "0.0.8",
-  "private" : true,
-  "author"  : "Roman Zaynetdinov",
-  "scripts" : {
-    "start" : "node app.js"
+  "name": "lukkari",
+  "version": "0.0.8",
+  "private": true,
+  "author": "Roman Zaynetdinov",
+  "scripts": {
+    "start": "node app.js"
   },
-  "dependencies" : {
-    "express"        : "*",
-    "jade"           : "*",
-    "connect-mongo"  : "*",
-    "mongoose"       : "*",
-    "request"        : "*",
-    "jsdom"          : "*",
-    "iconv"          : "*",
-    "async"          : "*",
-    "passport"       : "*",
-    "passport-local" : "*",
-    "morgan"         : "*",
-    "body-parser"    : "*",
-    "cookie-parser"  : "*",
-    "express-session": "*"
+  "dependencies": {
+    "express": "*",
+    "jade": "*",
+    "connect-mongo": "*",
+    "mongoose": "*",
+    "request": "*",
+    "jsdom": "*",
+    "iconv": "*",
+    "async": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "morgan": "*",
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "express-session": "*",
+    "gulp": "*",
+    "gulp-browserify": "*",
+    "gulp-uglify": "*",
+    "underscore": "*",
+    "backbone": "*",
+    "jquery": "*"
   },
-  "engines" : {
-    "node" : "0.10.x"
+  "engines": {
+    "node": "0.10.x"
   },
-  "repository" : {
-    "type" : "git",
-    "url"  : "https://github.com/zaynetro/lukkari.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaynetro/lukkari.git"
   },
-  "bugs" : {
-    "url" : "https://github.com/zaynetro/lukkari/issues"
+  "bugs": {
+    "url": "https://github.com/zaynetro/lukkari/issues"
+  },
+  "devDependencies": {
+    "gulp-browserify": "~0.5.0"
   }
 }

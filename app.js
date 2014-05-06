@@ -21,7 +21,7 @@ var express      = require('express'),
 // Get app files
 var config     = require(appdir + '/config/config'),
     logPath    = appdir + config.log.path,
-    logfile    = fs.createWriteStream(logPath, {flags: 'a+'}),
+    logfile    = fs.createWriteStream(logPath, { flags: 'a+' }),
     loggingOptions = {
       format : config.log.format,
       stream : logfile
@@ -60,12 +60,8 @@ app.disable('x-powered-by')
    .set('view engine', 'jade')
 
    .use(express.static(path.join(appdir, 'public')))
-   //.use(express.favicon(appdir + '/public/design/favicon.ico'))
+   //.use(express.favicon(appdir + '/public/favicon.ico'))
    .use(bodyParser())
-/**
- * To INCLUDE:
- * compress ?
- */
    .use(morgan(loggingOptions))
    .use(cookieParser())
    .use(session({
