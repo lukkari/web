@@ -435,10 +435,11 @@ exports.apiModel = function (req, res) {
   try {
     var
       model = mongoose.model(req.params.model),
-      page  = req.param('page'),
-      limit = 1;
+      page  = +req.param('page'),
+      limit = +req.param('limit');
 
-    page = page && (page > 0) ? +page : 1;
+    page = page && (page > 0) ? page : 1;
+    limit = limit && (limit < 100) ? limit : 10;
 
     model
       .find({})

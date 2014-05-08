@@ -18,7 +18,7 @@ app.Models = Backbone.Collection.extend({
     options = options || {};
 
     this.url += options.name;
-    this.url += '?page=' + options.page;
+    this.url += '?page=' + options.page + '&limit=' + options.limit;
   }
 });
 
@@ -27,12 +27,19 @@ app.ModelView = Backbone.View.extend({
   className : 'row',
   template  : $('#modelTemplate').html(),
 
+  initialize : function (options) {
+    options = options || {};
+
+    this.index = +options.index || 1;
+  },
+
   render : function () {
     var tmpl = _.template(this.template),
         data = this.model.toJSON();
 
     var newdata = {
-      model : JSON.stringify(data, null, '  ')
+      model : JSON.stringify(data, null, '  '),
+      index : this.index
     };
 
     this.$el.html(tmpl(newdata));
@@ -46,6 +53,9 @@ app.ModelsView = Backbone.View.extend({
   initialize : function (options) {
     options = options || {};
 
+    this.limit = +window.app.limit || 10;
+    this.page = +options.page;
+    options.limit = this.limit;
     this.collection = new app.Models(options);
 
     var that = this;
@@ -59,16 +69,17 @@ app.ModelsView = Backbone.View.extend({
   render : function () {
     this.$el.empty();
 
-    _.each(this.collection.models, function (item) {
-      this.renderItem(item);
+    _.each(this.collection.models, function (item, i) {
+      this.renderItem(item, (this.page - 1) * this.limit + (i+1));
     }.bind(this), this);
 
     return this;
   },
 
-  renderItem : function (item) {
+  renderItem : function (item, i) {
     var modelView = new app.ModelView({
-      model : item
+      model : item,
+      index : i
     });
 
     this.$el.append(modelView.render().el);

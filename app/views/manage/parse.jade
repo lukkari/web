@@ -5,11 +5,12 @@ block customHead
 
 block content
   div.manage
-    div.easylinks
-      ul
-        li: a(href='/') Home
-        li: a(href='/manage') Manage
-        li: a(href='/manage/parse') Parse
+    div.sidebar
+      div.links
+        ul
+          li: a(href='/') Home
+          li: a(href='/manage') Manage
+          li: a(href='/manage/parse') Parse
 
     div.container
       h1= title

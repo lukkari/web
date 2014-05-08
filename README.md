@@ -14,3 +14,4 @@ Install
 5. `cp config/config.example.js config/config.js`
 6. `cd ../`
 7. `gulp scripts`
+8. `node app`

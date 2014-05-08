@@ -14,35 +14,13 @@ block content
 
 
     div.container
-      h1= title
+      h1
+        span#modelName
+        span= title
 
       div.modellist
         h2 Search
-        div.searchbox
-          table
-            tr.row
-              td.labels.nopadding {
-
-            tr.row
-              td.labels: label(for='building') "building"
-                td.colons :
-                td.inputs: input.text(type='text' id='building' placeholder='your query')
-
-            tr.row
-              td.labels: label(for='_id') "_id"
-              td.colons :
-              td.inputs: input.text(type='text' id='_id' placeholder='your query')
-
-            tr.row
-              td.labels: label(for='name') "name"
-              td.colons :
-              td.inputs: input.text(type='text' id='name' placeholder='your query')
-
-            tr.row
-              td.labels.nopadding }
-
-            tr.row
-              td(colspan=3): input.button(type='button' value='Search')
+        div.searchbox#searchBox
 
         div#notfound Nothing found
 
@@ -55,7 +33,7 @@ block content
 
 block customFoot
   script#modelTemplate(type='text/html')
-    div.number #3
+    div.number #<%= index %>
       div.model
         div.actions
           ul
@@ -65,20 +43,19 @@ block customFoot
 
   script#paginationTemplate(type='text/html')
     li(class!='<%= (current) ? "current" : "" %>')
-      a(href!='<%= url + "/page/" + number %>') <%= number %>
+      a(href!='<%= url + "/page/" + number %>' data-local) <%= number %>
 
   script#searchTemplate(type='text/html')
-    h2 Search
     table
       tr.row
         td.labels.nopadding {
 
-      <% _.each(items, function (item) {
+      <% _.each(fields, function (field) { %>
       tr.row
-        td.labels: label(for!='<% item.name %>')
+        td.labels: label(for!='<%= field %>') <%= field %>
         td.colons :
         td.inputs
-          input.text(type='text' id!='<% item.name %>' placeholder='your query')
+          input.text(type='text' id!='<%= field %>' placeholder='your query')
       <% }); %>
 
       tr.row

@@ -132,7 +132,7 @@ select {
   float: left;
   width: 85%;
   box-sizing: border-box;
-  padding: 0 2em;
+  padding: 0 2em 2em 2em;
 }
 
 .manage .container h2 {
@@ -356,6 +356,11 @@ select {
   font-size: 13px;
   padding: 2px 40px;
   color: #888;
+}
+
+.manage #modelName:after {
+  content: '-';
+  padding: 0 0.3em;
 }
 
 .manage .modellist .searchbox {

@@ -14,68 +14,66 @@ $(function () {
     },
 
     initialize : function () {
-      this.pages = [];
-      this.config = null;
+      /**
+       * @type {Array} this.models Array of objects:
+       *   {
+       *     @type {String} model model name
+       *     @type {Object} view link to saved PageView
+       *   }
+       */
+      this.models = [];
     },
 
     /**
-     * Checks if this.pages has entry with the same params
-     * @param  {Object} params object with name and page
+     * Checks if this.models has model page
+     * @param  {String} name model name
      * @return {Object} return found object or undefined
      */
-    has : function (params) {
-      params = params || {};
+    has : function (name) {
+      name = name || '';
 
-      var found = _.find(this.pages,
+      var found = _.find(this.models,
         function (el) {
-          return _.isEqual(el.params, params);
+          return el.model === name;
         }
       );
       return found;
     },
 
-    add : function (content) {
-      if(typeof content === 'object') this.pages.push(content);
-      return content;
+    /**
+     * Adds object to this.models variable
+     * @param {String} data { model name, page view }
+     */
+    add : function (data) {
+      if(typeof data === 'object') this.models.push(data);
+      return data;
     },
 
     getPage : function (name, p) {
       if(!name || !name.length) return;
       p = p || '1'; // page number
 
-      //if(!this.config) this.getConfig(name);
-
-      var params = {
-        name : name,
-        page : p
-      };
-      this.page = new page.PageView(params);
-
-      var content = this.has(params);
+      var content = this.has(name);
       if(content) {
-        content.data.render();
+        content.view.load(p);
       } else {
-        content = new mvc.ModelsView(params);
+        content = new page.PageView({
+          name : name,
+          page : p
+        });
+
         this.add({
-          params : params,
-          data   : content
+          model : name,
+          view  : content
         });
       }
-    },
-
-    /**
-     * Load config for current model
-     * @param  {String} name model name
-     */
-    getConfig : function (name) {
-      $.get('/manage/api/model/'+name+'/config', function (data) {
-        this.config = data;
-
-      }.bind(this));
     }
   });
 
-  app.router = new app.Router();
+  window.app = {
+    router : new app.Router(),
+    limit  : 3
+  };
   Backbone.history.start({ pushState: true });
 
 
@@ -89,7 +87,7 @@ $(function () {
 
     if(href.slice(protocol.length) !== protocol) {
       e.preventDefault();
-      app.router.navigate(href, true);
+      window.app.router.navigate(href, true);
     }
   });
 

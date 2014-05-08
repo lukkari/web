@@ -21,9 +21,6 @@
     "body-parser": "*",
     "cookie-parser": "*",
     "express-session": "*",
-    "gulp": "*",
-    "gulp-browserify": "*",
-    "gulp-uglify": "*",
     "underscore": "*",
     "backbone": "*",
     "jquery": "*"
@@ -39,6 +36,8 @@
     "url": "https://github.com/zaynetro/lukkari/issues"
   },
   "devDependencies": {
-    "gulp-browserify": "~0.5.0"
+    "gulp": "*",
+    "gulp-browserify": "*",
+    "gulp-uglify": "*"
   }
 }
