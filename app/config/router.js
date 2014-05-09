@@ -106,7 +106,8 @@ module.exports = function (app, passport) {
     .get(   '/subject/:q',      api.getSubject)
     .delete('/subject/:q',      api.removeSubject)
     .post(  '/subject/:q',      api.addSubject)
-    .get(   '/subject/short/:q',api.getSubjects);
+    .get(   '/subject/short/:q',api.getSubjects)
+    .get(   '*',                api.notFound);
 
   // Experiments
   //app.get('/editor', ensureAuthenticated);

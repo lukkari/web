@@ -8,208 +8,133 @@ block content
     div.searchbox
       input.text(type='text' placeholder='Search...')
 
-    div.sidemenu
-      a.home(href='/' data-local)
-      a.menu(href='/search' data-local)
+    nav.mainnav
+      ul
+        li: a.home(href='/' data-local)
+        li: a.menu(href='/search' data-local)
 
-  div.pageoverlay
-    div.contentpusher
+  div.contentpusher
 
-    div.subjectpage
-      div.inner
-        div.back: a(href='/back' data-local) Return
-        article
+  div#content
 
 
-    div.mainpage
+  div.mainpage
 
-      div.wrapper
-        div.container
-          h2 Schedule finder
-          div.block Custom schedule of ICT-building [Beta]
+    div.wrapper
+      div.container
+        h2 Schedule finder
+        div.block Custom schedule of ICT-building [Beta]
 
-      div.wrapper
-        div.container
-          h2 Quick links
-          div.block.quicklinks
-            a.navlink(href='/search' data-local) Find schedule
+    div.wrapper
+      div.container
+        h2 Quick links
+        div.block.quicklinks
+          a.navlink(href='/search' data-local) Find schedule
 
-      div.wrapper
-        div.container
-          h2 How to use
-          div.block
-            h4 Basics
-            div.subblock
-              b Choose schedule
-              div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher. To filter list start typing group name or teacher name. You can quickly access your teachers timetable by clicking on them in your schedule.
-                i  Search by room is planned.
+    div.wrapper
+      div.container
+        h2 How to use
+        div.block
+          h4 Basics
+          div.subblock
+            b Choose schedule
+            div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher. To filter list start typing group name or teacher name. You can quickly access your teachers timetable by clicking on them in your schedule.
+              i  Search by room is planned.
 
-              b Choose week
-              div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
+            b Choose week
+            div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
 
-              b Select today schedule
-              div.info After selecting your group schedule, you can access today schedule by clicking on links and then on today schedule link.
+            b Select today schedule
+            div.info After selecting your group schedule, you can access today schedule by clicking on links and then on today schedule link.
 
-            h4 Save links
-            div.subblock You can save link and access it at any time. You will always see your current week timetable.
-              div.attention If you open your timetable on saturday or sunday, you will see the next week schedule.
+          h4 Save links
+          div.subblock You can save link and access it at any time. You will always see your current week timetable.
 
-            h4 User accounts
-            div.subblock Soon
+          h4 Mistakes
+          div.subblock This is not official timetable, therefore if you found some mistakes in schedule, please contact me as soon as possible in the form below.
 
-            h4 Mistakes
-            div.subblock This is not official timetable, therefore if you found some mistakes in schedule, please contact me as soon as possible in the form below.
+    div.wrapper
+      div.container
+        h2: label(for='message') Contacts
+        div.block If you have any suggestions or questions, please, contact me.
+          div.contactform
+            div.success#sent Thank you for texting me
+            textarea.text#message(placeholder='Input your message')
+            div#hiddenform
+              input.text#replyto(type='text' placeholder='Reply to or at least your name')
+              input.button#send(type='button' value='Send')
 
-      div.wrapper
-        div.container
-          h2: label(for='message') Contacts
-          div.block If you have any suggestions or questions, please, contact me.
-            div.contactform
-              div.success#sent Thank you for texting me
-              textarea.text#message(placeholder='Input your message')
-              div#hiddenform
-                input.text#replyto(type='text' placeholder='Reply to or at least your name')
-                input.button#send(type='button' value='Send')
+          div.subblock
+            div.note If you want to use API to fetch schedule, also contact me using this form.
 
-            div.subblock
-              div.note If you want to use API to fetch schedule, also contact me using this form.
+  div.schedule.clearfix
+    article
+      div.title: h2#scheduleTitle
 
-    div.schedule.clearfix
-      article
-        div.title: h2#scheduleTitle
+      div.weekblock
+        div#calendar.clearfix
+          each month in calendar
+            table
+              thead
+                tr
+                  th(colspan='6') #{month.month}
+                tr
+                  th #
+                  th Mo
+                  th Tu
+                  th We
+                  th Th
+                  th Fr
+              tbody
+                each week in month.dates
+                  - var trClass = (week.curweek == 0) ? 'current' : ''
+                  tr(class=trClass data-link='w#{week.week}')
+                    th #{week.week}
+                    each day in week.days
+                      - var tdClass = (day.old > 0) ? 'old' : ''
+                      td(class=tdClass) #{day.day}
 
-        div.weekblock
-          div#calendar.clearfix
-            each month in calendar
-              table
-                thead
-                  tr
-                    th(colspan='6') #{month.month}
-                  tr
-                    th #
-                    th Mo
-                    th Tu
-                    th We
-                    th Th
-                    th Fr
-                tbody
-                  each week in month.dates
-                    - var trClass = (week.curweek == 0) ? 'current' : ''
-                    tr(class=trClass data-link='w#{week.week}')
-                      th #{week.week}
-                      each day in week.days
-                        - var tdClass = (day.old > 0) ? 'old' : ''
-                        td(class=tdClass) #{day.day}
+        div.weekselector
+          a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
+          a.weekcontent(href='/') Week
+            span#weeknum(data-week='#{weeknum}' data-weeknow='#{weeknow}') #{weeknum}
+          a.neighbourweek#nextweek(href='/' data-week='#{weeknum+1}' data-local) Next
 
-          div.weekselector
-            a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
-            a.weekcontent(href='/') Week
-              span#weeknum(data-week='#{weeknum}' data-weeknow='#{weeknow}') #{weeknum}
-            a.neighbourweek#nextweek(href='/' data-week='#{weeknum+1}' data-local) Next
+      div#days
 
-        div#days
-
-    div.unknown Keep calm and don't experiment with url
-
-    div.sidebarwrap
-      div.bg
-      div.sidebar
-        a.closebtn(href='/') Close
-        div.container
-          div#groupList
-          div#teacherList
-
-    div.subjectpopup
-      div.bg
-      div.inner
-        button.closebtn Close
-        div.container
-
-  div.navwindow
-    div.container
-      section
-        div.content.clearfix
-          ul
-            li
-              input#ICT(type='checkbox' checked)
-              label(for='ICT') ICT-talo
-            li
-              input#Another(type='checkbox' checked)
-              label(for='Another') Another
-            li
-              input#Anothe(type='checkbox' checked)
-              label(for='Anothe') Anothe
-            li
-              input#Test(type='checkbox' checked)
-              label(for='Test') Test
-      section
-        header: h2 Groups
-        div.content.clearfix
-          ul
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-            li: a(href='#') Group
-
-      section
-        header: h2 Teachers
-        div.content.clearfix
-          ul
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-            li: a(href='#') Teacher
-
-
-      section
-        header: h2 Rooms
-        div.content.clearfix
-          ul
-            li: a(href='#') Room
-            li: a(href='#') Room
-            li: a(href='#') Room
-            li: a(href='#') Room
-            li: a(href='#') Room
-            li: a(href='#') Room
-            li: a(href='#') Room
+  div.unknown Keep calm and don't experiment with url
 
 
 
 block customFoot
+  script#errorTemplate(type='text/html')
+    div.notfound <%= error %>
+
+  script#weekNotFound(type='text/html')
+    div.notfound Nothing found
+
+  script#noDays(type='text/html')
+    div.notfound No classes during this week
+
+  script#searchPageTemplate(type='text/html')
+    div.navwindow
+      div.container
+      div.bg
+
+  script#searchSectionTemplate(type='text/html')
+    section
+      header: h2 <%= name %>
+      div.content.clearfix
+        ul
+
+  script#searchItemTemplate(type='text/html')
+    li: a(href!='<%= url %>' data-local) <%= name %>
+
+  script#searchFilterTemplate(type='text/html')
+    li
+      input(id!='<%= id %>' type='checkbox' checked!='<%= checked %>')
+      label(for!='<%= id %>') <%= name %>
+
   script#weekdayTemplate(type='text/html')
     div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
       div.weekday <%= weekday.name %>
@@ -257,60 +182,6 @@ block customFoot
         div.addsubject: button Add
         <% } %>
 
-  script#weekNotFound(type='text/html')
-    div.notfound Nothing found
 
-  script#noDays(type='text/html')
-    div.notfound No classes during this week
-
-  script#listTemplate(type='text/html')
-    div.search
-      input.text(id!='<%= title %>List' type='text' placeholder!='Type to filter <%= title %>s')
-    div.list.clearfix
-
-  script#itemlinkTemplate(type='text/html')
-    li: a(href!='/<%= tourl %>' data-local)<%= name %>
-
-  script#subjectTemplate(type='text/html')
-    div.row
-      h3 <%= name %>
-
-    div.row
-      h4 Teachers
-      div.teachers
-        ul
-          <% _.each(teachers, function (teacher) { %>
-          li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
-          <% }); %>
-
-    div.row
-      h4 Groups
-      div.groups
-        ul
-          <% _.each(groups, function (group) { %>
-          li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
-          <% }); %>
-
-    div.row
-      h4 When
-      div: i Will be available soon
-
-  script#subjectPopupTemplate(type='text/html')
-    div.row
-      input.text(type='text' id='subject' placeholder='Start typing subject name')
-    div.row
-      ul.found
-    div.note Start typing subject name you want to add, after clicking on it, course would be added automatically.
-
-  script#subjectPopupListTemplate(type='text/html')
-    <% _.each(data, function (subject) { %>
-    li(data-link!='<%= subject._id %>'): <%= subject.name %>
-    <% }); %>
-
-
-  script#navTemplate(type='text/html')
-
-
-
-  script(src='/js/app.min.js' async)
+  script(src='/js/builds/schedulepage.js' async)
   script(src='/js/libs/analytics.js' async)

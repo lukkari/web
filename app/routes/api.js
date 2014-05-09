@@ -380,3 +380,7 @@ exports.addSubject = function (req, res) {
     }
   );
 };
+
+exports.notFound = function (req, res) {
+  res.json(404, { error : 'Not found' });
+};
