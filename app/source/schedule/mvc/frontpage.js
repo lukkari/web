@@ -7,10 +7,18 @@ Backbone.$ = $;
 
 var app = app || {};
 
+
+/**
+ * Front page model
+ */
 app.FrontPageModel = Backbone.Model.extend({
   urlRoot : '/api/frontpage'
 });
 
+
+/**
+ * Front page view
+ */
 app.FrontPageView = Backbone.View.extend({
   template : $('#frontPageTemplate').html(),
   errTmpl  : $('#errorTemplate').html(),
@@ -52,6 +60,9 @@ app.FrontPageView = Backbone.View.extend({
     return this;
   },
 
+  /**
+   * Handle error page (show error template)
+   */
   handleError : function () {
     var tmpl = _.template(this.errTmpl),
         msg  = {

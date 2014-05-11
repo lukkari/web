@@ -10,6 +10,10 @@ Backbone.$ = $;
 
 var app = app || {};
 
+
+/**
+ * Main schedule page handler
+ */
 app.Router = Backbone.Router.extend({
   routes : {
     ''               : 'mainpage',
@@ -34,29 +38,14 @@ app.Router = Backbone.Router.extend({
   },
 
   /**
-   * Middleware for routes
-   * http://stackoverflow.com/questions/15942566/how-can-i-run-a-middleware-function-before-a-route-method-is-executed#answer-15943629
-   */
-  route : function(route, name, callback) {
-    var router = this;
-    if (!callback) callback = this[name];
-
-    var f = function() {
-      // Hide previous page before
-      router.hidePrev();
-      callback.apply(router, arguments);
-      // Call function after if needed
-    };
-    return Backbone.Router.prototype.route.call(this, route, name, f);
-  },
-
-  /**
    * Checks if page was saved
    * @param  {String} page page name
    * @return {Object}      found page view
    */
   has : function (page) {
     page = page || '';
+
+    if(!page.length) return null;
 
     return _.find(this.pages,
       function (el) {
@@ -75,26 +64,71 @@ app.Router = Backbone.Router.extend({
     return this.pages;
   },
 
+  /**
+   * Hide previous page
+   */
   hidePrev : function () {
     if(this.prev &&
       typeof this.prev === 'object' &&
       typeof this.prev.hide === 'function') this.prev.hide();
   },
 
-  mainpage : function () {
-    var content = this.has('mainpage');
+  /**
+   * Load page controller
+   * @param  {Object} params parameters for running page
+   */
+  loadPage : function (params) {
+    params = params || {};
 
+    var
+      defaults = {
+        hidePrev : true, // hide previous page
+        name     : '', // page name
+        options  : null // pass options to view constructor
+      },
+
+      content;
+
+    /**
+     * Create error page view
+     * @return {Object} returns error page view
+     */
+    defaults.createView = function () {
+      return null;
+    };
+
+    _.defaults(params, defaults);
+
+    if(params.hidePrev) this.hidePrev();
+
+    content = this.has(params.name);
     if(content) {
       content.view.show();
-      this.prev = content;
+      this.prev = content.view;
     } else {
-      content = new frontpage.FrontPageView();
+      content = params.createView(params.options);
       this.add({
-        page : 'mainpage',
+        page : params.name,
         view : content
       });
       this.prev = content;
     }
+  },
+
+  /**
+   * Show mainpage(front page)
+   */
+  mainpage : function () {
+    var
+      params = {
+        name : 'mainpage'
+      };
+
+    params.createView = function (options) {
+      return new frontpage.FrontPageView(options);
+    };
+
+    this.loadPage(params);
   },
 
   /**
@@ -106,19 +140,18 @@ app.Router = Backbone.Router.extend({
       options = {
         filter : s
       },
-      content = this.has('search');
 
-    if(content) {
-      content.view.show(options);
-      this.prev = content.view;
-    } else {
-      content = new navigation.SearchView(options);
-      this.add({
-        page : 'search',
-        view : content
-      });
-      this.prev = content;
-    }
+      params = {
+        options  : options,
+        name     : 'search',
+        hidePrev : false
+      };
+
+    params.createView = function (options) {
+      return new navigation.SearchView(options);
+    };
+
+    this.loadPage(params);
   },
 
   getSchedule2 : function (w, q) {

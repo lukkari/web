@@ -139,7 +139,10 @@ a:focus, input:focus, textarea {
   padding: 0.3em 1em;
   font-size: 1.1em;
   border: 0;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s,
+              background-color 0.2s,
+              color 0.2s,
+              border-color 0.3s;
   box-shadow: 0 0 4px #99CCF0;
 }
 
@@ -270,7 +273,7 @@ a:focus, input:focus, textarea {
   display: block;
   box-sizing: border-box;
   padding: 0.3em 0.4em;
-  margin: 0.2em 0.2em;
+  margin: 0.1em 0.1em;
   background-color: #444;
   color: #bbb;
   text-decoration: none;

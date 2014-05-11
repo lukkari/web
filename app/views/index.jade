@@ -6,7 +6,7 @@ block customHead
 block content
   header.top
     div.searchbox
-      input.text(type='text' placeholder='Search...')
+      input.text#searchInput(type='text' placeholder='Search...')
 
     nav.mainnav
       ul
@@ -161,7 +161,7 @@ block customFoot
                 <% if(subject.rest) { %>
                 div.resttext Break
                 <% } else { %>
-                a(href!='/subject/<%= toUrl(subject.name) %>' data-local) <%= subject.name %>
+                div.subjectname <%= subject.name %>
                 <% } %>
 
               div.room <%= getRooms(subject.rooms) %>

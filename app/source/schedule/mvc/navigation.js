@@ -8,142 +8,6 @@ Backbone.$ = $;
 
 var app = app || {};
 
-// REMOVE!!
-var old = {};
-
-/**
- * Link item model
- */
-old.ItemLink = Backbone.Model.extend({});
-
-/**
- * Collection of group links
- */
-old.GroupList = Backbone.Collection.extend({
-  model : app.ItemLink,
-  url   : '/api/groups',
-
-  search : function (letters) {
-    if(!letters.length) return this.models;
-
-    var pattern = new RegExp(letters, "gi");
-    return this.filter(function(data) {
-      return data.get("name").match(pattern);
-    });
-  }
-});
-
-/**
- * Collection of teacher links
- */
-old.TeacherList = Backbone.Collection.extend({
-  model : app.ItemLink,
-  url   : '/api/teachers',
-
-  search : function (letters) {
-    if(!letters.length) return this.models;
-
-    var pattern = new RegExp(letters, "gi");
-    return this.filter(function(data) {
-      return data.get("name").match(pattern);
-    });
-  }
-});
-
-/**
- * Link item view
- */
-old.ItemLinkView = Backbone.View.extend({
-  tagName   : 'ul',
-  template  : $('#itemlinkTemplate').html(),
-
-  render : function () {
-    var tmpl = _.template(this.template);
-
-    var data = this.model.toJSON();
-    data.tourl = data.name.toLowerCase().replace(/\s/g, "_");
-    this.$el.html(tmpl(data));
-    return this;
-  }
-});
-
-old.ListView = Backbone.View.extend({
-
-  template : $('#listTemplate').html(),
-
-  events : {
-    'click a'     : 'closeList',
-    'keyup .text' : 'searchFilter'
-  },
-
-  initialize : function (options) {
-    options = options || {};
-
-    switch (options.list) {
-      case 'group' :
-        this.collection = new app.GroupList();
-        break;
-      case 'teacher' :
-        this.collection = new app.TeacherList();
-        break;
-      default:
-        return;
-    }
-
-    this.title = options.list;
-
-    var that = this;
-    this.collection.fetch({
-      success : function () {
-        that.render();
-      }
-    });
-  },
-
-  render : function () {
-    var that = this;
-
-    var tmpl = _.template(this.template);
-    this.$el.html(tmpl({ title : this.title }));
-
-    _.each(this.collection.models, function (item) {
-      that.renderItem(item);
-    }, this);
-
-    return this;
-  },
-
-  renderList : function (data) {
-    data = data || [];
-
-    var that = this;
-
-    this.$el.children('.list').empty();
-    _.each(data, function (item) {
-      that.renderItem(item);
-    }, this);
-
-    app.sideBar.setHeight();
-
-    return this;
-  },
-
-  renderItem : function (item) {
-    var itemLinkView = new app.ItemLinkView({
-      model: item
-    });
-    this.$el.children('.list').append(itemLinkView.render().el);
-  },
-
-  closeList : function (e) {
-    app.sideBar.close();
-  },
-
-  searchFilter : function (e) {
-    var letters = this.$el.find('.text').val();
-    this.renderList(this.collection.search(letters));
-  }
-});
 
 /**
  * Search item model (Link item)
@@ -179,14 +43,28 @@ app.SearchSection = Backbone.Collection.extend({
   model : app.SearchItemModel,
   url : '/api/',
 
-  initialize : function (options) {
+  initialize : function (data, options) {
     options = options || {};
 
     /**
      * Add section name to url
      *   Ex: groups, teachers, rooms
      */
-    this.url += options.name;
+    this.url += options.url;
+  },
+
+  /**
+   * Search models in collection by string
+   * @param  {String} letters filter string
+   * @return {Array}          found models
+   */
+  search : function (letters) {
+    if(!letters.length) return this.models;
+
+    var pattern = new RegExp(letters, "gi");
+    return this.filter(function(data) {
+      return data.get("name").match(pattern);
+    });
   }
 });
 
@@ -205,8 +83,8 @@ app.SearchSectionView = Backbone.View.extend({
     this.$parent = options.$parent;
     this.name = options.name;
 
-    this.collection = new app.SearchSection({
-      name : options.name
+    this.collection = new app.SearchSection([], {
+      url : options.name
     });
 
     this.collection.fetch({
@@ -232,8 +110,11 @@ app.SearchSectionView = Backbone.View.extend({
     return this;
   },
 
-  render : function () {
-    _.each(this.collection.models, function (item) {
+  render : function (list) {
+    this.$el.find('ul').empty();
+
+    if(!Array.isArray(list)) list = this.collection.models;
+    _.each(list, function (item) {
       this.renderItem(item);
     }, this);
 
@@ -248,6 +129,16 @@ app.SearchSectionView = Backbone.View.extend({
       .$el
       .find('ul')
       .append(searchItemView.render().el);
+  },
+
+  /**
+   * Filter section
+   * @param  {String} s filter string
+   */
+  filter : function (s) {
+    s = s || '';
+    this.render(this.collection.search(s));
+    return this;
   }
 });
 
@@ -288,26 +179,55 @@ app.SearchFiltersView = Backbone.View.extend({
  * Search(navigation) window view
  */
 app.SearchView = Backbone.View.extend({
-  template : $('#searchPageTemplate').html(),
-  filter : '',
-  $parent : $('.globalouter'),
+  template     : $('#searchPageTemplate').html(),
+  filter       : '',
+  $parent      : $('.globalouter'),
+  $searchInput : $('#searchInput'),
 
   initialize : function (options) {
     options = options || {};
 
     this
       .render()
-      .loadChildren();
+      .loadChildren()
+      .addEvents();
   },
 
-  show : function (options) {
+  show : function () {
     this.$el.fadeIn('fast');
+    this.$searchInput.addClass('dark');
     return this;
   },
 
   hide : function () {
     this.$el.hide();
+    this.$searchInput.removeClass('dark');
     return this;
+  },
+
+  /**
+   * Add events:
+   *   - filter window with typing
+   */
+  addEvents : function () {
+    var that = this;
+    this.$searchInput.on('keyup', function (e) {
+      that.filterView(e.currentTarget.value);
+    });
+
+    return this;
+  },
+
+  /**
+   * Filter search view
+   * @param  {String} s filter string
+   */
+  filterView : function (s) {
+    s = s || '';
+
+    this.content.sections.forEach(function (el) {
+      el.view.filter(s);
+    });
   },
 
   /**
@@ -348,9 +268,11 @@ app.SearchView = Backbone.View.extend({
 
     this
       .$el
-      .html(tmpl())
-      .fadeIn('fast');
-    this.$parent.append(this.el);
+      .html(tmpl());
+    this
+      .show()
+      .$parent
+      .append(this.el);
 
     return this;
   }
