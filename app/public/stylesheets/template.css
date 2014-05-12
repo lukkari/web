@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:url('/fonts/icomoon.eot?-1kcld8');
-  src:url('/fonts/icomoon.eot?#iefix-1kcld8') format('embedded-opentype'),
-    url('/fonts/icomoon.woff?-1kcld8') format('woff'),
-    url('/fonts/icomoon.ttf?-1kcld8') format('truetype'),
-    url('/fonts/icomoon.svg?-1kcld8#icomoon') format('svg');
+  src: url('/fonts/icomoon.eot?-1kcld8');
+  src: url('/fonts/icomoon.eot?#iefix-1kcld8') format('embedded-opentype'),
+       url('/fonts/icomoon.woff?-1kcld8') format('woff'),
+       url('/fonts/icomoon.ttf?-1kcld8') format('truetype'),
+       url('/fonts/icomoon.svg?-1kcld8#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,6 +14,7 @@ body {
   margin: 0;
   font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #ecf0f1;
+  overflow-y: scroll;
 }
 
 a {
@@ -432,7 +433,7 @@ a:focus, input:focus, textarea {
  *
  */
 
-.mainpage, .schedule, .unknown {
+.mainpage, .unknown {
   display: none;
 }
 
@@ -453,6 +454,7 @@ a:focus, input:focus, textarea {
   padding: 0;
   margin: 2px 0;
   color: #1D2F43;
+  min-height: 1.1em;
 }
 
 .schedule .weekblock {
@@ -739,6 +741,7 @@ a:focus, input:focus, textarea {
 @media screen and (max-width: 480px) {
   .schedule .bwrap {
     width: 100%;
+    clear: left;
   }
 
   .schedule .weekcontent {
@@ -753,6 +756,7 @@ a:focus, input:focus, textarea {
 @media screen and (min-width: 480px) and (max-width: 550px) {
   .schedule .bwrap {
     width: 100%;
+    clear: left;
   }
 
   .schedule .weekcontent {
@@ -769,6 +773,10 @@ a:focus, input:focus, textarea {
     width: 50%;
   }
 
+  .schedule .bwrap:nth-of-type(3n) {
+    clear: left;
+  }
+
   .schedule .weekcontent {
     width: 70%;
   }
@@ -782,23 +790,25 @@ a:focus, input:focus, textarea {
   .schedule .bwrap {
     width: 33.3333333333%;
   }
+
+  .schedule .bwrap:nth-of-type(4n) {
+    clear: left;
+  }
 }
 
 @media screen and (min-width: 980px) and (max-width: 1200px) {
   .schedule .bwrap {
     width: 25%;
   }
+
+  .schedule .bwrap:nth-of-type(5n) {
+    clear: left;
+  }
 }
 
 @media screen and (min-width: 1200px) {
   .schedule .bwrap {
     width: 20%;
-  }
-}
-
-@media screen and (min-width: 980px) {
-  .topmenu ul {
-    width: 900px;
   }
 }
 

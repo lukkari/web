@@ -94,12 +94,6 @@ block content
                       - var tdClass = (day.old > 0) ? 'old' : ''
                       td(class=tdClass) #{day.day}
 
-        div.weekselector
-          a.neighbourweek#prevweek(href='/' data-week='#{weeknum-1}' data-local) Prev
-          a.weekcontent(href='/') Week
-            span#weeknum(data-week='#{weeknum}' data-weeknow='#{weeknow}') #{weeknum}
-          a.neighbourweek#nextweek(href='/' data-week='#{weeknum+1}' data-local) Next
-
       div#days
 
   div.unknown Keep calm and don't experiment with url
@@ -117,23 +111,57 @@ block customFoot
     div.notfound No classes during this week
 
   script#searchPageTemplate(type='text/html')
-    div.navwindow
-      div.container
-      div.bg
+    div.container
+    div.bg
 
   script#searchSectionTemplate(type='text/html')
-    section
-      header: h2 <%= name %>
-      div.content.clearfix
-        ul
+    header: h2 <%= name %>
+    div.content.clearfix
+      ul
 
   script#searchItemTemplate(type='text/html')
-    li: a(href!='<%= url %>' data-local) <%= name %>
+    a(href!='<%= url %>' data-local) <%= name %>
 
   script#searchFilterTemplate(type='text/html')
-    li
-      input(id!='<%= id %>' type='checkbox' checked!='<%= checked %>')
-      label(for!='<%= id %>') <%= name %>
+    input(id!='<%= id %>' type='checkbox' checked!='<%= checked %>')
+    label(for!='<%= id %>') <%= name %>
+
+  script#weekBarTemplate(type='text/html')
+    a.neighbourweek#prevweek(href!='/<%= prevUrl %>' data-local) Prev
+    a.weekcontent(href='/') Week
+      span#weeknum <%= weekNum %>
+    a.neighbourweek#nextweek(href!='/<%= nextUrl %>' data-local) Next
+
+  script#calendarTemplate(type='text/html')
+    <% _.each(months, function (month) { %>
+    table
+      thead
+        tr
+          th(colspan='6') <%= month.month %>
+        tr
+          th #
+          th Mo
+          th Tu
+          th We
+          th Th
+          th Fr
+        tbody
+          <% _.each(month.weeks, function (week) { %>
+          tr(class='' data-link!='<%= week.week %>')
+            th <%= week.week %>
+              <% _.each(week.days, function (day) { %>
+              td(class='') <%= day.day %>
+              <% }); %>
+          <% }); %>
+    <% }); %>
+
+  script#scheduleTemplate(type='text/html')
+    article
+      div.title: h2#scheduleTitle
+      div#calendar.clearfix
+      div#weekBar
+      div#days
+
 
   script#weekdayTemplate(type='text/html')
     div.block(class!='<%= (isToday(date)) ? "today" : "" %>')

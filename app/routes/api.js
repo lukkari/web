@@ -54,6 +54,30 @@ exports.getTeachers = function (req, res) {
   );
 };
 
+exports.getRooms = function (req, res) {
+  cache.get(req.path,
+    function (err, data) {
+      if(err)
+        console.log(err);
+
+      res.json(data);
+    },
+    function (send) {
+      var Room   = mongoose.model('Room');
+
+      Room.getAll(function (err, room) {
+        if(err) {
+          console.log(err);
+          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+        }
+        else {
+          send(room);
+        }
+      });
+    }
+  );
+};
+
 exports.getNow = function (req, res) {
 
   var search = req.params.q;

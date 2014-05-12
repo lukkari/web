@@ -20,7 +20,10 @@
     "morgan": "*",
     "body-parser": "*",
     "cookie-parser": "*",
-    "express-session": "*"
+    "express-session": "*",
+    "underscore": "*",
+    "backbone": "*",
+    "jquery": "*"
   },
   "engines": {
     "node": "0.10.x"
@@ -35,9 +38,6 @@
   "devDependencies": {
     "gulp": "*",
     "gulp-browserify": "*",
-    "gulp-uglify": "*",
-    "underscore": "*",
-    "backbone": "*",
-    "jquery": "*"
+    "gulp-uglify": "*"
   }
 }

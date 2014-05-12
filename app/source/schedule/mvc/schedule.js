@@ -1,9 +1,13 @@
 var
   $ = require('jquery'),
   _ = require('underscore'),
-  Backbone = require('backbone');
+  Backbone = require('backbone'),
+  helpers = require('../helpers');
 
 var
+  // REMOVE!!
+  old = {},
+
   app = app || {},
 
   months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -100,9 +104,38 @@ app.Week = Backbone.Collection.extend({
 app.Schedule = Backbone.Model.extend({
   urlRoot : '/api/schedule/',
 
-  initialize : function (options) {
+  initialize : function (data, options) {
     options = options || {};
     this.urlRoot += options.url;
+  },
+
+  getDays : function () {
+    return this.get('weekdays');
+  },
+
+  getTitle : function () {
+    return this.get('title');
+  }
+});
+
+/**
+ * Schedules collection
+ *   used to save all fetched schedules from the server
+ */
+app.Schedules = Backbone.Collection.extend({
+  model : app.Schedule,
+
+  /**
+   * Finds model for a current query
+   * @param  {String} query query string
+   * @return {Array}       found model or empty array
+   */
+  getByQuery : function (query) {
+    query = query || {};
+
+    return this.filter(function (data) {
+      return data.urlRoot === '/api/schedule/' + query;
+    });
   }
 });
 
@@ -167,9 +200,7 @@ app.WeekDayView = Backbone.View.extend({
  * Week view
  */
 app.WeekView = Backbone.View.extend({
-  el           : $('#days'),
-  errTmpl      : $('#weekNotFound').html(),
-  noTmpl       : $('#noDays').html(),
+
   editable     : false,
   subjectUrl   : '/api/subject',
 
@@ -187,21 +218,8 @@ app.WeekView = Backbone.View.extend({
     _.each(this.collection.models, function (item) {
       that.renderWeekDay(item);
     }, this);
-    app.alignDays();
 
     return this;
-  },
-
-  showErr : function () {
-    this.$el.empty();
-    var tmpl = _.template(this.errTmpl);
-    this.$el.html(tmpl());
-  },
-
-  showNoClasses : function () {
-    this.$el.empty();
-    var tmpl = _.template(this.noTmpl);
-    this.$el.html(tmpl());
   },
 
   renderWeekDay : function (item) {
@@ -210,6 +228,8 @@ app.WeekView = Backbone.View.extend({
       editable : this.editable
     });
     this.$el.append(weekDayView.render().el);
+
+    return this;
   }
 
 });
@@ -219,44 +239,178 @@ app.WeekView = Backbone.View.extend({
  * Schedule view
  */
 app.ScheduleView = Backbone.View.extend({
-
-  week   : null,
-  $title : $('#scheduleTitle'),
+  $parent   : $('#content'),
+  template  : $('#scheduleTemplate').html(),
+  className : 'schedule',
 
   initialize : function (options) {
     options = options || {};
-    this.model = new app.Schedule(options);
 
-    var that = this;
-    this.model.fetch({
-      success : function () {
-        that.week = new app.WeekView(that.model.attributes.weekdays, options);
-        that.render();
-      },
+    this.collection = new app.Schedules();
+    this.views = {
+      calendar : new app.CalendarView(options),
+      weekbar  : new app.WeekBarView(options)
+    };
 
-      error   : function () {
-        that.week = new app.WeekView(null, options);
-        that.showErr();
-      }
-    });
+    this.preRender(options);
+    this.load(options);
   },
 
-  render : function () {
-    this.$title.text(this.model.attributes.title);
-    this.week.render();
+  /**
+   * Load new schedule page or find fetched page
+   * @param  {Object} options object with query string and week number
+   */
+  load : function (options) {
+    options = options || {};
+
+    var that     = this,
+        schedule = this.collection.getByQuery(options.url);
+
+    console.log(options);
+    this.views.weekbar.setWeek(options);
+    if(Array.isArray(schedule) && schedule.length) {
+      this.model = schedule[0];
+      this.render();
+    } else {
+      this.model = new app.Schedule([], options);
+      this.model.fetch({
+        success : function () {
+          that.collection.add(that.model);
+          that.render();
+        },
+
+        error : function () {
+
+        }
+      });
+    }
 
     return this;
   },
 
-  showErr : function () {
-    this.$title.text('');
-    this.week.showErr();
+  show : function (options) {
+    this
+      .load(options)
+      .$el
+      .show();
+    return this;
   },
 
-  getTitle : function () {
-    return this.$title.text();
-  }
+  hide : function () {
+    this.$el.hide();
+    return this;
+  },
 
+  preRender : function (options) {
+    options = options || {};
+
+    var tmpl = _.template(this.template);
+
+    this.views.weekbar.setWeek(options);
+
+    // Render template
+    this
+      .$el
+      .html(tmpl())
+      .show();
+
+    // Render weekbar
+    this
+      .$el
+      .find('#weekBar')
+      .html(this.views.weekbar.render().el);
+
+    // Add element to the page
+    this
+      .$parent
+      .append(this.el);
+  },
+
+  render : function () {
+    this.views.week = new app.WeekView(this.model.getDays());
+
+    this
+      .$el
+      .find('#scheduleTitle')
+      .text(this.model.getTitle());
+
+    this
+      .$el
+      .find('#days')
+      .html(this.views.week.render().el)
+      .fadeIn('fast');
+
+    return this;
+  }
+});
+
+
+/**
+ * Calendar view
+ */
+app.CalendarView = Backbone.View.extend({
+  template : $('#calendarTemplate').html(),
+
+  initialize : function (options) {
+    options = options || {};
+    // From query string get selected week
+    this.update(options);
+  },
+
+  /**
+   * Update calendar
+   * @param  {Object} options parameters of new schedule page
+   */
+  update : function (options) {
+    return this;
+  }
+});
+
+
+
+/**
+ * Weekbar Model
+ */
+app.WeekBarModel = Backbone.Model.extend({});
+/**
+ * Weekbar view
+ */
+app.WeekBarView = Backbone.View.extend({
+  className : 'weekselector',
+  template  : $('#weekBarTemplate').html(),
+
+  initialize : function () {
+    this.model = new app.WeekBarModel();
+  },
+
+  render : function () {
+    var tmpl = _.template(this.template);
+
+    this.$el.html(tmpl(this.model.toJSON()));
+
+    return this;
+  },
+
+  /**
+   * Set week numbers in model
+   */
+  setWeek : function (options) {
+    options = options || {};
+
+    var
+      week  = parseInt(options.week, 10),
+      query = options.query,
+
+      attributes = {
+        prevUrl : query + '/w' + (week - 1),
+        weekNum : week,
+        nextUrl : query + '/w' + (week + 1)
+      };
+
+    this.model.set(attributes);
+
+    return this;
+  }
 });
 
 module.exports = app;

@@ -34,7 +34,7 @@ var app = express();
 
 // DB connection
 var connect = function () {
-  mongoose.connect(config.db);
+  mongoose.connect(config.db, { server : { auto_reconnect : true } });
 };
 
 connect();

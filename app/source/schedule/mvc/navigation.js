@@ -19,6 +19,7 @@ app.SearchItemModel = Backbone.Model.extend({});
  * Search item view (Link item)
  */
 app.SearchItemView = Backbone.View.extend({
+  tagName  : 'li',
   template : $('#searchItemTemplate').html(),
 
   render : function () {
@@ -73,6 +74,7 @@ app.SearchSection = Backbone.Collection.extend({
  * Search section view
  */
 app.SearchSectionView = Backbone.View.extend({
+  tagName  : 'section',
   template : $('#searchSectionTemplate').html(),
 
   initialize : function (options) {
@@ -125,6 +127,7 @@ app.SearchSectionView = Backbone.View.extend({
     var searchItemView = new app.SearchItemView({
       model: item
     });
+
     this
       .$el
       .find('ul')
@@ -180,7 +183,7 @@ app.SearchFiltersView = Backbone.View.extend({
  */
 app.SearchView = Backbone.View.extend({
   template     : $('#searchPageTemplate').html(),
-  filter       : '',
+  className    : 'navwindow',
   $parent      : $('.globalouter'),
   $searchInput : $('#searchInput'),
 
@@ -269,6 +272,7 @@ app.SearchView = Backbone.View.extend({
     this
       .$el
       .html(tmpl());
+
     this
       .show()
       .$parent

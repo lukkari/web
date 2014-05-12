@@ -4,7 +4,8 @@ var
   Backbone = require('backbone'),
   navigation = require('./mvc/navigation'),
   schedule = require('./mvc/schedule'),
-  frontpage = require('./mvc/frontpage');
+  frontpage = require('./mvc/frontpage'),
+  helpers = require('./helpers');
 
 Backbone.$ = $;
 
@@ -34,7 +35,14 @@ app.Router = Backbone.Router.extend({
     /**
      * Saves last page view
      */
-    this.prev = null;
+    this.view = null;
+    /**
+     * Load search page when focusing search field
+     */
+    $('#searchInput').on('focus', function () {
+      if(typeof this.view === 'object' &&
+         this.view.el.baseURI.indexOf('search') === -1) this.navigate('/search', { trigger : true });
+    }.bind(this));
   },
 
   /**
@@ -67,10 +75,10 @@ app.Router = Backbone.Router.extend({
   /**
    * Hide previous page
    */
-  hidePrev : function () {
-    if(this.prev &&
-      typeof this.prev === 'object' &&
-      typeof this.prev.hide === 'function') this.prev.hide();
+  hideView : function () {
+    if(this.view &&
+      typeof this.view === 'object' &&
+      typeof this.view.hide === 'function') this.view.hide();
   },
 
   /**
@@ -82,9 +90,9 @@ app.Router = Backbone.Router.extend({
 
     var
       defaults = {
-        hidePrev : true, // hide previous page
-        name     : '', // page name
-        options  : null // pass options to view constructor
+        hideView : true, // hide previous page
+        name     : '',   // page name
+        options  : null  // pass options to view constructor
       },
 
       content;
@@ -99,19 +107,19 @@ app.Router = Backbone.Router.extend({
 
     _.defaults(params, defaults);
 
-    if(params.hidePrev) this.hidePrev();
+    if(params.hideView) this.hideView();
 
     content = this.has(params.name);
     if(content) {
-      content.view.show();
-      this.prev = content.view;
+      content.view.show(params.options);
+      this.view = content.view;
     } else {
       content = params.createView(params.options);
       this.add({
         page : params.name,
         view : content
       });
-      this.prev = content;
+      this.view = content;
     }
   },
 
@@ -137,14 +145,11 @@ app.Router = Backbone.Router.extend({
    */
   search : function (s) {
     var
-      options = {
-        filter : s
-      },
-
       params = {
-        options  : options,
-        name     : 'search',
-        hidePrev : false
+        options  : {
+          filter : s
+        },
+        name     : 'search'
       };
 
     params.createView = function (options) {
@@ -154,27 +159,41 @@ app.Router = Backbone.Router.extend({
     this.loadPage(params);
   },
 
+  /**
+   * Show schedule page with parameters vice versa
+   */
   getSchedule2 : function (w, q) {
     this.getSchedule(q, w);
   },
 
+  /**
+   * Show schedule page
+   * @param  {String} q query string
+   * @param  {String} w week number
+   */
   getSchedule : function (q, w) {
-    /*app.pagesCtrl.toggle('schedule');
+    var
+      query = q,
 
-    var query = q;
+      params = {
+        options : {
+          query : query
+        },
+        name : 'schedule'
+      };
 
-    app.weekBar.set(q, w);
-    query += '?w=' + app.weekBar.getWeekNum();
+    params.createView = function (options) {
+      return new schedule.ScheduleView(options);
+    };
 
-    $('#nowlink').attr('href', '/' + q + '/now');
+    w = parseInt(w,10) > 0 ? w : new Date().getStudyWeek();
 
-    var schedule = this.findIn(this.schedule, query);
-    if(schedule) schedule.render();
-    else {
-      schedule = new app.ScheduleView({ url : query });
-      this.schedule.urls.push(query);
-      this.schedule.views.push(schedule);
-    }*/
+    query += '?w=' + w;
+
+    params.options.url = query;
+    params.options.week = w;
+
+    this.loadPage(params);
   },
 
   unknown : function () {

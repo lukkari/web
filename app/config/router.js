@@ -100,6 +100,7 @@ module.exports = function (app, passport) {
     .use(ensureXhr)
     .get(   '/groups',          api.getGroups)
     .get(   '/teachers',        api.getTeachers)
+    .get(   '/rooms',           api.getRooms)
     .get(   '/schedule/:q',     api.getSchedule)
     .get(   '/schedule/now/:q', api.getNow)
     .post(  '/messages',        api.sendMsg)
