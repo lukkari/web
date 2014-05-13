@@ -20,7 +20,7 @@ app.FrontPageModel = Backbone.Model.extend({
  * Front page view
  */
 app.FrontPageView = Backbone.View.extend({
-  template : $('#frontPageTemplate').html(),
+  className : 'mainpage',
   errTmpl  : $('#errorTemplate').html(),
   $parent  : $('#content'),
 
@@ -50,13 +50,12 @@ app.FrontPageView = Backbone.View.extend({
   },
 
   render : function () {
-    var tmpl = _.template(this.template);
-
-    this
+    console.log(this.model);
+    /*this
       .$el
-      .html(tmpl(this.model.toJSON()))
+      .html(this.model.toJSON())
       .fadeIn('fast');
-    this.$parent.append(this.el);
+    this.$parent.append(this.el);*/
     return this;
   },
 

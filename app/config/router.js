@@ -108,6 +108,7 @@ module.exports = function (app, passport) {
     .delete('/subject/:q',      api.removeSubject)
     .post(  '/subject/:q',      api.addSubject)
     .get(   '/subject/short/:q',api.getSubjects)
+    .get(   '/frontpage',       api.getFrontPage)
     .get(   '*',                api.notFound);
 
   // Experiments

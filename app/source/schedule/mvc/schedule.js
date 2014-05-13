@@ -5,12 +5,11 @@ var
   helpers = require('../helpers');
 
 var
-  // REMOVE!!
-  old = {},
-
   app = app || {},
 
-  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+
+  fullmonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   viewHelper = {
 
@@ -266,7 +265,6 @@ app.ScheduleView = Backbone.View.extend({
     var that     = this,
         schedule = this.collection.getByQuery(options.url);
 
-    console.log(options);
     this.views.weekbar.setWeek(options);
     if(Array.isArray(schedule) && schedule.length) {
       this.model = schedule[0];
@@ -301,24 +299,19 @@ app.ScheduleView = Backbone.View.extend({
     return this;
   },
 
+  /**
+   * Render only once
+   */
   preRender : function (options) {
     options = options || {};
 
     var tmpl = _.template(this.template);
-
-    this.views.weekbar.setWeek(options);
 
     // Render template
     this
       .$el
       .html(tmpl())
       .show();
-
-    // Render weekbar
-    this
-      .$el
-      .find('#weekBar')
-      .html(this.views.weekbar.render().el);
 
     // Add element to the page
     this
@@ -329,11 +322,19 @@ app.ScheduleView = Backbone.View.extend({
   render : function () {
     this.views.week = new app.WeekView(this.model.getDays());
 
+    // Render title
     this
       .$el
       .find('#scheduleTitle')
       .text(this.model.getTitle());
 
+    // Render weekbar
+    this
+      .$el
+      .find('#weekBar')
+      .html(this.views.weekbar.render().el);
+
+    // Render days(week)
     this
       .$el
       .find('#days')
@@ -346,6 +347,96 @@ app.ScheduleView = Backbone.View.extend({
 
 
 /**
+ * Calendar month model
+ */
+app.Month = Backbone.Model.extend({
+  initialize : function (data, options) {
+    options = options || {};
+    this.date = options.date;
+
+    var d = new Date(this.date);
+
+    this.set({
+      month : fullmonths[d.getMonth()]
+    });
+
+    this.buildMonth();
+  },
+
+  /**
+   * Build current month
+   */
+  buildMonth : function () {
+    var
+      today = new Date(),
+      d = new Date(this.date),
+      fd = new Date(d.getFullYear(), d.getMonth(), 1), // first day of the month
+      ls = new Date(d.getFullYear(), d.getMonth() + 1, 0), // last day of the month
+      oneday = 24*60*60*1000, // one day in milliseconds
+      weeks = [],
+      i, j, dur, week;
+
+    d.setDate(1); // set day to first (if wasn't set)
+    d.setDate(-d.getDay()); // go back to the first day of week
+
+    ls.setDate(ls.getDate() + 6 - ls.getDay()); // get last day of the last week
+
+    dur = Math.round((ls.getTime() - d.getTime()) / oneday) + 1; // get difference in days
+
+    for(i = 0; i < dur; i += 1) {
+      if(d.getDay() === 0) {
+        if(typeof week !== 'undefined') weeks.push(week);
+
+        week = {
+          week : d.getWeek(),
+          isCurrent : (d.getWeek() === today.getWeek()),
+          days : []
+        };
+
+      } else if(d.getDay() !== 6) {
+        week.days.push({
+          // if current month is not equal to building month
+          isOld : (d.getMonth() !== fd.getMonth()),
+          day : d.getDate()
+        });
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    weeks.push(week);
+
+    this.set({
+      weeks : weeks
+    });
+
+    return this;
+  },
+});
+
+
+/**
+ * Calendar month view
+ */
+app.MonthView = Backbone.View.extend({
+  template : $('#monthTemplate').html(),
+
+  initialize : function (options) {
+    options = options || {};
+
+    this.monthNum = options.monthNum;
+    this.buildMonth();
+  }
+});
+
+
+/**
+ * Calendar months collection
+ */
+app.Months = Backbone.Collection.extend({
+  model : app.Month
+});
+
+
+/**
  * Calendar view
  */
 app.CalendarView = Backbone.View.extend({
@@ -353,8 +444,45 @@ app.CalendarView = Backbone.View.extend({
 
   initialize : function (options) {
     options = options || {};
+
+    this.collection = new app.Months();
+
+    this.buildCalendar();
     // From query string get selected week
-    this.update(options);
+    //this.update(options);
+  },
+
+  /**
+   * Build calendar
+   *   When month is
+   *                 8     -> show 8..10
+   *                 9..11 -> show 9..12 ??
+   *                 12    -> show 11..1
+   *                 1..4  -> show 1..5
+   *                 5..7  -> show 4..7
+   *   OR
+   *     show current month, one preceding and two following (implemented)
+   */
+  buildCalendar : function () {
+    var
+      d = new Date(),   // current date
+      m = d.getMonth(), // current month
+      prec = 1,         // number of preceding months to show
+      follow = 2,       // number of following months to show
+      model, i, j;
+
+    for(i = -prec; i <= follow; i += 1) {
+      j = m + i; // month to show
+      j = (j < 0) ? (12 + j) : j;  // handle if month < 0
+      j = (j > 11) ? (j - 12) : j; // handle if month > 11
+
+      this
+        .collection
+        .add(new app.Month([], {
+            date : new Date(d.getFullYear(), j, 1)
+          }));
+    }
+
   },
 
   /**
@@ -400,15 +528,24 @@ app.WeekBarView = Backbone.View.extend({
     var
       week  = parseInt(options.week, 10),
       query = options.query,
+      // prevoius year
+      pd = new Date(new Date().getFullYear() - 1, 11, 31), // get last day
+      pw = pd.getWeek(), // get last week
+      //current year
+      ld = new Date(new Date().getFullYear(), 11, 31), // get last day
+      lw = ld.getWeek(), // get last week
 
       attributes = {
-        prevUrl : query + '/w' + (week - 1),
+        // if current week <= 1 -> show last week of the previous year
+        prevUrl : query + '/w' + ((week <= 1) ? pw : (week - 1)),
+        // current week
+        weekUrl : query + '/w' + week,
         weekNum : week,
-        nextUrl : query + '/w' + (week + 1)
+        // if current week >= last week of the current year -> show first week
+        nextUrl : query + '/w' + ((week >= lw) ? 1 : (week + 1))
       };
 
     this.model.set(attributes);
-
     return this;
   }
 });

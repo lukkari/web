@@ -112,7 +112,7 @@ mongoose.model('Entry', entrySchema);
 
 var roomSchema = new Schema({
   name      : { type : String, default : '' },
-  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   capacity  : { type : Number, default : 0 },
   createdAt : { type : Date,   default : Date.now }
 });
@@ -142,7 +142,7 @@ mongoose.model('Room', roomSchema);
 
 var teacherSchema = new Schema({
   name      : { type : String, default : '' },
-  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -171,7 +171,7 @@ mongoose.model('Teacher', teacherSchema);
 
 var groupSchema = new Schema({
   name      : { type : String, default : '' },
-  building  : { type : Schema.Types.ObjectId, ref : 'Building' },
+  filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -346,13 +346,13 @@ mongoose.model('UserTable', UserTableSchema);
 
 
 /**
- * Buildings
+ * Filters
  */
 
-var BuildingSchema = new Schema({
+var FilterSchema = new Schema({
   name        : { type : String, default : '' },
   description : { type : String, default : '' },
   createdAt   : { type : Date,   default : Date.now }
 });
 
-mongoose.model('Building', BuildingSchema);
+mongoose.model('Filter', FilterSchema);

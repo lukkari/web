@@ -17,85 +17,6 @@ block content
 
   div#content
 
-
-  div.mainpage
-
-    div.wrapper
-      div.container
-        h2 Schedule finder
-        div.block Custom schedule of ICT-building [Beta]
-
-    div.wrapper
-      div.container
-        h2 Quick links
-        div.block.quicklinks
-          a.navlink(href='/search' data-local) Find schedule
-
-    div.wrapper
-      div.container
-        h2 How to use
-        div.block
-          h4 Basics
-          div.subblock
-            b Choose schedule
-            div.info Click on any of two links on the top of the page and then choose your group or if you are looking for a teacher timetable choose teacher. To filter list start typing group name or teacher name. You can quickly access your teachers timetable by clicking on them in your schedule.
-              i  Search by room is planned.
-
-            b Choose week
-            div.info To choose other week you can click on a wide button with week number or use quick links for previous and next weeks. Blue week selection shows current week and grey selection means week which you chose.
-
-            b Select today schedule
-            div.info After selecting your group schedule, you can access today schedule by clicking on links and then on today schedule link.
-
-          h4 Save links
-          div.subblock You can save link and access it at any time. You will always see your current week timetable.
-
-          h4 Mistakes
-          div.subblock This is not official timetable, therefore if you found some mistakes in schedule, please contact me as soon as possible in the form below.
-
-    div.wrapper
-      div.container
-        h2: label(for='message') Contacts
-        div.block If you have any suggestions or questions, please, contact me.
-          div.contactform
-            div.success#sent Thank you for texting me
-            textarea.text#message(placeholder='Input your message')
-            div#hiddenform
-              input.text#replyto(type='text' placeholder='Reply to or at least your name')
-              input.button#send(type='button' value='Send')
-
-          div.subblock
-            div.note If you want to use API to fetch schedule, also contact me using this form.
-
-  div.schedule.clearfix
-    article
-      div.title: h2#scheduleTitle
-
-      div.weekblock
-        div#calendar.clearfix
-          each month in calendar
-            table
-              thead
-                tr
-                  th(colspan='6') #{month.month}
-                tr
-                  th #
-                  th Mo
-                  th Tu
-                  th We
-                  th Th
-                  th Fr
-              tbody
-                each week in month.dates
-                  - var trClass = (week.curweek == 0) ? 'current' : ''
-                  tr(class=trClass data-link='w#{week.week}')
-                    th #{week.week}
-                    each day in week.days
-                      - var tdClass = (day.old > 0) ? 'old' : ''
-                      td(class=tdClass) #{day.day}
-
-      div#days
-
   div.unknown Keep calm and don't experiment with url
 
 
@@ -128,32 +49,29 @@ block customFoot
 
   script#weekBarTemplate(type='text/html')
     a.neighbourweek#prevweek(href!='/<%= prevUrl %>' data-local) Prev
-    a.weekcontent(href='/') Week
+    a.weekcontent(href!='/<%= weekUrl %>' data-local) Week
       span#weeknum <%= weekNum %>
     a.neighbourweek#nextweek(href!='/<%= nextUrl %>' data-local) Next
 
-  script#calendarTemplate(type='text/html')
-    <% _.each(months, function (month) { %>
-    table
-      thead
-        tr
-          th(colspan='6') <%= month.month %>
-        tr
-          th #
-          th Mo
-          th Tu
-          th We
-          th Th
-          th Fr
-        tbody
-          <% _.each(month.weeks, function (week) { %>
-          tr(class='' data-link!='<%= week.week %>')
-            th <%= week.week %>
-              <% _.each(week.days, function (day) { %>
-              td(class='') <%= day.day %>
-              <% }); %>
-          <% }); %>
-    <% }); %>
+  script#monthTemplate(type='text/html')
+    thead
+      tr
+        th(colspan='6') <%= month %>
+      tr
+        th #
+        th Mo
+        th Tu
+        th We
+        th Th
+        th Fr
+      tbody
+        <% _.each(weeks, function (week) { %>
+        tr(class!='<%= week.className %>' data-link!='<%= week.week %>')
+          th <%= week.week %>
+            <% _.each(week.days, function (day) { %>
+            td(class!='<%= day.className %>') <%= day.day %>
+            <% }); %>
+        <% }); %>
 
   script#scheduleTemplate(type='text/html')
     article
@@ -189,7 +107,7 @@ block customFoot
                 <% if(subject.rest) { %>
                 div.resttext Break
                 <% } else { %>
-                div.subjectname <%= subject.name %>
+                <%= subject.name %>
                 <% } %>
 
               div.room <%= getRooms(subject.rooms) %>

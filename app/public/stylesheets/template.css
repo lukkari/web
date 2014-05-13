@@ -687,6 +687,10 @@ a:focus, input:focus, textarea {
   color: #333;
 }
 
+.schedule .subject .inner .name {
+  font-size: 1.2em;
+}
+
 .schedule .subject .inner .name a {
   font-size: 1.2em;
   color: #2C6D98;
