@@ -136,9 +136,9 @@ module.exports = function (app, passport) {
 
   // Add all routers
   app
-    .use('/manage', manageRouter)
+    .use('/manage',     manageRouter)
     .use('/manage/api', manageApiRouter)
-    .use('/u', userRouter)
-    .use('/api', apiRouter)
-    .use('/', homeRouter);
+    .use('/u',          userRouter)
+    .use('/api',        apiRouter)
+    .use('/',           homeRouter);
 };

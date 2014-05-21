@@ -198,6 +198,19 @@ app.Router = Backbone.Router.extend({
 
   unknown : function () {
     //app.pagesCtrl.toggle('unknown');
+  },
+
+  /**
+   * Open needed week
+   * @param  {Integer} week Week number
+   */
+  goToWeek : function (week) {
+
+    var url = window.location.pathname;
+    url = url.replace(/\/w\d+/, '') + '/w' + week;
+
+    console.log(url);
+    this.navigate(url, true);
   }
 });
 

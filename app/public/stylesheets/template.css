@@ -14,7 +14,6 @@ body {
   margin: 0;
   font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #ecf0f1;
-  overflow-y: scroll;
 }
 
 a {
@@ -463,7 +462,7 @@ a:focus, input:focus, textarea {
 }
 
 .schedule #calendar {
-  display: none;
+  display: block;
   padding: 10px 0;
 }
 

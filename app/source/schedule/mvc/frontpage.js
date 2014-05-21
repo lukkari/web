@@ -50,12 +50,11 @@ app.FrontPageView = Backbone.View.extend({
   },
 
   render : function () {
-    console.log(this.model);
-    /*this
+    this
       .$el
-      .html(this.model.toJSON())
+      .html(this.model.attributes.data)
       .fadeIn('fast');
-    this.$parent.append(this.el);*/
+    this.$parent.append(this.el);
     return this;
   },
 

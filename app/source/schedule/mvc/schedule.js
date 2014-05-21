@@ -268,13 +268,13 @@ app.ScheduleView = Backbone.View.extend({
     this.views.weekbar.setWeek(options);
     if(Array.isArray(schedule) && schedule.length) {
       this.model = schedule[0];
-      this.render();
+      this.render(options);
     } else {
       this.model = new app.Schedule([], options);
       this.model.fetch({
         success : function () {
           that.collection.add(that.model);
-          that.render();
+          that.render(options);
         },
 
         error : function () {
@@ -319,7 +319,7 @@ app.ScheduleView = Backbone.View.extend({
       .append(this.el);
   },
 
-  render : function () {
+  render : function (options) {
     this.views.week = new app.WeekView(this.model.getDays());
 
     // Render title
@@ -333,6 +333,12 @@ app.ScheduleView = Backbone.View.extend({
       .$el
       .find('#weekBar')
       .html(this.views.weekbar.render().el);
+
+    // Render calendar
+    this
+      .$el
+      .find('#calendar')
+      .html(this.views.calendar.render(options).el);
 
     // Render days(week)
     this
@@ -417,13 +423,39 @@ app.Month = Backbone.Model.extend({
  * Calendar month view
  */
 app.MonthView = Backbone.View.extend({
+  tagName : 'table',
   template : $('#monthTemplate').html(),
 
-  initialize : function (options) {
+  events : {
+    'click tbody tr' : 'goToWeek'
+  },
+
+  initialize : function (data, options) {
     options = options || {};
 
     this.monthNum = options.monthNum;
-    this.buildMonth();
+  },
+
+  /**
+   * When needed week is click, go to that week
+   * @param  {Object} e Event
+   */
+  goToWeek : function (e) {
+    console.log('run');
+    window.app.router.goToWeek($(e.currentTarget).attr('data-week'));
+    return this;
+  },
+
+  render : function () {
+    var tmpl = _.template(this.template);
+    this.$el.html(tmpl(this.model.toJSON()));
+
+    /**
+     * NOT WORKING!!!
+     */
+    this.delegateEvents();
+
+    return this;
   }
 });
 
@@ -440,7 +472,6 @@ app.Months = Backbone.Collection.extend({
  * Calendar view
  */
 app.CalendarView = Backbone.View.extend({
-  template : $('#calendarTemplate').html(),
 
   initialize : function (options) {
     options = options || {};
@@ -491,6 +522,26 @@ app.CalendarView = Backbone.View.extend({
    */
   update : function (options) {
     return this;
+  },
+
+  render : function () {
+    this.$el.empty();
+
+    _.each(this.collection.models, function (item) {
+      this
+        .$el
+        .append(this.renderItem(item).el);
+    }.bind(this));
+
+    return this;
+  },
+
+  renderItem : function (item) {
+    var monthView = new app.MonthView({
+      model : item
+    });
+
+    return monthView.render();
   }
 });
 
@@ -513,9 +564,7 @@ app.WeekBarView = Backbone.View.extend({
 
   render : function () {
     var tmpl = _.template(this.template);
-
     this.$el.html(tmpl(this.model.toJSON()));
-
     return this;
   },
 
@@ -528,7 +577,7 @@ app.WeekBarView = Backbone.View.extend({
     var
       week  = parseInt(options.week, 10),
       query = options.query,
-      // prevoius year
+      // previous year
       pd = new Date(new Date().getFullYear() - 1, 11, 31), // get last day
       pw = pd.getWeek(), // get last week
       //current year

@@ -64,13 +64,13 @@ block customFoot
         th We
         th Th
         th Fr
-      tbody
-        <% _.each(weeks, function (week) { %>
-        tr(class!='<%= week.className %>' data-link!='<%= week.week %>')
-          th <%= week.week %>
-            <% _.each(week.days, function (day) { %>
-            td(class!='<%= day.className %>') <%= day.day %>
-            <% }); %>
+    tbody
+      <% _.each(weeks, function (week) { %>
+      tr(class!='<%= week.className %>' data-week!='<%= week.week %>')
+        th <%= week.week %>
+          <% _.each(week.days, function (day) { %>
+          td(class!='<%= day.className %>') <%= day.day %>
+          <% }); %>
         <% }); %>
 
   script#scheduleTemplate(type='text/html')
