@@ -14,11 +14,7 @@ block content
         li: a.menu(href='/search' data-local)
 
   div.contentpusher
-
   div#content
-
-  div.unknown Keep calm and don't experiment with url
-
 
 
 block customFoot
@@ -66,10 +62,10 @@ block customFoot
         th Fr
     tbody
       <% _.each(weeks, function (week) { %>
-      tr(class!='<%= week.className %>' data-week!='<%= week.week %>')
+      tr(class!='<% if(week.isCurrent) { %>current<% } %>' data-week!='<%= week.week %>')
         th <%= week.week %>
           <% _.each(week.days, function (day) { %>
-          td(class!='<%= day.className %>') <%= day.day %>
+          td(class!='<% if(day.isOld) { %>old<% } %>') <%= day.day %>
           <% }); %>
         <% }); %>
 

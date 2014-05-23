@@ -209,7 +209,6 @@ app.Router = Backbone.Router.extend({
     var url = window.location.pathname;
     url = url.replace(/\/w\d+/, '') + '/w' + week;
 
-    console.log(url);
     this.navigate(url, true);
   }
 });

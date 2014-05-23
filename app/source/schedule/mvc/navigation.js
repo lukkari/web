@@ -184,7 +184,7 @@ app.SearchFiltersView = Backbone.View.extend({
 app.SearchView = Backbone.View.extend({
   template     : $('#searchPageTemplate').html(),
   className    : 'navwindow',
-  $parent      : $('.globalouter'),
+  $parent      : $('#content'),
   $searchInput : $('#searchInput'),
 
   initialize : function (options) {

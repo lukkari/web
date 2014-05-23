@@ -370,8 +370,13 @@ a:focus, input:focus, textarea {
   background-color: #27ae60;
 }
 
-.mainpage .subblock .info {
-  margin: 2px 0 7px 10px;
+.mainpage .quicklinks .issuelink {
+  background-color: #3498db;
+  font-size: 1em;
+}
+
+.mainpage .quicklinks .issuelink:hover {
+  background-color: #2980b9;
 }
 
 .mainpage h4 {
@@ -384,57 +389,10 @@ a:focus, input:focus, textarea {
   margin-top: 0;
 }
 
-.mainpage .attention {
-  margin: 3px 5px;
-}
-
-.mainpage .success {
-  margin: 3px 0;
-}
-
-.mainpage #sent {
-  display: none;
-}
-
-.mainpage .contactform {
-  margin: 10px 0;
-}
-
-.mainpage .contactform textarea {
-  margin: 0;
-  width: 35%;
-  height: 25px;
-  transition: height 0.3s, width 0.3s;
-}
-
-.mainpage .contactform textarea.big {
-  width: 100%;
-  height: 38px;
-}
-
-.mainpage .contactform textarea:focus, .mainpage .contactform .text:focus {
-  border-color: #555;
-}
-
-.mainpage .contactform #hiddenform {
-  margin: 2px 0 0;
-  display: none;
-}
-
-.mainpage .contactform .button {
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-
 /**
  * SCHEDULE TEMPLATE
  *
  */
-
-.mainpage, .unknown {
-  display: none;
-}
 
 .schedule {
   clear: both;
@@ -825,7 +783,6 @@ a:focus, input:focus, textarea {
   }
 }
 
-
 .unknown {
   font-size: 1.4em;
   text-align: center;
@@ -939,159 +896,4 @@ a:focus, input:focus, textarea {
 
 .nowpage .schedule .now {
   background-color: #EDFCF4;
-}
-
-
-/**
- * Experimental
- *
- */
-
-.schedule .block .subject {
-  position: relative;
-  overflow: hidden;
-}
-
-.schedule .block .subject .controlbar {
-  display: block;
-  position: absolute;
-  top: -35px;
-  right: 0;
-  transition: top 0.3s;
-  padding: 0;
-  height: 30px;
-  width: 100%;
-  box-shadow: 0 1px 4px 0 #555;
-}
-
-.schedule .block .controlbar button {
-  display: block;
-  float: left;
-  text-align: center;
-  width: 100%;
-  padding: 7px 0;
-  text-decoration: none;
-  color: #000;
-  border: 0;
-  margin: 0;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.schedule .block .controlbar .removelink {
-  background-color: #F69E9E;
-}
-
-.schedule .block .subject:hover > .controlbar {
-  top: 0;
-}
-
-.schedule .block .controlbar .removelink:hover {
-  background-color: #F27C7C;
-}
-
-.schedule .block .addsubject button {
-  width: 100%;
-  text-align: center;
-  border: 0;
-  margin: 0;
-  padding: 15px 0;
-  background-color: #f5f5f5;
-  font-size: 1.1em;
-  transition: background-color 0.3s;
-  cursor: pointer;
-}
-
-.schedule .block .addsubject button:hover {
-  background-color: #9BE0AE;
-}
-
-.schedule .block .new {
-  display: none;
-}
-
-.subjectpopup {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.subjectpopup .bg {
-  background-color: rgba(0,0,0,0.2);
-  width: 100%;
-  min-height: 100%;
-  position: fixed;
-}
-
-.subjectpopup .inner {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  margin: 0;
-  margin-left: -350px;
-  width: 700px;
-  box-shadow: 0 0 10px 2px rgba(0,0,0,0.4);
-}
-
-@media screen and (max-width: 700px) {
-  .subjectpopup .inner {
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-  }
-}
-
-.subjectpopup .closebtn {
-  width: 100%;
-  padding: 7px 0;
-  border: 0;
-  margin: 0;
-  font-size: 1.3em;
-  background-color: #eee;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.subjectpopup .closebtn:hover {
-  background-color: #BCD5E7;
-}
-
-.subjectpopup .container {
-  background-color: #fff;
-  padding: 7px 15px;
-}
-
-.subjectpopup .row {
-  margin-bottom: 10px;
-}
-
-.subjectpopup .form .text {
-  width: 100%;
-  padding: 5px;
-  font-size: 1.1em;
-}
-
-.subjectpopup .form .text:focus {
-  border-color: #777;
-}
-
-.subjectpopup .form .found li {
-  padding: 7px 7px;
-  cursor: pointer;
-  font-size: 1.1em;
-  transition: background-color 0.1s;
-  border-bottom: 1px solid #eee;
-}
-
-.subjectpopup .form .found li:last-child {
-  border: 0;
-}
-
-.subjectpopup .form .found li:hover {
-  background-color: #eee;
 }

@@ -265,7 +265,10 @@ app.ScheduleView = Backbone.View.extend({
     var that     = this,
         schedule = this.collection.getByQuery(options.url);
 
+    // Update weekbar and calendar
     this.views.weekbar.setWeek(options);
+    this.views.calendar.setWeek(options);
+
     if(Array.isArray(schedule) && schedule.length) {
       this.model = schedule[0];
       this.render(options);
@@ -278,7 +281,7 @@ app.ScheduleView = Backbone.View.extend({
         },
 
         error : function () {
-
+          // TO DO!
         }
       });
     }
@@ -313,6 +316,12 @@ app.ScheduleView = Backbone.View.extend({
       .html(tmpl())
       .show();
 
+    // Render calendar
+    this
+      .$el
+      .find('#calendar')
+      .html(this.views.calendar.render(options).el);
+
     // Add element to the page
     this
       .$parent
@@ -333,12 +342,6 @@ app.ScheduleView = Backbone.View.extend({
       .$el
       .find('#weekBar')
       .html(this.views.weekbar.render().el);
-
-    // Render calendar
-    this
-      .$el
-      .find('#calendar')
-      .html(this.views.calendar.render(options).el);
 
     // Render days(week)
     this
@@ -395,7 +398,7 @@ app.Month = Backbone.Model.extend({
 
         week = {
           week : d.getWeek(),
-          isCurrent : (d.getWeek() === today.getWeek()),
+          isCurrent : (d.getWeek() === today.getStudyWeek()),
           days : []
         };
 
@@ -426,14 +429,14 @@ app.MonthView = Backbone.View.extend({
   tagName : 'table',
   template : $('#monthTemplate').html(),
 
-  events : {
-    'click tbody tr' : 'goToWeek'
-  },
-
   initialize : function (data, options) {
     options = options || {};
 
     this.monthNum = options.monthNum;
+  },
+
+  events : {
+    'click tbody tr' : 'goToWeek'
   },
 
   /**
@@ -441,7 +444,6 @@ app.MonthView = Backbone.View.extend({
    * @param  {Object} e Event
    */
   goToWeek : function (e) {
-    console.log('run');
     window.app.router.goToWeek($(e.currentTarget).attr('data-week'));
     return this;
   },
@@ -449,11 +451,6 @@ app.MonthView = Backbone.View.extend({
   render : function () {
     var tmpl = _.template(this.template);
     this.$el.html(tmpl(this.model.toJSON()));
-
-    /**
-     * NOT WORKING!!!
-     */
-    this.delegateEvents();
 
     return this;
   }
@@ -479,20 +476,11 @@ app.CalendarView = Backbone.View.extend({
     this.collection = new app.Months();
 
     this.buildCalendar();
-    // From query string get selected week
-    //this.update(options);
   },
 
   /**
    * Build calendar
-   *   When month is
-   *                 8     -> show 8..10
-   *                 9..11 -> show 9..12 ??
-   *                 12    -> show 11..1
-   *                 1..4  -> show 1..5
-   *                 5..7  -> show 4..7
-   *   OR
-   *     show current month, one preceding and two following (implemented)
+   *   show current month, one preceding and two following
    */
   buildCalendar : function () {
     var
@@ -517,10 +505,26 @@ app.CalendarView = Backbone.View.extend({
   },
 
   /**
-   * Update calendar
+   * Update calendar with current week
    * @param  {Object} options parameters of new schedule page
    */
-  update : function (options) {
+  setWeek : function (options) {
+    options = options || {};
+
+    var week = options.week;
+
+    // Clear previous selection
+    this
+      .$el
+      .find('tr.selected')
+      .removeClass('selected');
+
+    // Set new selection
+    this
+      .$el
+      .find("tr[data-week='" + week + "']")
+      .addClass('selected');
+
     return this;
   },
 
