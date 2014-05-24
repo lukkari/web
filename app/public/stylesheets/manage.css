@@ -40,7 +40,6 @@ select {
   border: 1px solid #bbb;
   padding: 3px;
   width: 200px;
-  box-sizing: border-box;
 }
 
 .button {
@@ -57,8 +56,9 @@ select {
   background-color: #bdc3c7;
 }
 
-.text, .button {
+.text, .button, textarea {
   outline: none;
+  box-sizing: border-box;
 }
 
 .footer {
@@ -133,6 +133,18 @@ select {
   width: 85%;
   box-sizing: border-box;
   padding: 0 2em 2em 2em;
+}
+
+@media screen and (max-width: 700px) {
+  .manage .sidebar {
+    float: none;
+    width: 100%;
+  }
+
+  .manage .container {
+    width: 100%;
+    float: none;
+  }
 }
 
 .manage .container h2 {
@@ -391,6 +403,17 @@ select {
   padding: 0.5em 0;
 }
 
+.manage .modellist textarea {
+  height: 3.5em;
+  width: 100%;
+  background-color: #f7f7f7;
+  border: 0;
+  border-left: 5px solid #bbb;
+  margin: 0;
+  padding: 0;
+  font-family: Consolas, monospace;
+}
+
 .manage .modellist #notfound {
   display: none;
   margin: 1em 0 0;
@@ -407,20 +430,22 @@ select {
 
 .manage .modellist .model {
   position: relative;
+  background-color: #eee;
+}
+
+.manage .modellist .model:hover {
+  background-color: #ddd;
 }
 
 .manage .modellist pre {
+  outline: none;
   font-size: 0.9em;
   font-family: Consolas, monospace;
   color: #000;
-  background-color: #eee;
   padding: 0.2em 0.3em;
   margin: 0;
+  overflow: auto;
   transition: background-color 0.2s;
-}
-
-.manage .modellist .model:hover > pre {
-  background-color: #ddd;
 }
 
 .manage .modellist .actions {
@@ -431,31 +456,53 @@ select {
 
 .manage .modellist .actions li {
   float: left;
-  margin: 0 0.6em 0.2em 0;
+  margin: 0.1em 0 0.2em 0;
 }
 
-.manage .modellist .actions li > a {
+.manage .modellist .actions li > button {
   display: block;
   padding: 0.3em 0.6em;
+  margin: 0 0.4em;
+  border: 0;
   color: #fff;
   border-radius: 0.3em;
+  cursor: pointer;
+  font-size: 1em;
   text-decoration: none;
 }
 
-.manage .modellist .actions li > a.delete {
+.manage .modellist .actions li > .save {
+  display: none;
+  background: #27ae60;
+}
+
+.manage .modellist .actions li > .save:hover {
+  background: #1E9C53;
+}
+
+.manage .modellist .actions li > .delete {
   background: #e74c3c;
 }
 
-.manage .modellist .actions li > a.delete:hover {
+.manage .modellist .actions li > .delete:hover {
   background: #DE3321;
 }
 
-.manage .modellist .actions li > a.edit {
+.manage .modellist .actions li > .edit {
   background: #f1c40f;
 }
 
-.manage .modellist .actions li > a.edit:hover {
+.manage .modellist .actions li > .edit:hover {
   background: #E3B705;
+}
+
+.manage .modellist .actions li > .cancel {
+  display: none;
+  background-color: #aaa;
+}
+
+.manage .modellist .actions li > .cancel:hover {
+  background-color: #999;
 }
 
 .manage .pagination li {

@@ -150,7 +150,7 @@ exports.parse = function(req, res) {
 
   var Group    = mongoose.model('Group'),
       Parse    = mongoose.model('Parse'),
-      Building = mongoose.model('Building'),
+      Filter = mongoose.model('Filter'),
       list     = {
         groups    : [],
         parses    : [],
@@ -184,13 +184,13 @@ exports.parse = function(req, res) {
       },
 
       function (cb) {
-        Building.find({})
+        Filter.find({})
           .sort({ name : 1 })
-          .exec(function (err, buildings) {
+          .exec(function (err, filters) {
             if(err)
               console.log(err);
             else {
-              list.buildings = buildings;
+              list.buildings = filters;
               cb(false, null);
             }
           });
@@ -477,5 +477,50 @@ exports.apiModelConfig = function (req, res) {
     });
   } catch (e) {
     return res.json(500, { error : "Model doesn't exist" });
+  }
+};
+
+exports.apiEditModel = function (req, res) {
+
+  try {
+
+    var
+      model = mongoose.model(req.params.model),
+      doc   = req.body;
+
+    delete doc._id;
+
+    model.findByIdAndUpdate(req.params.id, doc, function (err) {
+      if(err) {
+        console.log(err);
+        return res.json(500, { error : err });
+      }
+
+      res.json({ success : true });
+    });
+
+  } catch (err) {
+    res.json(500, { error : err });
+  }
+
+};
+
+exports.apiDeleteModel = function (req, res) {
+
+  try {
+
+    var model = mongoose.model(req.params.model);
+
+    model.findByIdAndRemove(req.params.id, function (err) {
+      if(err) {
+        console.log(err);
+        return res.json(500, {error : err });
+      }
+
+      res.json({ success : true });
+    });
+
+  } catch (err) {
+    res.json(500, { error : err });
   }
 };

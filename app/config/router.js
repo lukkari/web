@@ -79,7 +79,9 @@ module.exports = function (app, passport) {
     .use(ensureXhr)
 
     .get('/model/:model/config', manage.apiModelConfig)
-    .get('/model/:model', manage.apiModel);
+    .get('/model/:model', manage.apiModel)
+    .put('/model/:model/:id', manage.apiEditModel)
+    .delete('/model/:model/:id', manage.apiDeleteModel);
 
   var userRouter = express.Router();
   userRouter

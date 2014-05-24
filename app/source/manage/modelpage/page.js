@@ -17,9 +17,11 @@ app.Search = Backbone.Model.extend({});
 app.SearchView = Backbone.View.extend({
   template : $('#searchTemplate').html(),
   el : $('#searchBox'),
+  query : {},
 
   events : {
-    'click .button' : 'search'
+    'click .button' : 'search',
+    'keyup .field'  : 'makeQuery'
   },
 
   initialize : function (options) {
@@ -40,7 +42,36 @@ app.SearchView = Backbone.View.extend({
   },
 
   search : function () {
-    console.log('search');
+    var query = this.$el.find('#query').val();
+
+    try {
+      query = JSON.parse(query);
+      console.log(query);
+      this.$el.find('#error').text('');
+    } catch (err) {
+      this.$el.find('#error').text(err);
+    }
+  },
+
+  /**
+   * Form query into full query field
+   * @param  {Object} e Event
+   */
+  makeQuery : function (e) {
+    var $el = $(e.currentTarget);
+
+    if($el.val()) {
+      // If value is not empty
+      this.query[$el.attr('id')] = $el.val();
+    } else if(typeof this.query[$el.attr('id')] !== 'undefined') {
+      // If value is empty and object property exists
+      delete this.query[$el.attr('id')];
+    }
+
+    this
+      .$el
+      .find('#query')
+      .val(JSON.stringify(this.query, null, '  '));
   }
 });
 
@@ -85,7 +116,7 @@ app.PaginationView = Backbone.View.extend({
    * Build array of page elements(links) and add them to collection
    */
   build : function () {
-    for(var i = 1; i <= this.count/this.limit; i += 1) {
+    for(var i = 1; i <= Math.ceil(this.count/this.limit); i += 1) {
       var paginationItem = new app.Pagination({
         current : i == this.pageNum,
         number  : i,
