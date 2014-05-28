@@ -1,25 +1,15 @@
+/**
+ * Front page view
+ */
+
 var
   $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
-Backbone.$ = $;
+var FrontPage = require('../models/frontpage');
 
-var app = app || {};
-
-
-/**
- * Front page model
- */
-app.FrontPageModel = Backbone.Model.extend({
-  urlRoot : '/api/frontpage'
-});
-
-
-/**
- * Front page view
- */
-app.FrontPageView = Backbone.View.extend({
+module.exports = Backbone.View.extend({
   className : 'mainpage',
   errTmpl  : $('#errorTemplate').html(),
   $parent  : $('#content'),
@@ -27,7 +17,7 @@ app.FrontPageView = Backbone.View.extend({
   initialize : function () {
     var that = this;
 
-    this.model = new app.FrontPageModel();
+    this.model = new FrontPage();
     this.model.fetch({
       success : function () {
         that.render();
@@ -76,5 +66,3 @@ app.FrontPageView = Backbone.View.extend({
     return this;
   }
 });
-
-module.exports = app;

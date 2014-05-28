@@ -72,7 +72,7 @@ $(function () {
 
   window.app = {
     router : new app.Router(),
-    limit  : 3
+    limit  : 5
   };
   Backbone.history.start({ pushState: true });
 

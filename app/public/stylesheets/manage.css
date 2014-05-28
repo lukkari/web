@@ -431,6 +431,7 @@ select {
 .manage .modellist .model {
   position: relative;
   background-color: #eee;
+  transition: background-color 0.2s;
 }
 
 .manage .modellist .model:hover {
@@ -445,7 +446,6 @@ select {
   padding: 0.2em 0.3em;
   margin: 0;
   overflow: auto;
-  transition: background-color 0.2s;
 }
 
 .manage .modellist .actions {

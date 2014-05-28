@@ -1,0 +1,38 @@
+div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
+  div.weekday <%= weekday.name %>
+    span.date <%= date.day %> <%= getMonth(date.month) %>
+
+  div.container
+    <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
+    div.subject
+      div.time
+        div.hour <%= getTime(subject.days) %>
+        div.duration
+          span(class!='dur-<%= getDur(subject.days) %>')
+            i#duration <%= getDur(subject.days) %>
+            u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
+
+      div.info
+        div.inner
+          div.name
+            <% if(subject.rest) { %>
+            div.resttext Break
+            <% } else { %>
+            <%= subject.name %>
+            <% } %>
+
+          div.room <%= getRooms(subject.rooms) %>
+
+          ul.teachers
+            <% _.each(subject.teachers, function (teacher) { %>
+            li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
+            <% }); %>
+
+      ul.groups.clearfix
+        <% _.each(subject.groups, function (group) { %>
+        li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
+        <% }); %>
+
+    <% }); %><% } else { %>
+    div.noclasses No classes
+    <% } %>

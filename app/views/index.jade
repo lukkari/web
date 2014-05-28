@@ -4,6 +4,8 @@ block customHead
   link(rel='stylesheet', href='/stylesheets/template.css')
 
 block content
+  div#app.globalouter
+
   header.top
     div.searchbox
       input.text#searchInput(type='text' placeholder='Search...')
@@ -26,104 +28,6 @@ block customFoot
 
   script#noDays(type='text/html')
     div.notfound No classes during this week
-
-  script#searchPageTemplate(type='text/html')
-    div.container
-    div.bg
-
-  script#searchSectionTemplate(type='text/html')
-    header: h2 <%= name %>
-    div.content.clearfix
-      ul
-
-  script#searchItemTemplate(type='text/html')
-    a(href!='<%= url %>' data-local) <%= name %>
-
-  script#searchFilterTemplate(type='text/html')
-    input(id!='<%= id %>' type='checkbox' checked!='<%= checked %>')
-    label(for!='<%= id %>') <%= name %>
-
-  script#weekBarTemplate(type='text/html')
-    a.neighbourweek#prevweek(href!='/<%= prevUrl %>' data-local) Prev
-    a.weekcontent(href!='/<%= weekUrl %>' data-local) Week
-      span#weeknum <%= weekNum %>
-    a.neighbourweek#nextweek(href!='/<%= nextUrl %>' data-local) Next
-
-  script#monthTemplate(type='text/html')
-    thead
-      tr
-        th(colspan='6') <%= month %>
-      tr
-        th #
-        th Mo
-        th Tu
-        th We
-        th Th
-        th Fr
-    tbody
-      <% _.each(weeks, function (week) { %>
-      tr(class!='<% if(week.isCurrent) { %>current<% } %>' data-week!='<%= week.week %>')
-        th <%= week.week %>
-          <% _.each(week.days, function (day) { %>
-          td(class!='<% if(day.isOld) { %>old<% } %>') <%= day.day %>
-          <% }); %>
-        <% }); %>
-
-  script#scheduleTemplate(type='text/html')
-    article
-      div.title: h2#scheduleTitle
-      div#calendar.clearfix
-      div#weekBar
-      div#days
-
-
-  script#weekdayTemplate(type='text/html')
-    div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
-      div.weekday <%= weekday.name %>
-        span.date <%= date.day %> <%= getMonth(date.month) %>
-
-      div.container
-        <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
-        div.subject
-          <% if(editable) { %>
-          div.controlbar
-            button.removelink(data-link!='<%= subject._id %>') Remove
-          <% } %>
-
-          div.time
-            div.hour <%= getTime(subject.days) %>
-            div.duration
-              span(class!='dur-<%= getDur(subject.days) %>')
-                i#duration <%= getDur(subject.days) %>
-                u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
-
-          div.info
-            div.inner
-              div.name
-                <% if(subject.rest) { %>
-                div.resttext Break
-                <% } else { %>
-                <%= subject.name %>
-                <% } %>
-
-              div.room <%= getRooms(subject.rooms) %>
-
-              ul.teachers
-                <% _.each(subject.teachers, function (teacher) { %>
-                li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
-                <% }); %>
-
-          ul.groups.clearfix
-            <% _.each(subject.groups, function (group) { %>
-            li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
-            <% }); %>
-
-        <% }); %><% } else { %>
-        div.noclasses No classes
-        <% } if (editable) { %>
-        div.addsubject: button Add
-        <% } %>
-
 
   script(src='/js/builds/schedulepage.js' async)
   script(src='/js/libs/analytics.js' async)

@@ -219,7 +219,7 @@ exports.addParse = function (req, res) {
   function returnRes(err, parse) {
     if(req.xhr) {
       if(err)
-        res.json(500, err);
+        res.json(400, err);
       else
         res.json({ response : 'success', data : parse });
     }
@@ -245,7 +245,7 @@ exports.staffParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err) return res.json(500, err);
+      if(err) return res.json(400, err);
       return res.json('success');
     }
     else {
@@ -271,7 +271,7 @@ exports.runParse = function (req, res) {
   function returnRes(err) {
     if(req.xhr) {
       if(err)
-        res.json(500, { error : err });
+        res.json(400, { error : err });
       else
         res.json('success');
     }
@@ -344,7 +344,7 @@ exports.deleteParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err) return res.json(500, { error : err });
+      if(err) return res.json(400, { error : err });
       return res.json('success');
     }
     else {
@@ -378,7 +378,7 @@ exports.clearParse = function (req, res) {
 
   function returnRes(err) {
     if(req.xhr) {
-      if(err) return res.json(500, { error : err });
+      if(err) return res.json(400, { error : err });
       return res.json('success');
     }
     else {
@@ -450,12 +450,12 @@ exports.apiModel = function (req, res) {
         function (err, docs) {
         if(err) {
           console.log(err);
-          return res.json(500, err);
+          return res.json(400, err);
         }
         res.json(docs);
       });
   } catch(e) {
-    return res.json(500, { error : "Model doesn't exist" });
+    return res.json(400, { error : "Model doesn't exist" });
   }
 };
 
@@ -467,7 +467,7 @@ exports.apiModelConfig = function (req, res) {
     model.count({}, function (err, count) {
       if(err) {
         console.log(err);
-        return res.json(500, err);
+        return res.json(400, err);
       }
       res.json({
         count  : count,
@@ -476,7 +476,7 @@ exports.apiModelConfig = function (req, res) {
       });
     });
   } catch (e) {
-    return res.json(500, { error : "Model doesn't exist" });
+    return res.json(400, { error : "Model doesn't exist" });
   }
 };
 
@@ -500,7 +500,7 @@ exports.apiEditModel = function (req, res) {
     });
 
   } catch (err) {
-    res.json(500, { error : err });
+    res.json(400, { error : err });
   }
 
 };
@@ -514,13 +514,13 @@ exports.apiDeleteModel = function (req, res) {
     model.findByIdAndRemove(req.params.id, function (err) {
       if(err) {
         console.log(err);
-        return res.json(500, {error : err });
+        return res.json(400, {error : err });
       }
 
       res.json({ success : true });
     });
 
   } catch (err) {
-    res.json(500, { error : err });
+    res.json(400, { error : err });
   }
 };

@@ -8,14 +8,13 @@ html
       link(rel='stylesheet', href='/stylesheets/mobile.css')
     block customHead
   body
-    div.globalouter
-      block content
+    block content
 
-      div.footer
-        span.footlinks
-          include ./footlinks/unlogged
-        span by
-          a(href='//zaynetro.github.io' target='_blank') zaynetro
-          | 2014
+    div.footer
+      span.footlinks
+        include ./footlinks/unlogged
+      span by
+        a(href='//zaynetro.github.io' target='_blank') zaynetro
+        | 2014
 
     block customFoot

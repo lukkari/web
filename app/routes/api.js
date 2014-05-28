@@ -19,7 +19,7 @@ exports.getGroups = function (req, res) {
       Group.getAll(function (err, groups) {
         if(err) {
           console.log(err);
-          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
         }
         else {
           send(groups);
@@ -44,7 +44,7 @@ exports.getTeachers = function (req, res) {
       Teacher.getAll(function (err, teacher) {
         if(err) {
           console.log(err);
-          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
         }
         else {
           send(teacher);
@@ -68,7 +68,7 @@ exports.getRooms = function (req, res) {
       Room.getAll(function (err, room) {
         if(err) {
           console.log(err);
-          send({ error : { code : 500, msg : 'Unknown mistake' } }, 500);
+          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
         }
         else {
           send(room);
@@ -82,7 +82,7 @@ exports.getNow = function (req, res) {
 
   var search = req.params.q;
 
-  if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
+  if(!search || !search.length) return res.json(400, { error : { code : 500, msg :'Wrong request' }});
 
   var today = new Date();
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
@@ -128,7 +128,7 @@ exports.getNow = function (req, res) {
       Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
         if(err) {
           console.log(err);
-          send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+          send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
         }
         else {
           if(group)
@@ -144,7 +144,7 @@ exports.getNow = function (req, res) {
             Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
               if(err) {
                 console.log(err);
-                send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+                send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
               }
               else {
                 if(teacher)
@@ -157,7 +157,7 @@ exports.getNow = function (req, res) {
                     }
                   });
                 else
-                  send({ error : { code : 404, msg : 'Not found' }}, 500);
+                  send({ error : { code : 404, msg : 'Not found' }}, 404);
               }
 
             });
@@ -175,7 +175,7 @@ exports.getSchedule = function (req, res) {
       w      = req.param('w');
 
 
-  if(!search || !search.length) return res.json(500, { error : { code : 500, msg :'Wrong request' }});
+  if(!search || !search.length) return res.json(400, { error : { code : 400, msg :'Wrong request' }});
 
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
   var today = new Date();
@@ -231,7 +231,7 @@ exports.getSchedule = function (req, res) {
       Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
         if(err) {
           console.log(err);
-          send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+          send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
         }
         else {
           if(group)
@@ -247,7 +247,7 @@ exports.getSchedule = function (req, res) {
             Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
               if(err) {
                 console.log(err);
-                send({ error : { code : 500, msg : 'Unknown mistake' }}, 500);
+                send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
               }
               else {
                 if(teacher)
@@ -279,7 +279,7 @@ exports.sendMsg = function (req, res) {
       from = encodeURI(req.param('from'));
 
   if(text.length < 2)
-    return res.json(200, 'success');
+    return res.json('success');
 
   var Contact = mongoose.model('Contact'),
       contact = new Contact({ message : text, from : from });
@@ -287,9 +287,9 @@ exports.sendMsg = function (req, res) {
   contact.save(function (err) {
     if(err) {
       console.log(err);
-      res.json(500, 'error');
+      res.json(400, 'error');
     }
-    else res.json(200, 'success');
+    else res.json('success');
   });
 
 };
@@ -317,7 +317,7 @@ exports.getSubject = function (req, res) {
                  });
   }
   else
-    return res.json(500, { error : 'Wrong request' });
+    return res.json(400, { error : 'Wrong request' });
 };
 
 exports.getSubjects = function (req, res) {
@@ -336,14 +336,14 @@ exports.getSubjects = function (req, res) {
                  });
   }
   else
-    return res.json(500, { error : 'Wrong request' });
+    return res.json(400, { error : 'Wrong request' });
 };
 
 exports.removeSubject = function (req, res) {
 
   var q = decodeURIComponent(req.params.q);
 
-  if(!q || !q.length) return res.json(500, 'wrong request');
+  if(!q || !q.length) return res.json(400, 'wrong request');
 
   var UserTable = mongoose.model('UserTable');
 
@@ -376,7 +376,7 @@ exports.addSubject = function (req, res) {
 
   var q = decodeURIComponent(req.params.q);
 
-  if(!q || !q.length) return res.json(500, 'wrong request');
+  if(!q || !q.length) return res.json(400, 'wrong request');
 
   var UserTable = mongoose.model('UserTable');
 
