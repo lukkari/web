@@ -3,7 +3,6 @@
  */
 
 var
-  $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
@@ -19,7 +18,6 @@ var
 module.exports = Backbone.View.extend({
   template     : templates.searchpage,
   className    : 'navwindow',
-  $searchInput : $('#searchInput'),
   filters : {},
   sections : {},
 

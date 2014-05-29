@@ -8,6 +8,8 @@ var
   Backbone = require('backbone');
 
 var
+  Schedule = require('./models/schedule'),
+
   AppView = require('./views/app'),
   FrontPageView = require('./views/frontpage'),
   SearchView = require('./views/search'),
@@ -45,99 +47,9 @@ module.exports = Backbone.Router.extend({
   },
 
   /**
-   * Checks if page was saved
-   * @param  {String} page page name
-   * @return {Object}      found page view
-   */
-  has : function (page) {
-    page = page || '';
-
-    if(!page.length) return null;
-
-    return _.find(this.pages,
-      function (el) {
-        return el.page === page;
-      }
-    );
-  },
-
-  /**
-   * Adds page object to saved pages
-   * @param  {Object} data page data
-   * @return {Array}       saved pages array
-   */
-  add : function (data) {
-    if(typeof data === 'object') this.pages.push(data);
-    return this.pages;
-  },
-
-  /**
-   * Hide previous page
-   */
-  hideView : function () {
-    if(this.view &&
-      typeof this.view === 'object' &&
-      typeof this.view.hide === 'function') this.view.hide();
-  },
-
-  /**
-   * Load page controller
-   * @param  {Object} params parameters for running page
-   */
-  loadPage : function (params) {
-    params = params || {};
-
-    var
-      defaults = {
-        hideView : true, // hide previous page
-        name     : '',   // page name
-        options  : null  // pass options to view constructor
-      },
-
-      content;
-
-    /**
-     * Create error page view
-     * @return {Object} returns error page view
-     */
-    defaults.createView = function () {
-      return null;
-    };
-
-    _.defaults(params, defaults);
-
-    if(params.hideView) this.hideView();
-
-    content = this.has(params.name);
-    if(content) {
-      content.view.show(params.options);
-      this.view = content.view;
-    } else {
-      content = params.createView(params.options);
-      this.add({
-        page : params.name,
-        view : content
-      });
-      this.view = content;
-    }
-  },
-
-  /**
    * Show mainpage(front page)
    */
   mainpage : function () {
-    /*
-    var
-      params = {
-        name : 'mainpage'
-      };
-
-    params.createView = function (options) {
-      return new FrontPageView(options);
-    };
-
-    this.loadPage(params);
-    */
 
     if(this.view) this.view.remove();
 
@@ -150,21 +62,6 @@ module.exports = Backbone.Router.extend({
    * @param  {String} s filter string
    */
   search : function (s) {
-    /*
-    var
-      params = {
-        options  : {
-          filter : s
-        },
-        name     : 'search'
-      };
-
-    params.createView = function (options) {
-      return new SearchView(options);
-    };
-
-    this.loadPage(params);
-    */
 
     if(this.view) this.view.remove();
 
@@ -190,42 +87,31 @@ module.exports = Backbone.Router.extend({
    * @param  {String} w week number
    */
   getSchedule : function (q, w) {
-    /*
-    var
-      query = q,
-
-      params = {
-        options : {
-          query : query
-        },
-        name : 'schedule'
-      };
-
-    params.createView = function (options) {
-      return new ScheduleView(options);
-    };
-
-    w = parseInt(w,10) > 0 ? w : new Date().getStudyWeek();
-
-    query += '?w=' + w;
-
-    params.options.url = query;
-    params.options.week = w;
-
-    this.loadPage(params);
-    */
 
     if(this.view) this.view.remove();
 
-    var query = q;
+    var
+      options = {
+        query : q,
+        q : q,
+        week : null
+      };
 
     w = (parseInt(w,10) > 0) ? w : new Date().getStudyWeek();
-    query += '?w=' + w;
 
-    this.view = new ScheduleView({
-      query : q,
-      url : query,
-      week : w
+    options.week = w;
+    options.query += '?w=' + w;
+
+    var schedule = new Schedule([], {
+      url : options.query
+    });
+
+    this.view = this.app.schedule;
+    schedule.fetch({
+      success : (function () {
+        this.view.model = schedule;
+        this.app.assign(this.view, '#content', options);
+      }).bind(this)
     });
   },
 

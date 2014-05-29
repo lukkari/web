@@ -9,13 +9,12 @@ var
 var templates = require('../dist');
 
 module.exports = Backbone.View.extend({
+
   tagName : 'table',
   template : templates.month,
 
   initialize : function (data, options) {
     options = options || {};
-
-    this.monthNum = options.monthNum;
   },
 
   events : {
@@ -32,8 +31,11 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var tmpl = _.template(this.template);
-    this.$el.html(tmpl(this.model.toJSON()));
+    this
+      .$el
+      .html(_.template(this.template,
+                       this.model.toJSON(),
+                       { variable : 'data' }));
 
     return this;
   }

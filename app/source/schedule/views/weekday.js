@@ -53,7 +53,6 @@ module.exports = Backbone.View.extend({
     });
 
     data.subjects = subjects;
-    data.editable = this.editable;
 
     _.extend(data, viewHelper);
 

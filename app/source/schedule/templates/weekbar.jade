@@ -1,4 +1,4 @@
-a.neighbourweek#prevweek(href!='/<%= prevUrl %>' data-local) Prev
-a.weekcontent(href!='/<%= weekUrl %>' data-local) Week
-  span#weeknum <%= weekNum %>
-a.neighbourweek#nextweek(href!='/<%= nextUrl %>' data-local) Next
+a.neighbourweek#prevweek(href!='/<%= data.prevUrl %>' data-local) Prev
+a.weekcontent(href!='/<%= data.weekUrl %>' data-local) Week
+  span#weeknum <%= data.weekNum %>
+a.neighbourweek#nextweek(href!='/<%= data.nextUrl %>' data-local) Next

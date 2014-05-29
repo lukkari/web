@@ -31,7 +31,7 @@ module.exports = Backbone.View.extend({
    * @param  {Event} e event
    */
   searchFocused : function (e) {
-    console.log('focused');
+    this.trigger('searchFocused');
   },
 
   /**

@@ -19,8 +19,12 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var tmpl = _.template(this.template);
-    this.$el.html(tmpl(this.model.toJSON()));
+    this
+      .$el
+      .html(_.template(this.template,
+                       this.model.toJSON(),
+                       { variable : 'data' }));
+
     return this;
   },
 
@@ -32,7 +36,7 @@ module.exports = Backbone.View.extend({
 
     var
       week  = parseInt(options.week, 10),
-      query = options.query,
+      query = options.q,
       // previous year
       pd = new Date(new Date().getFullYear() - 1, 11, 31), // get last day
       pw = pd.getWeek(), // get last week

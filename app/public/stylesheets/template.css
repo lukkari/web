@@ -14,6 +14,7 @@ body {
   margin: 0;
   font: 90% "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #ecf0f1;
+  overflow-y: scroll;
 }
 
 a {
@@ -482,6 +483,7 @@ a:focus, input:focus, textarea {
 .schedule #days {
   margin-top: 10px;
   clear: both;
+  overflow: hidden;
 }
 
 .schedule .bwrap {
