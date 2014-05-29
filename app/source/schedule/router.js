@@ -36,18 +36,12 @@ module.exports = Backbone.Router.extend({
      */
     this.view = null;
     /**
-     * Load search page when focusing search field
-     */
-    $('#searchInput').on('focus', function () {
-      if(typeof this.view === 'object' &&
-         this.view.el.baseURI.indexOf('search') === -1) this.navigate('/search', { trigger : true });
-    }.bind(this));
-    /**
      * Initalize appview
      */
     this.app = new AppView({
       el : '#app'
     });
+    this.app.render();
   },
 
   /**
@@ -132,6 +126,7 @@ module.exports = Backbone.Router.extend({
    * Show mainpage(front page)
    */
   mainpage : function () {
+    /*
     var
       params = {
         name : 'mainpage'
@@ -142,6 +137,12 @@ module.exports = Backbone.Router.extend({
     };
 
     this.loadPage(params);
+    */
+
+    if(this.view) this.view.remove();
+
+    this.view = new FrontPageView();
+    this.app.toContent(this.view.render().el);
   },
 
   /**
@@ -149,6 +150,7 @@ module.exports = Backbone.Router.extend({
    * @param  {String} s filter string
    */
   search : function (s) {
+    /*
     var
       params = {
         options  : {
@@ -162,6 +164,17 @@ module.exports = Backbone.Router.extend({
     };
 
     this.loadPage(params);
+    */
+
+    if(this.view) this.view.remove();
+
+    this.view = new SearchView({
+      filter : s,
+      header : this.app.header
+    });
+    this.app.toContent(this.view.render().el);
+
+    this.app.header.goTheme('dark');
   },
 
   /**
@@ -177,6 +190,7 @@ module.exports = Backbone.Router.extend({
    * @param  {String} w week number
    */
   getSchedule : function (q, w) {
+    /*
     var
       query = q,
 
@@ -199,6 +213,20 @@ module.exports = Backbone.Router.extend({
     params.options.week = w;
 
     this.loadPage(params);
+    */
+
+    if(this.view) this.view.remove();
+
+    var query = q;
+
+    w = (parseInt(w,10) > 0) ? w : new Date().getStudyWeek();
+    query += '?w=' + w;
+
+    this.view = new ScheduleView({
+      query : q,
+      url : query,
+      week : w
+    });
   },
 
   unknown : function () {

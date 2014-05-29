@@ -10,47 +10,46 @@ var
 var templates = require('../dist');
 
 var
+  SearchSection = require('../collections/searchsection'),
+
   SearchFiltersView = require('./searchfilters'),
   SearchSectionView = require('./searchsection');
+
 
 module.exports = Backbone.View.extend({
   template     : templates.searchpage,
   className    : 'navwindow',
-  $parent      : $('#content'),
   $searchInput : $('#searchInput'),
+  filters : {},
+  sections : {},
 
   initialize : function (options) {
     options = options || {};
 
+    this.filterString = options.filter;
+    this.loadChildren();
+    this.header = options.header;
+
+    this.listenTo(this.header, 'filterSections', this.filterSections);
+  },
+
+  render : function () {
     this
-      .render()
-      .loadChildren()
-      .addEvents();
-  },
+      .$el
+      .html(_.template(this.template, {}, { variable : 'data' }))
+      .fadeIn('fast');
 
-  show : function () {
-    this.$el.fadeIn('fast');
-    this.$searchInput.addClass('dark');
-    return this;
-  },
+    _.invoke(this.subViews, 'render');
 
-  hide : function () {
-    this.$el.hide();
-    this.$searchInput.removeClass('dark');
     return this;
   },
 
   /**
-   * Add events:
-   *   - filter window with typing
+   * Filter sections after user typed
+   * @param  {Event} e event
    */
-  addEvents : function () {
-    var that = this;
-    this.$searchInput.on('keyup', function (e) {
-      that.filterView(e.currentTarget.value);
-    });
-
-    return this;
+  filterSections : function (e) {
+    this.filterView(e.currentTarget.value);
   },
 
   /**
@@ -60,8 +59,8 @@ module.exports = Backbone.View.extend({
   filterView : function (s) {
     s = s || '';
 
-    this.content.sections.forEach(function (el) {
-      el.view.filter(s);
+    _.each(this.sections, function (el) {
+      el.filter(s);
     });
   },
 
@@ -71,46 +70,41 @@ module.exports = Backbone.View.extend({
    */
   loadChildren : function () {
     var
-      options = {
-        $parent : this.$el.find('.container')
-      },
-
       sections = ['groups', 'teachers', 'rooms'],
-
       i;
 
-    this.content = {
-      filters  : new SearchFiltersView(options),
-      sections : []
-    };
+    //this.filters = new SearchFiltersView();
 
-    sections.forEach(function (el) {
-      var opt = options;
-      opt.name = el;
+    _.each(sections, function (el) {
 
-      this.content.sections.push({
-        name : el,
-        view : new SearchSectionView(opt)
+      var section = new SearchSection([], { url : el });
+
+      section.fetch({
+        success : (function () {
+          this.sections[el] = new SearchSectionView({
+            name : el,
+            collection : section
+          });
+          // Append to view
+          this.sections[el].setElement(this.$el.find('#' + el)).render();
+        }).bind(this)
       });
 
-    }.bind(this));
+    }, this);
 
     return this;
   },
 
-  render : function () {
-    var tmpl = _.template(this.template);
+  /**
+   * Rewrite remove function to switch header theme first and remove children
+   */
+  remove : function () {
+    this.header.goTheme();
 
-    this
-      .$el
-      .html(tmpl());
+    _.invoke(this.filters, "remove");
+    _.invoke(this.sections, "remove");
 
-    this
-      .show()
-      .$parent
-      .append(this.el);
-
-    return this;
+    Backbone.View.prototype.remove.apply(this, arguments);
   }
 
 });

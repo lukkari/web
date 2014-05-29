@@ -15,48 +15,26 @@ var
 
 
 module.exports = Backbone.View.extend({
-  tagName  : 'section',
   template : templates.searchsection,
 
   initialize : function (options) {
     options = options || {};
 
-    var that = this;
-
-    this.$parent = options.$parent;
     this.name = options.name;
-
-    this.collection = new SearchSection([], {
-      url : options.name
-    });
-
-    this.collection.fetch({
-      success : function () {
-        that.render();
-      }
-    });
-
-    this.preRender();
-  },
-
-  /**
-   * Show sections before content is loaded
-   */
-  preRender : function () {
-    var tmpl = _.template(this.template);
-    this
-      .$el
-      .html(tmpl({ name : this.name.capitalize() }));
-
-    this.$parent.append(this.$el);
-
-    return this;
   },
 
   render : function (list) {
+    this
+      .$el
+      .html(_.template(this.template,
+                      { name : this.name.capitalize() },
+                      { variable : 'data' }));
+
+
     this.$el.find('ul').empty();
 
     if(!Array.isArray(list)) list = this.collection.models;
+
     _.each(list, function (item) {
       this.renderItem(item);
     }, this);
@@ -73,6 +51,8 @@ module.exports = Backbone.View.extend({
       .$el
       .find('ul')
       .append(searchItemView.render().el);
+
+    return this;
   },
 
   /**

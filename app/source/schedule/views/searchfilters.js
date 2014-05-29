@@ -14,6 +14,5 @@ module.exports = Backbone.View.extend({
 
   initialize : function (options) {
     options = options || {};
-    this.$parent = options.$parent;
   }
 });

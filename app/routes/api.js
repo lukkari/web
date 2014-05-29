@@ -405,12 +405,6 @@ exports.addSubject = function (req, res) {
   );
 };
 
-exports.getFrontPage = function (req, res) {
-  res.render('includes/frontpage', {}, function (err, html) {
-    res.json({ data : html });
-  });
-};
-
 exports.notFound = function (req, res) {
   res.json(404, { error : 'Not found' });
 };

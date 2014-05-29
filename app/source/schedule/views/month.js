@@ -27,7 +27,7 @@ module.exports = Backbone.View.extend({
    * @param  {Object} e Event
    */
   goToWeek : function (e) {
-    window.app.router.goToWeek($(e.currentTarget).attr('data-week'));
+    window.app.router.goToWeek(this.$(e.currentTarget).attr('data-week'));
     return this;
   },
 

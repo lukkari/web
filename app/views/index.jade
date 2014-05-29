@@ -1,33 +1,23 @@
-extends ./layouts/main
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    if mobile
+      meta(name="viewport" content="width=device-width, user-scalable=no")
+      link(rel='stylesheet', href='/stylesheets/mobile.css')
+    link(rel='stylesheet', href='/stylesheets/template.css')
+  body
 
-block customHead
-  link(rel='stylesheet', href='/stylesheets/template.css')
+    div#app.globalouter
 
-block content
-  div#app.globalouter
+    div#content
 
-  header.top
-    div.searchbox
-      input.text#searchInput(type='text' placeholder='Search...')
+    script#weekNotFound(type='text/html')
+      div.notfound Nothing found
 
-    nav.mainnav
-      ul
-        li: a.home(href='/' data-local)
-        li: a.menu(href='/search' data-local)
+    script#noDays(type='text/html')
+      div.notfound No classes during this week
 
-  div.contentpusher
-  div#content
-
-
-block customFoot
-  script#errorTemplate(type='text/html')
-    div.notfound <%= error %>
-
-  script#weekNotFound(type='text/html')
-    div.notfound Nothing found
-
-  script#noDays(type='text/html')
-    div.notfound No classes during this week
-
-  script(src='/js/builds/schedulepage.js' async)
-  script(src='/js/libs/analytics.js' async)
+    script(src='/js/builds/schedulepage.js' async)
+    script(src='/js/libs/analytics.js' async)

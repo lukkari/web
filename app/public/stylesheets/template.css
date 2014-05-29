@@ -72,7 +72,7 @@ select {
   box-sizing: border-box;
 }
 
-.footer {
+#app > footer {
   width: 100%;
   text-align: center;
   font-size: 0.8em;
@@ -80,7 +80,7 @@ select {
   color: #888;
 }
 
-.footer a {
+#app > footer a {
   color: #777;
   margin: 0 4px;
 }
@@ -150,7 +150,7 @@ a:focus, input:focus, textarea {
   box-shadow: 0 0 4px #3498db;
 }
 
-.top .searchbox .dark {
+#app header.dark .searchbox .text {
   background-color: #222;
   color: #ccc;
 }
