@@ -1,5 +1,5 @@
 /**
- * Boot schedule page
+ * Boot manage page
  */
 
 var
@@ -9,16 +9,21 @@ var
 var Router = require('./router');
 
 // add functions
-require('./util');
+//require('./util');
 
 Backbone.$ = $;
 
 $(document).ready(function () {
 
-  window.app = {};
+  window.app = {
+    router : new Router(),
+    limit  : 5
+  };
 
-  window.app.router = new Router();
-  Backbone.history.start({ pushState: true });
+  Backbone.history.start({
+    pushState : true,
+    root : '/manage/'
+  });
 
   /**
    * Bind events to all local links

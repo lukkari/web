@@ -1,16 +1,16 @@
-div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
-  div.weekday <%= weekday.name %>
-    span.date <%= date.day %> <%= getMonth(date.month) %>
+div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
+  div.weekday <%= data.weekday.name %>
+    span.date <%= data.date.day %> <%= data.getMonth(data.date.month) %>
 
   div.container
-    <% if(subjects.length > 0) { %><% _.each(subjects, function (subject) { %>
+    <% if(data.subjects.length > 0) { %><% _.each(data.subjects, function (subject) { %>
     div.subject
       div.time
-        div.hour <%= getTime(subject.days) %>
+        div.hour <%= data.getTime(subject.days) %>
         div.duration
-          span(class!='dur-<%= getDur(subject.days) %>')
-            i#duration <%= getDur(subject.days) %>
-            u hour<% if(getDur(subject.days) > 1) { %>s<% } %>
+          span(class!='dur-<%= data.getDur(subject.days) %>')
+            i#duration <%= data.getDur(subject.days) %>
+            u hour<% if(data.getDur(subject.days) > 1) { %>s<% } %>
 
       div.info
         div.inner
@@ -21,16 +21,16 @@ div.block(class!='<%= (isToday(date)) ? "today" : "" %>')
             <%= subject.name %>
             <% } %>
 
-          div.room <%= getRooms(subject.rooms) %>
+          div.room <%= data.getRooms(subject.rooms) %>
 
           ul.teachers
             <% _.each(subject.teachers, function (teacher) { %>
-            li: a(href!='/<%= toUrl(teacher.name) %>' data-local) <%= teacher.name %>
+            li: a(href!='/<%= data.toUrl(teacher.name) %>' data-local) <%= teacher.name %>
             <% }); %>
 
       ul.groups.clearfix
         <% _.each(subject.groups, function (group) { %>
-        li: a(href!='/<%= toUrl(group.name) %>' data-local) <%= group.name %>
+        li: a(href!='/<%= data.toUrl(group.name) %>' data-local) <%= group.name %>
         <% }); %>
 
     <% }); %><% } else { %>

@@ -21,14 +21,14 @@ module.exports = Backbone.View.extend({
 
   render : function () {
 
-    var tmpl = _.template(this.template),
-        data = this.model.toJSON();
+    var data = this.model.toJSON();
 
     var prev    = null,
         subjects = [];
-    data.subjects.forEach(function (e) {
+
+    _.each(data.subjects, function(el) {
       if(prev) {
-        var date  = new Date(e.days[0].date),
+        var date  = new Date(el.days[0].date),
             pdate = new Date(prev.date),
             dur   = date.getHours() - pdate.getHours() - prev.duration;
 
@@ -48,15 +48,18 @@ module.exports = Backbone.View.extend({
         }
       }
 
-      subjects.push(e);
-      prev = e.days[0];
+      subjects.push(el);
+      prev = el.days[0];
     });
 
     data.subjects = subjects;
 
     _.extend(data, viewHelper);
 
-    this.$el.html(tmpl(data));
+    this.$el.html(_.template(this.template,
+                             data,
+                             { variable : 'data' }));
+
     return this;
   }
 });
