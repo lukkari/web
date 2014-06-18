@@ -2,6 +2,7 @@ var path = require('path'),
     fs   = require('fs');
 
 module.exports = function (config) {
+  if(!config) return;
   var hashes = [],
       folder = path.resolve('./' + config.path),
       expire = config.expire;

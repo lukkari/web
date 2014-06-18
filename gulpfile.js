@@ -1,9 +1,10 @@
-var gulp = require('gulp'),
-    browserify = require('gulp-browserify'),
-    uglify = require('gulp-uglify'),
-    jade = require('gulp-jade'),
-    fs = require('fs'),
-    path = require('path');
+var
+  gulp       = require('gulp'),
+  browserify = require('gulp-browserify'),
+  uglify     = require('gulp-uglify'),
+  jade       = require('gulp-jade'),
+  fs         = require('fs'),
+  path       = require('path');
 
 var production = (process.env.NODE_ENV === 'production');
 
@@ -11,7 +12,7 @@ var paths = {
   watch : './app/source/**/*.js',
 
   builds : [
-    './app/source/manage/*.js',
+    './app/source/manage/managepage.js',
     './app/source/schedule/schedulepage.js'
   ],
 

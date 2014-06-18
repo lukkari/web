@@ -32,12 +32,3 @@ exports.getNow = function(req, res) {
   );
 
 };
-
-exports.editor = function (req, res) {
-
-  res.render('editor', {
-                          title  : 'Editor',
-                          logged : true
-                       }
-  );
-};

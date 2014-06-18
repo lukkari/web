@@ -10,9 +10,8 @@ var
 var templates = require('../dist/');
 
 var
-  HeaderView = require('./header'),
-  FooterView = require('./footer'),
-  ScheduleView = require('./schedule');
+  SidebarView = require('./sidebar'),
+  FooterView = require('./footer');
 
 module.exports = Backbone.View.extend({
 
@@ -20,24 +19,20 @@ module.exports = Backbone.View.extend({
 
   subviews : {},
 
-
   initialize : function (options) {
     options = options || {};
 
     // Init header view
-    this.subviews.header = new HeaderView();
+    this.subviews.sidebar = new SidebarView();
 
     // Init footer view
     this.subviews.footer = new FooterView();
-
-    // Init schedule view
-    this.subviews.schedule = new ScheduleView();
   },
 
   render : function () {
     this.$el.html(_.template(this.template, {}, { variable : 'data' }));
 
-    this.assign(this.subviews.header, '#appHeader');
+    this.assign(this.subviews.sidebar, '#appSidebar');
     this.assign(this.subviews.footer, '#appFooter');
 
     return this;
@@ -57,7 +52,7 @@ module.exports = Backbone.View.extend({
     view.setElement(this.$(selector)).render(options);
   },
 
-  remove : function() {
+  remove : function () {
     _.invoke(this.subviews, 'remove');
     this.subviews = {};
 

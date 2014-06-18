@@ -39,6 +39,7 @@
     "gulp": "*",
     "gulp-browserify": "*",
     "gulp-uglify": "*",
-    "gulp-jade": "*"
+    "gulp-jade": "*",
+    "gulp-cssmin": "*"
   }
 }

@@ -36,7 +36,7 @@ module.exports = Backbone.Model.extend({
     d.setDate(1); // set day to first (if wasn't set)
     d.setDate(-d.getDay()); // go back to the first day of week
 
-    ls.setDate(ls.getDate() + 6 - ls.getDay()); // get last day of the last week
+    ls.setDate(ls.getDate() + 6 - (ls.getDay() || 7)); // get last day of the last week
 
     dur = Math.round((ls.getTime() - d.getTime()) / oneday) + 1; // get difference in days
 

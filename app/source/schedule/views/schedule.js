@@ -28,20 +28,13 @@ module.exports = Backbone.View.extend({
     };
   },
 
-  /**
-   * Render only once
-   */
-  preRender : function (options) {
-    options = options || {};
-
-
-  },
-
   render : function (options) {
     // Render template
     this
       .$el
-      .html(_.template(this.template, {}, { variable : 'data' }));
+      .html(_.template(this.template,
+                       this.model.getDefaults(),
+                       { variable : 'data' }));
 
     // Render calendar
     this.views.calendar.setElement(this.$el.find('#calendar')).render();
@@ -49,12 +42,6 @@ module.exports = Backbone.View.extend({
     this.views.week = new WeekView(this.model.getDays());
     this.views.weekbar.setWeek(options);
     this.views.calendar.setWeek(options);
-
-    // Render title
-    this
-      .$el
-      .find('#scheduleTitle')
-      .text(this.model.getTitle());
 
     // Render weekbar
     this
@@ -68,6 +55,5 @@ module.exports = Backbone.View.extend({
     return this;
   },
 
-  remove : function () {
-  }
+  remove : function () {}
 });

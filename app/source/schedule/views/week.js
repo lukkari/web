@@ -17,9 +17,8 @@ module.exports = Backbone.View.extend({
   subjectUrl   : '/api/subject',
 
   initialize : function (data, options) {
-    data = data || {};
     options = options || {};
-    //this.editable = options.editable || false;
+
     this.collection = new Week(data, options);
   },
 

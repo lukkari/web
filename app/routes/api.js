@@ -1,81 +1,49 @@
 var mongoose = require('mongoose'),
     week     = require('../helpers/models/week'),
-    weekday  = require('../helpers/models/weekday'),
-    config   = require('../config/config'),
-    cache    = require('../helpers/cache')(config.cache);
+    weekday  = require('../helpers/models/weekday');
 
 exports.getGroups = function (req, res) {
 
-  cache.get(req.path,
-    function (err, data) {
-      if(err)
-        console.log(err);
+  var Group = mongoose.model('Group');
 
-      res.json(data);
-    },
-    function (send) {
-      var Group   = mongoose.model('Group');
-
-      Group.getAll(function (err, groups) {
-        if(err) {
-          console.log(err);
-          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
-        }
-        else {
-          send(groups);
-        }
-      });
+  Group.getAll(function (err, groups) {
+    if(err) {
+      console.log(err);
+      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
     }
-  );
+
+    return res.json(groups);
+  });
+
 };
 
 exports.getTeachers = function (req, res) {
 
-  cache.get(req.path,
-    function (err, data) {
-      if(err)
-        console.log(err);
+  var Teacher = mongoose.model('Teacher');
 
-      res.json(data);
-    },
-    function (send) {
-      var Teacher   = mongoose.model('Teacher');
-
-      Teacher.getAll(function (err, teacher) {
-        if(err) {
-          console.log(err);
-          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
-        }
-        else {
-          send(teacher);
-        }
-      });
+  Teacher.getAll(function (err, teacher) {
+    if(err) {
+      console.log(err);
+      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
     }
-  );
+
+    return res.json(teacher);
+  });
+
 };
 
 exports.getRooms = function (req, res) {
-  cache.get(req.path,
-    function (err, data) {
-      if(err)
-        console.log(err);
 
-      res.json(data);
-    },
-    function (send) {
-      var Room   = mongoose.model('Room');
+  var Room = mongoose.model('Room');
 
-      Room.getAll(function (err, room) {
-        if(err) {
-          console.log(err);
-          send({ error : { code : 400, msg : 'Unknown mistake' } }, 400);
-        }
-        else {
-          send(room);
-        }
-      });
+  Room.getAll(function (err, room) {
+    if(err) {
+      console.log(err);
+      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
     }
-  );
+
+    return res.json(room);
+  });
 };
 
 exports.getNow = function (req, res) {
@@ -110,63 +78,48 @@ exports.getNow = function (req, res) {
     return;
   }
 
-  cache.get(req.path,
-    function (err, data) {
-      if(err)
-        console.log(err);
+  var Group   = mongoose.model('Group'),
+      Teacher = mongoose.model('Teacher');
 
-      err = parseInt(err, 10);
-      if(err > 400)
-        res.json(err, data);
-      else
-        res.json(data);
-    },
-    function (send) {
-      var Group   = mongoose.model('Group'),
-          Teacher = mongoose.model('Teacher');
+  Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+    if(err) {
+      console.log(err);
+      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+    }
 
-      Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+    if(group) {
+      weekday.getSubjects({
+        date   : today,
+        type   : 'groups',
+        typeid : group._id,
+        cb : function (err, data) {
+          res.json(data);
+        }
+      });
+    }
+    else {
+      Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
         if(err) {
           console.log(err);
-          send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
+          return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
         }
-        else {
-          if(group)
-            weekday.getSubjects({
-              date   : today,
-              type   : 'groups',
-              typeid : group._id,
-              cb : function (err, data) {
-                send(data);
-              }
-            });
-          else {
-            Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-              if(err) {
-                console.log(err);
-                send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
-              }
-              else {
-                if(teacher)
-                  weekday.getSubjects({
-                    date   : today,
-                    type   : 'teachers',
-                    typeid : teacher._id,
-                    cb : function (err, data) {
-                      send(data);
-                    }
-                  });
-                else
-                  send({ error : { code : 404, msg : 'Not found' }}, 404);
-              }
 
-            });
-          }
+        if(teacher) {
+          weekday.getSubjects({
+            date   : today,
+            type   : 'teachers',
+            typeid : teacher._id,
+            cb : function (err, data) {
+              res.json(data);
+            }
+          });
         }
+        else res.json(404, { error : { code : 404, msg : 'Not found' }});
 
       });
     }
-  );
+
+  });
 };
 
 exports.getSchedule = function (req, res) {
@@ -180,15 +133,13 @@ exports.getSchedule = function (req, res) {
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
   var today = new Date();
 
-  if(w !== undefined) {
+  if(typeof w !== 'undefined') {
     var i = 0;
-    if(today.getStudyWeek() > (w + 35))
-      i = 1;
+    if(today.getStudyWeek() > (w + 35)) i = 1;
 
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
   }
-  else
-    w = new Date().getStudyWeek();
+  else w = new Date().getStudyWeek();
 
   if(search.toLowerCase() === 'my') {
 
@@ -213,63 +164,47 @@ exports.getSchedule = function (req, res) {
     return;
   }
 
-  cache.get(req.path + w,
-    function (err, data) {
-      if(err)
-        console.log(err);
+  var Group   = mongoose.model('Group'),
+      Teacher = mongoose.model('Teacher');
 
-      err = parseInt(err, 10);
-      if(err > 400)
-        res.json(err, data);
-      else
-        res.json(data);
-    },
-    function (send) {
-      var Group   = mongoose.model('Group'),
-          Teacher = mongoose.model('Teacher');
+  Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+    if(err) {
+      console.log(err);
+      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+    }
 
-      Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
+    if(group) {
+      week.getSchedule({
+        date   : today,
+        type   : 'groups',
+        typeid : group._id,
+        cb : function (err, data) {
+          res.json({ title : group.name, weekdays : data });
+        }
+      });
+    }
+    else {
+      Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
         if(err) {
           console.log(err);
-          send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
+          return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
         }
-        else {
-          if(group)
-            week.getSchedule({
-              date   : today,
-              type   : 'groups',
-              typeid : group._id,
-              cb : function (err, data) {
-                send({ title : group.name, weekdays : data });
-              }
-            });
-          else {
-            Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-              if(err) {
-                console.log(err);
-                send({ error : { code : 400, msg : 'Unknown mistake' }}, 400);
-              }
-              else {
-                if(teacher)
-                  week.getSchedule({
-                    date   : today,
-                    type   : 'teachers',
-                    typeid : teacher._id,
-                    cb : function (err, data) {
-                      send({ title : teacher.name, weekdays : data });
-                    }
-                  });
-                else
-                  send({ error : { code : 404, msg : 'Not found' }}, 404);
-              }
 
-            });
-          }
+        if(teacher) {
+          week.getSchedule({
+            date   : today,
+            type   : 'teachers',
+            typeid : teacher._id,
+            cb : function (err, data) {
+              res.json({ title : teacher.name, weekdays : data });
+            }
+          });
         }
+        else res.json(404, { error : { code : 404, msg : 'Not found' }});
 
       });
     }
-  );
+  });
 
 };
 
@@ -278,8 +213,7 @@ exports.sendMsg = function (req, res) {
   var text = encodeURI(req.param('msg')),
       from = encodeURI(req.param('from'));
 
-  if(text.length < 2)
-    return res.json('success');
+  if(text.length < 2) return res.json('success');
 
   var Contact = mongoose.model('Contact'),
       contact = new Contact({ message : text, from : from });

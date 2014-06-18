@@ -13,7 +13,8 @@ var
   AppView = require('./views/app'),
   FrontPageView = require('./views/frontpage'),
   SearchView = require('./views/search'),
-  ScheduleView = require('./views/schedule');
+  ScheduleView = require('./views/schedule'),
+  NowScheduleView = require('./views/nowschedule');
 
 
 module.exports = Backbone.Router.extend({
@@ -22,17 +23,11 @@ module.exports = Backbone.Router.extend({
     'search(/:s)(/)' : 'search',
     'w:w/:q(/)'      : 'getSchedule2',
     ':q(/w:w)(/)'    : 'getSchedule',
+    ':q/now(/)'      : 'getNowSchedule',
     '*other'         : 'unknown'
   },
 
   initialize : function () {
-    /**
-     * Array of objects = {
-     *   page : {String}
-     *   view : {Object}
-     * }
-     */
-    this.pages = [];
     /**
      * Saves last page view
      */
@@ -67,11 +62,11 @@ module.exports = Backbone.Router.extend({
 
     this.view = new SearchView({
       filter : s,
-      header : this.app.header
+      header : this.app.subviews.header
     });
     this.app.toContent(this.view.render().el);
 
-    this.app.header.goTheme('dark');
+    this.app.subviews.header.goTheme('dark');
   },
 
   /**
@@ -106,11 +101,33 @@ module.exports = Backbone.Router.extend({
       url : options.query
     });
 
-    this.view = this.app.schedule;
     schedule.fetch({
       success : (function () {
+        this.view = this.app.subviews.schedule;
         this.view.model = schedule;
         this.app.assign(this.view, '#content', options);
+      }).bind(this)
+    });
+  },
+
+  /**
+   * Show now schedule page
+   * @param  {String} q query string
+   */
+  getNowSchedule : function (q) {
+
+    if(this.view) this.view.remove();
+
+    var schedule = new Schedule([], {
+      url : q + '/now',
+      extraClass : 'nowpage'
+    });
+    schedule.fetch({
+      success : (function () {
+        this.view = new NowScheduleView({
+          model : schedule
+        });
+        this.app.assign(this.view, '#content');
       }).bind(this)
     });
   },

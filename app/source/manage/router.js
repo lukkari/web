@@ -2,16 +2,22 @@
  * Manage page router
  */
 
-var $ = require('jquery'),
-    _ = require('underscore'),
-    Backbone = require('backbone'),
-    mvc = require('./modelpage/model-mvc'),
-    page = require('./modelpage/page');
+var
+  $ = require('jquery'),
+  _ = require('underscore'),
+  Backbone = require('backbone');
 
+var
+  ModelBlocks = require('./collections/modelblocks'),
+
+  SetionView = require('./views/section'),
+  AppView = require('./views/app'),
+  ManagePageView = require('./views/managepage'),
+  ModelView = require('./views/model');
 
 module.exports = Backbone.Router.extend({
   routes : {
-    'model/:m(/page/:p)' : 'modelPage',
+    'model/:m(/page/:p)(/)' : 'modelPage',
     '*' : 'mainPage'
   },
 
@@ -24,6 +30,15 @@ module.exports = Backbone.Router.extend({
      *   }
      */
     this.models = [];
+
+    // Save current view
+    this.view = null;
+
+    // Init app view
+    this.app = new AppView({
+      el : '#app'
+    });
+    this.app.render();
   },
 
   /**
@@ -59,7 +74,7 @@ module.exports = Backbone.Router.extend({
     if(content) {
       content.view.load(p);
     } else {
-      content = new page.PageView({
+      content = new ModelView({
         name : name,
         page : p
       });
@@ -71,7 +86,28 @@ module.exports = Backbone.Router.extend({
     }
   },
 
+  /**
+   * Show main page
+   */
   mainPage : function () {
 
+    if(this.view) this.view.remove();
+
+    var modelblocks = new ModelBlocks();
+
+    modelblocks.fetch({
+      success : (function () {
+        this.view = new ManagePageView({
+          subviews : {
+            modelblocks : new Section({
+              title : 'Database models',
+              className : 'models',
+              collection : modelblocks
+            })
+          }
+        });
+        this.app.assign(this.view, '#content');
+      })
+    });
   }
 });

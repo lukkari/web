@@ -5,8 +5,6 @@
  var mongoose = require('mongoose'),
      async    = require('async'),
      fs       = require('fs'),
-     config   = require('../config/config'),
-     cache    = require('../helpers/cache')(config.cache),
      parser   = require('../helpers/parsers/parser');
 
 /**
@@ -117,8 +115,6 @@ exports.clearModel = function (req, res) {
 
   if(model.toLowerCase() == 'log') {
     fs.writeFile(__dirname + '/..' + config.log.path, '');
-  } else if(model.toLowerCase() == 'cache') {
-    cache.clear();
   } else {
     try {
       var Model = mongoose.model(model.capitalize());

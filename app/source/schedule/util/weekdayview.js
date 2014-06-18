@@ -55,10 +55,11 @@ module.exports = {
 
   /**
    * Checks if day is today
-   * @param  {Date}  date date to check
+   * @param  {Object}  date date to check
    * @return {Boolean}    if day is today
    */
   isToday : function (date) {
+    date = date || {};
     var d = new Date();
     return (d.getDate() == date.day) && (d.getMonth() == date.month);
   },

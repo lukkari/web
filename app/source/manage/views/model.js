@@ -4,7 +4,7 @@
 
 var
   _ = require('underscore'),
-  Backbone = require('Backbone');
+  Backbone = require('backbone');
 
 
 module.exports = Backbone.View.extend({

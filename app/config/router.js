@@ -104,7 +104,7 @@ module.exports = function (app, passport) {
     .get(   '/teachers',        api.getTeachers)
     .get(   '/rooms',           api.getRooms)
     .get(   '/schedule/:q',     api.getSchedule)
-    .get(   '/schedule/now/:q', api.getNow)
+    .get(   '/schedule/:q/now', api.getNow)
     .post(  '/messages',        api.sendMsg)
     .get(   '/subject/:q',      api.getSubject)
     .delete('/subject/:q',      api.removeSubject)
@@ -132,7 +132,7 @@ module.exports = function (app, passport) {
     .post('/signup', users.create)
 
     // Main page
-    .get('/:q/now', routes.getNow)
+    //.get('/:q/now', routes.getNow)
     .get('/*',      routes.index);
 
   // Add all routers
