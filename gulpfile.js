@@ -13,7 +13,8 @@ var paths = {
 
   builds : [
     './app/source/manage/managepage.js',
-    './app/source/schedule/schedulepage.js'
+    './app/source/schedule/schedulepage.js',
+    './app/source/parser/parserpage.js'
   ],
 
   dest : './app/public/js/builds/',
@@ -33,10 +34,10 @@ var paths = {
 
 gulp.task('scripts', function () {
 
-  paths.builds.forEach(function (path) {
+  paths.builds.forEach(function (file) {
 
     gulp
-    .src(path)
+    .src(file)
     .pipe(browserify({ debug : false }))
     //.pipe(uglify())
     .pipe(gulp.dest(paths.dest));
