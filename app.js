@@ -17,7 +17,7 @@ var
   MongoStore   = require('connect-mongo')({ session : session });
 
 // Application directory
-var appdir = __dirname + '/app';
+var appdir = path.join(__dirname, 'app');
 
 // Create express application
 var app = express();

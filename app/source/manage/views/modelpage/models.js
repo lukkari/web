@@ -8,7 +8,6 @@ var
 
 
 module.exports = Backbone.View.extend({
-  el : $('#results'),
 
   initialize : function (options) {
     options = options || {};

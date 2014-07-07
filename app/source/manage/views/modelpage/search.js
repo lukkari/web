@@ -6,11 +6,10 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var Search = require('../models/search');
+var Search = require('../../models/search');
 
 module.exports = Backbone.View.extend({
-  template : $('#searchTemplate').html(),
-  el : $('#searchBox'),
+  template : '',
   query : {},
 
   events : {
@@ -52,7 +51,7 @@ module.exports = Backbone.View.extend({
    * @param  {Object} e Event
    */
   makeQuery : function (e) {
-    var $el = $(e.currentTarget);
+    var $el = this.$(e.currentTarget);
 
     if($el.val()) {
       // If value is not empty

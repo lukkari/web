@@ -7,15 +7,14 @@ var
   Backbone = require('backbone');
 
 var
-  Page = require('../models/page'),
+  //Page = require('../../models/page'),
 
   SearchView = require('./search'),
-  PaginationView = require('./pagination'),
+  PaginationView = require('./paginations'),
   ModelsView = require('./models');
 
 module.exports = Backbone.View.extend({
   views : {},
-  $modelName : $('#modelName'),
 
   initialize : function (options) {
     options = options || {};
@@ -30,12 +29,12 @@ module.exports = Backbone.View.extend({
      * Get current model configurations:
      *   schema, count and name
      */
-    this.model = new Page(options.name);
+    /*this.model = new Page(options.name);
     this.model.fetch({
       success : function () {
         that.setup();
       }
-    });
+    });*/
 
     this.views.models = new ModelsView(options);
   },

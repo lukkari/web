@@ -10,27 +10,21 @@ var
 var
   ModelBlocks = require('./collections/modelblocks'),
 
-  SetionView = require('./views/section'),
   AppView = require('./views/app'),
-  ManagePageView = require('./views/managepage'),
-  ModelView = require('./views/model');
+
+  DashboardView = require('./views/dashboard'),
+  SectionView = require('./views/dashboard/section'),
+  ModelBlockView = require('./views/dashboard/modelblock'),
+
+  ModelPageView = require('./views/modelpage');
 
 module.exports = Backbone.Router.extend({
   routes : {
     'model/:m(/page/:p)(/)' : 'modelPage',
-    '*' : 'mainPage'
+    '/*' : 'dashboard'
   },
 
   initialize : function () {
-    /**
-     * @type {Array} this.models Array of objects:
-     *   {
-     *     @type {String} model model name
-     *     @type {Object} view link to saved PageView
-     *   }
-     */
-    this.models = [];
-
     // Save current view
     this.view = null;
 
@@ -42,72 +36,47 @@ module.exports = Backbone.Router.extend({
   },
 
   /**
-   * Checks if this.models has model page
-   * @param  {String} name model name
-   * @return {Object} return found object or undefined
+   * Show model page
+   * @param  {String} name Model name
+   * @param  {String]} p   Page number
    */
-  has : function (name) {
-    name = name || '';
-
-    var found = _.find(this.models,
-      function (el) {
-        return el.model === name;
-      }
-    );
-    return found;
-  },
-
-  /**
-   * Adds object to this.models variable
-   * @param {String} data { model name, page view }
-   */
-  add : function (data) {
-    if(typeof data === 'object') this.models.push(data);
-    return data;
-  },
-
   modelPage : function (name, p) {
     if(!name || !name.length) return;
     p = p || '1'; // page number
 
-    var content = this.has(name);
-    if(content) {
-      content.view.load(p);
-    } else {
-      content = new ModelView({
-        name : name,
-        page : p
-      });
+    if(this.view) this.view.remove();
 
-      this.add({
-        model : name,
-        view  : content
-      });
-    }
+    this.view = new ModelPageView({
+      name : name,
+      page : p
+    });
+
+    this.app.assign(this.view, '#content');
   },
 
   /**
-   * Show main page
+   * Show dashboard page
    */
-  mainPage : function () {
-
+  dashboard : function () {
     if(this.view) this.view.remove();
 
     var modelblocks = new ModelBlocks();
 
     modelblocks.fetch({
       success : (function () {
-        this.view = new ManagePageView({
+        this.view = new DashboardView({
           subviews : {
-            modelblocks : new Section({
+            modelblocks : new SectionView({
               title : 'Database models',
               className : 'models',
-              collection : modelblocks
+              collection : modelblocks,
+              ModelView : ModelBlockView
             })
           }
         });
-        this.app.assign(this.view, '#content');
-      })
+
+        this.app.toContent(this.view.render().el);
+      }).bind(this)
     });
   }
 });

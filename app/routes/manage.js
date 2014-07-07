@@ -520,3 +520,21 @@ exports.apiDeleteModel = function (req, res) {
     res.json(400, { error : err });
   }
 };
+
+exports.apiGetModels = function (req, res) {
+  res.json([{
+      link : 'one',
+      name : 'one',
+      count : 10
+    },
+    {
+      link : 'two',
+      name : 'two',
+      count : 2
+    },
+    {
+      link : 'three',
+      name : 'three',
+      count : 5
+    }]);
+};

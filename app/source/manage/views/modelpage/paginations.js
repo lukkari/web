@@ -7,13 +7,12 @@ var
   Backbone = require('backbone');
 
 var
-  Pagination = require('../models/pagination'),
-  Paginations = require('../collections/paginations'),
+  Pagination = require('../../models/pagination'),
+  Paginations = require('../../collections/paginations'),
   PaginationItemView = require('./paginationitem');
 
 
 module.exports = Backbone.View.extend({
-  el : $('#pagination'),
   collection : new Paginations(),
 
   initialize : function (options) {

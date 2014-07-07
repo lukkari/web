@@ -1,20 +1,12 @@
 /**
- * Manage page view
+ * Dashboard view
  */
 
 var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist/');
-
-var ModelBlocksView = require('./modelblocks');
-
 module.exports = Backbone.View.extend({
-
-  template : templates.managepage,
-
-  subviews : {},
 
   initialize : function (options) {
     options = options || {};
@@ -23,11 +15,11 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    this.$el.html(_.template(this.template,
-                             {},
-                             { variable : 'data' }));
+    //_.invoke(this.subviews, 'render');
 
-    _.invoke(this.subviews, 'render');
+    _.each(this.subviews, function (subview) {
+      this.$el.append(subview.render().el);
+    }, this);
 
     return this;
   },

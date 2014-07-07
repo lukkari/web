@@ -81,7 +81,9 @@ module.exports = function (app, passport) {
     .get('/model/:model/config', manage.apiModelConfig)
     .get('/model/:model', manage.apiModel)
     .put('/model/:model/:id', manage.apiEditModel)
-    .delete('/model/:model/:id', manage.apiDeleteModel);
+    .delete('/model/:model/:id', manage.apiDeleteModel)
+
+    .get('/model', manage.apiGetModels);
 
   var userRouter = express.Router();
   userRouter

@@ -7,7 +7,7 @@ var
   Backbone = require('backbone');
 
 module.exports = Backbone.View.extend({
-  template : $('#paginationTemplate').html(),
+  template : '',
 
   render : function () {
     var tmpl = _.template(this.template);

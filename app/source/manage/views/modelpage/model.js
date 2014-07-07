@@ -10,7 +10,7 @@ var
 module.exports = Backbone.View.extend({
   tagName   : 'li',
   className : 'row',
-  template  : $('#modelTemplate').html(),
+  template  : '',
 
   events : {
     'click .edit'   : 'editModel',
