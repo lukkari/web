@@ -522,19 +522,100 @@ exports.apiDeleteModel = function (req, res) {
 };
 
 exports.apiGetModels = function (req, res) {
-  res.json([{
-      link : 'one',
-      name : 'one',
-      count : 10
-    },
-    {
-      link : 'two',
-      name : 'two',
-      count : 2
-    },
-    {
-      link : 'three',
-      name : 'three',
-      count : 5
-    }]);
+
+
+  var Contact  = mongoose.model('Contact'),
+      models   = [],
+      messages,
+      modelslist = Object.keys(mongoose.connection.base.models);
+
+  async.parallel([
+      function (cb) {
+        var l = modelslist.length,
+            i = 0;
+
+        modelslist.forEach(function (el) {
+          countCollection(el, function (err, num) {
+            if(err) {
+              console.log(err);
+              num = 0;
+            }
+            models.push({
+              name  : el.capitalize(),
+              count : num
+            });
+            i += 1;
+            if(i >= l) cb(null);
+          });
+        });
+      },
+
+      function (cb) {
+        Contact
+          .find({})
+          .sort({ createdAt : -1 })
+          .limit(50)
+          .exec(function (err, data) {
+            if(err) console.log(err);
+            else messages = data;
+
+            cb(null);
+          });
+      }
+    ],
+
+    function (err) {
+      var date = new Date();
+      res.json(models);
+    }
+  );
+
+};
+
+exports.apiGetParses = function (req, res) {
+
+  var Parse = mongoose.model('Parse');
+
+  Parse
+    .find({})
+    .sort({ createdAt : '1' })
+    .exec(function (err, parses) {
+      if(err) {
+        console.log(err);
+        return res.json(400, err);
+      }
+
+      res.json(parses);
+    });
+};
+
+var parser = require('../helpers/parsers');
+var mainLink = require('../helpers/parsers/mainLink');
+
+exports.apiAddParse = function (req, res) {
+
+  var Parse = mongoose.model('Parse');
+
+  var parse = new Parse(req.body);
+
+  parse.save(function (err, doc) {
+    if(err) {
+      console.log(err);
+      return res.json(400, err);
+    }
+
+    // parse current doc and add children
+    parser({
+      url : doc.url,
+      parser : mainLink,
+      done : function (err, result) {
+        if(err) {
+          console.log(err);
+          return res.json(400, err);
+        }
+        console.log(result);
+        res.json('success');
+      }
+    });
+  });
 };

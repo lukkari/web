@@ -1,0 +1,9 @@
+/**
+ * Parse(link) model
+ */
+
+var Backbone = require('backbone');
+
+module.exports = Backbone.Model.extend({
+  urlRoot : '/manage/api/parse'
+});

@@ -57,6 +57,7 @@ module.exports = function (app, passport) {
     .use(ensureAdmin)
 
     .get('/',             manage.index)
+    .get('/parser',       manage.index)
     .get('/log',          manage.showLog)
     .get('/model/:model', manage.model)
     .get('/model/:model/page/:page', manage.model)
@@ -83,7 +84,9 @@ module.exports = function (app, passport) {
     .put('/model/:model/:id', manage.apiEditModel)
     .delete('/model/:model/:id', manage.apiDeleteModel)
 
-    .get('/model', manage.apiGetModels);
+    .get('/model', manage.apiGetModels)
+    .get('/parse', manage.apiGetParses)
+    .post('/parse', manage.apiAddParse);
 
   var userRouter = express.Router();
   userRouter

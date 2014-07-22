@@ -198,6 +198,9 @@ mongoose.model('Group', groupSchema);
  * Parse
  */
 
+/**
+ * Old Parse Schema
+
 var parseSchema = new Schema({
   link        : { type : String,  default : '' },
   group       : { type : Schema.Types.ObjectId, ref : 'Group' },
@@ -215,11 +218,11 @@ var parseSchema = new Schema({
 });
 
 parseSchema.pre('save', function (next, done) {
-  var link = this.link,
-      groupname;
+  var
+    link = this.link,
+    groupname;
 
-  if(link.length < 1)
-    done('Url is too short');
+  if(link.length < 1) done('Url is too short');
 
   link  = link.split('/');
 
@@ -256,6 +259,21 @@ parseSchema.pre('save', function (next, done) {
     });
   }
 
+});
+
+*/
+
+var parseSchema = new Schema({
+  url         : { type : String,  default : '' },
+  title       : { type : String,  default : '' }, // not required in the top level
+  description : { type : String,  default : '' },
+  parsed      : { type : Boolean, default : false },
+  children    : [{
+    url   : { type : String, default : '' },
+    title : { type : String, default : '' },
+    week  : { type : Number, default : 0 }
+  }],
+  createdAt   : { type : Date,    default : Date.now }
 });
 
 mongoose.model('Parse', parseSchema);

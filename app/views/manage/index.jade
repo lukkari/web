@@ -1,61 +1,14 @@
-extends ../layouts/main
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    if mobile
+      meta(name="viewport" content="width=device-width, user-scalable=no")
+      link(rel='stylesheet', href='/stylesheets/mobile-manage.css')
+    link(rel='stylesheet', href='/stylesheets/manage.css')
+  body
 
-block customHead
-  link(rel='stylesheet', href='/stylesheets/manage.css')
+    div#app.manage
 
-block content
-  div(style='display: none;')
-    div.manage
-      div.sidebar
-        div.links
-          ul
-            li: a(href='/') Home
-            li: a(href='/manage') Manage
-            li: a(href='/manage/parse') Parse
-            li: a(href='/manage/parser' data-local) Parser
-
-
-      div.container
-        h1= title
-
-        h2 Info
-        div.block
-          ul.info
-            li Date:
-              span #{date}
-            li Study week:
-              span #{week}
-
-        h2 Database statistics
-        div.block
-          ul.models
-            each item in models
-              -if(!item.count) item.count = 0;
-              li
-                a.modellink(href='/manage/model/#{item.name}')
-                  span.name=item.name
-                  span.count=item.count
-                a.clearlink(href='/manage/clear/#{item.name}' onclick='return confirm("Clear all #{item.name}s?");') clear
-
-            li
-              a.modellink(href='/manage/log') Log
-              a.clearlink(href='/manage/clear/log' onclick='return confirm("Clear log?");') clear
-            li
-              a.modellink(href='#') Cache
-              a.clearlink(href='/manage/clear/cache' onclick='return confirm("Clear cache?");') clear
-
-        h2 Messages
-        div.block
-          div.msgs
-            each message in messages
-              - var msg  = decodeURI(message.message)
-              - var from = decodeURI(message.from)
-              div.msg
-                div.from= from
-                  i= message.createdAt
-                div.contain #{msg}
-
-  div#app.manage
-
-block customFoot
-  script(src='/js/builds/managepage.js' async)
+    script(src='/js/builds/managepage.js' async)

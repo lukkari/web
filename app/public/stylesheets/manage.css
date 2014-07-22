@@ -61,7 +61,7 @@ select {
   box-sizing: border-box;
 }
 
-.footer {
+.manage > footer {
   width: 100%;
   text-align: center;
   font-size: 0.8em;
@@ -69,7 +69,7 @@ select {
   color: #888;
 }
 
-.footer a {
+.manage > footer a {
   color: #777;
   margin: 0 4px;
 }

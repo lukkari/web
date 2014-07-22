@@ -1,17 +1,17 @@
 /**
- * Model blocks view
+ * Link item view
  */
 
 var
-  _ = require('underscore'),
-  Backbone = require('backbone');
+  Backbone = require('backbone'),
+  _ = require('underscore');
 
-var template = require('../../dist/');
+var templates = require('../../dist/');
 
 module.exports = Backbone.View.extend({
-
-  template : template.modelblock,
   tagName : 'li',
+
+  template : templates.linkItem,
 
   initialize : function (options) {
     options = options || {};
@@ -20,12 +20,8 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var data = this.model.toJSON();
-
-    data.link = '/model/' + data.name;
-
     this.$el.html(_.template(this.template,
-                             data,
+                             this.model.toJSON(),
                              { variable : 'data' }));
 
     return this;

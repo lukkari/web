@@ -10,17 +10,22 @@ var
 var
   ModelBlocks = require('./collections/modelblocks'),
 
+  Parses = require('./collections/parses'),
+
   AppView = require('./views/app'),
 
   DashboardView = require('./views/dashboard'),
   SectionView = require('./views/dashboard/section'),
   ModelBlockView = require('./views/dashboard/modelblock'),
 
-  ModelPageView = require('./views/modelpage');
+  ModelPageView = require('./views/modelpage'),
+
+  ParserView = require('./views/parser');
 
 module.exports = Backbone.Router.extend({
   routes : {
     'model/:m(/page/:p)(/)' : 'modelPage',
+    'parser' : 'parser',
     '/*' : 'dashboard'
   },
 
@@ -55,9 +60,30 @@ module.exports = Backbone.Router.extend({
   },
 
   /**
+   * Show parser page
+   */
+  parser : function () {
+    console.log('parser');
+    if(this.view) this.view.remove();
+
+    var parses = new Parses();
+
+    parses.fetch({
+      success : (function () {
+        this.view = new ParserView({
+          parses : parses
+        });
+
+        this.app.toContent(this.view.render().el);
+      }).bind(this)
+    });
+  },
+
+  /**
    * Show dashboard page
    */
   dashboard : function () {
+    console.log('dashboard');
     if(this.view) this.view.remove();
 
     var modelblocks = new ModelBlocks();
