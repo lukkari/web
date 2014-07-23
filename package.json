@@ -23,7 +23,8 @@
     "express-session": "*",
     "underscore": "*",
     "backbone": "*",
-    "jquery": "*"
+    "jquery": "*",
+    "cheerio": "*"
   },
   "engines": {
     "node": "0.10.x"

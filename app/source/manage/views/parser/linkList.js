@@ -16,6 +16,14 @@ module.exports = Backbone.View.extend({
     options = options || {};
 
     this.collection = options.collection;
+    this.collection.on('all', this.render, this);
+  },
+
+  /**
+   * Add Parse model to the list
+   */
+  addParse : function (parse) {
+    this.collection.add(parse);
   },
 
   render : function () {

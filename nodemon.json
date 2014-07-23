@@ -1,3 +1,0 @@
-{
-  "ignore": ["app/source", "app/public", "app/cache", "app/logs"]
-}

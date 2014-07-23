@@ -2,10 +2,24 @@
  * Main link parser
  */
 
-module.exports = function (w) {
-  var d = w.document;
+module.exports = function ($) {
 
-  console.log(d.body);
+  var links = [];
 
-  return d.getElementsByTagName('b')[0].innerText;
+  $('a').each(function () {
+    var
+      title = $(this).text().trim(),
+      url = $(this).attr('href'),
+      week = parseInt(title.slice(0, title.indexOf(':')), 10);
+
+    if(title.length) {
+      links.push({
+        title : title,
+        url   : url,
+        week  : week
+      });
+    }
+  });
+
+  return links;
 };

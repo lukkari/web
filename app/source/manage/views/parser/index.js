@@ -23,7 +23,9 @@ module.exports = Backbone.View.extend({
     this.subviews.linkList = new LinkListView({
       collection : options.parses
     });
-    this.subviews.addLinkForm = new AddLinkFormView();
+    this.subviews.addLinkForm = new AddLinkFormView({
+      linkListView : this.subviews.linkList
+    });
   },
 
   render : function () {

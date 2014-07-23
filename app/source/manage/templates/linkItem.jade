@@ -1,2 +1,10 @@
 div.url <%= data.url %>
 div.description <%= data.description %>
+div.controls
+  button.run Run
+  button.delete Delete
+ul.sublinks
+  <% _.each(data.children, function (link) { %>
+  li <%= link.title %>
+  <% }); %>
+

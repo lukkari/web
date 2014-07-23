@@ -17,6 +17,15 @@ module.exports = Backbone.View.extend({
     'click #addLink' : 'addLink'
   },
 
+  initialize : function (options) {
+    options = options || {};
+
+    this.linkListView = options.linkListView;
+  },
+
+  /**
+   * Save parse to db and put 'em to the linkList
+   */
   addLink : function () {
     /**
      * Add fields check
@@ -25,8 +34,24 @@ module.exports = Backbone.View.extend({
       url : this.$el.find('#link').val(),
       description : this.$el.find('#description').val()
     });
-    parse.save();
-    console.log(parse);
+    parse.save([], {
+      success : (function () {
+        // add to parses list
+        this.linkListView.addParse(parse);
+        this.clean();
+      }).bind(this),
+      error : function () {
+        // show error message
+      }
+    });
+  },
+
+  /**
+   * Clean input fields
+   */
+  clean : function () {
+    this.$el.find('#link').val('');
+    this.$el.find('#description').val('');
   },
 
   render : function () {

@@ -5,6 +5,7 @@
 var
   request = require('request'),
   jsdom = require('jsdom'),
+  cheerio = require('cheerio'),
   iconv = require('iconv'),
   ic = new iconv.Iconv('ISO-8859-1', 'utf-8');
 
@@ -28,7 +29,12 @@ function getContent(url, cb) {
 }
 
 function getHTML(body, cb) {
-  jsdom.env({
+  cb(null, cheerio.load(body, {
+    normalizeWhitespace : true
+  }));
+
+
+  /*jsdom.env({
     html : body,
     scripts : ["http://code.jquery.com/jquery-2.1.1.min.js"],
     done : function (errors, window) {
@@ -38,7 +44,7 @@ function getHTML(body, cb) {
 
       cb(null, window);
     }
-  });
+  });*/
 
 
   /*

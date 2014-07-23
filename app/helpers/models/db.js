@@ -273,6 +273,7 @@ var parseSchema = new Schema({
     title : { type : String, default : '' },
     week  : { type : Number, default : 0 }
   }],
+  filter      : { type : Schema.Types.ObjectId, ref : 'Filter' },
   createdAt   : { type : Date,    default : Date.now }
 });
 
@@ -286,7 +287,7 @@ mongoose.model('Parse', parseSchema);
 var contactSchema = new Schema({
   message   : { type : String, default : '' },
   from      : { type : String, default : '' },
-  user      : { type : Schema.Types.ObjectId, ref: 'User' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
   createdAt : { type : Date,   default : Date.now }
 });
 

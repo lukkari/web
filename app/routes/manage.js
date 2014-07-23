@@ -613,8 +613,19 @@ exports.apiAddParse = function (req, res) {
           console.log(err);
           return res.json(400, err);
         }
-        console.log(result);
-        res.json('success');
+
+        if(!Array.isArray(result)) return res.json('Nothing to add');
+
+        doc.children = result;
+
+        doc.save(function (err, newdoc) {
+          if(err) {
+            console.log(err);
+            res.json(400, err);
+          }
+
+          res.json(newdoc);
+        });
       }
     });
   });
