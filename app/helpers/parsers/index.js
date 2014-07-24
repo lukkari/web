@@ -8,24 +8,40 @@ var content = require('./content');
 
 /**
  * Run specified Parser and provide results
- * @param  {Object} params Object containing parameters
- *                         url - link to-be-parsed page
+ * @param {Array}  url Array of links to-be-parsed
+ * @param {Object} params Object containing parameters
  *                         parser - Parser function
  *                         done - function to-be-run after parsing
+ * @param {Array} data Data from previous function run
  */
-module.exports = function (params) {
+function runner(url, params, data) {
   var defaults = {
-    url : '',
-    parser : function () { return null; }
+    parser : function () { return null; },
+    done : function () { return null; }
   };
+
+  var globalErr = null;
 
   _.defaults(params, defaults);
 
-  content(params.url, function (err, w) {
+  if(!data) data = [];
+
+  if(!_.isArray(url)) return params.done(new Error('Wrong url argument'));
+
+  if(!url.length) return params.done(globalErr, data);
+
+  content(url.shift(), function (err, w) {
     if(err) {
-      return params.done(err);
+      globalErr = err;
+      url.length = 0;
+      return;
     }
 
-    return params.done(null, params.parser(w));
+    console.log('running');
+
+    data.push(params.parser(w));
   });
-};
+}
+
+
+module.exports = runner;

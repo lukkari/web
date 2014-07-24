@@ -267,7 +267,7 @@ var parseSchema = new Schema({
   url         : { type : String,  default : '' },
   title       : { type : String,  default : '' }, // not required in the top level
   description : { type : String,  default : '' },
-  parsed      : { type : Boolean, default : false },
+  parsed      : { type : Date,    default : 0 },
   children    : [{
     url   : { type : String, default : '' },
     title : { type : String, default : '' },

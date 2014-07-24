@@ -28,7 +28,16 @@ module.exports = Backbone.View.extend({
    * Execute Parse
    */
   runParse : function () {
+    var btn = this.$el.find('.run');
+    btn.attr('disabled', 'disabled');
 
+    Backbone.$.ajax({
+      url : this.model.runUrl(),
+      success : (function () {
+        console.log(this.model);
+        btn.removeAttr('disabled');
+      }).bind(this)
+    });
   },
 
   /**

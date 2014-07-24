@@ -605,8 +605,7 @@ exports.apiAddParse = function (req, res) {
     }
 
     // parse current doc and add children
-    parser({
-      url : doc.url,
+    parser([doc.url], {
       parser : mainLink,
       done : function (err, result) {
         if(err) {
@@ -626,6 +625,40 @@ exports.apiAddParse = function (req, res) {
 
           res.json(newdoc);
         });
+      }
+    });
+  });
+};
+
+var staff = require('../helpers/parsers/staff');
+
+exports.apiRunParse = function (req, res) {
+  var
+    id = req.params.id,
+    Parse = mongoose.model('Parse');
+
+  Parse.findById(id, function (err, parse) {
+    if(err) {
+      console.log(err);
+      return res.json(err);
+    }
+
+    if(!Array.isArray(parse.children)) return res.json('Nothing to parse');
+
+    var links = parse.children.map(function (el) {
+      return parse.url + el.url;
+    });
+
+    parser(links, {
+      parser : staff,
+      done : function (err, result) {
+        if(err) {
+          console.log(err);
+        }
+
+        console.log(result);
+
+        res.json(parse);
       }
     });
   });

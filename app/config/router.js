@@ -86,7 +86,8 @@ module.exports = function (app, passport) {
 
     .get('/model', manage.apiGetModels)
     .get('/parse', manage.apiGetParses)
-    .post('/parse', manage.apiAddParse);
+    .post('/parse', manage.apiAddParse)
+    .get('/parse/:id/run', manage.apiRunParse);
 
   var userRouter = express.Router();
   userRouter
