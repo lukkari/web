@@ -141,9 +141,10 @@ exports.getSchedule = function (req, res) {
   }
   else w = new Date().getStudyWeek();
 
-  var Group   = mongoose.model('Group'),
-      Teacher = mongoose.model('Teacher'),
-      Room = mongoose.model('Room');
+  var
+    Group   = mongoose.model('Group'),
+    Teacher = mongoose.model('Teacher'),
+    Room    = mongoose.model('Room');
 
   Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
     if(err) {

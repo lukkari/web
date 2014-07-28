@@ -9,57 +9,6 @@ var mongoose = require('mongoose'),
 
 
 /**
- * Subject (schedule item)
- *
-
-var subjectSchema = new Schema({
-  name      : { type : String, default : '' },
-  days      : [{
-    date     : { type : Date,   default : 0 },
-    duration : { type : Number, default : 0 }
-  }],
-  rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
-  groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
-  teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
-  coursenum : { type : String, default : '' },
-  user      : { type : Schema.Types.ObjectId, ref : 'User' },
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
-  createdAt : { type : Date, default : Date.now }
-});
-
-subjectSchema.methods = {
-  addDate : function (date, cb) {
-    var d   = new Date(date),
-        add = true;
-    for(var i = 0; i < this.dates.length; i += 1)
-      if(this.dates[i].getTime() === d.getTime())
-        add = false;
-
-    if(add)
-      this.dates.push(d);
-
-    cb = cb || null;
-    this.save(cb);
-  },
-
-  addDay : function (day, cb) {
-    var d   = new Date(day.date),
-        add = true;
-    for(var i = 0; i < this.days.length; i += 1)
-      if(this.days[i].date.getTime() === d.getTime())
-        add = false;
-
-    if(add)
-      this.days.push(day);
-
-    cb = cb || null;
-    this.save(cb);
-  }
-};
-
-*/
-
-/**
  * Subject
  */
 
