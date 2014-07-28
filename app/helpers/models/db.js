@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 
 /**
  * Subject (schedule item)
- */
+ *
 
 var subjectSchema = new Schema({
   name      : { type : String, default : '' },
@@ -26,35 +26,6 @@ var subjectSchema = new Schema({
   parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
   createdAt : { type : Date, default : Date.now }
 });
-
-/**
- * New vesion
- *
-
-var subjectSchema = new Schema({
-  name      : { type : String, default : '' },
-  coursenum : { type : String, default : '' },
-  user      : { type : Schema.Types.ObjectId, ref : 'User' },
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
-  createdAt : { type : Date, default : Date.now }
-});
-
-subjectSchema.methods = {
-
-  addEntry : function (entry, cb) {
-    if(typeof entry !== 'object') return cb(new Error('Wrong entry'));
-
-    var e = entry;
-    e.subject = this._id;
-
-    mongoose.model('Entry').save(e, function (err, entry) {
-      cb(err, entry);
-    });
-  }
-};
-
-*/
-
 
 subjectSchema.methods = {
   addDate : function (date, cb) {
@@ -86,10 +57,42 @@ subjectSchema.methods = {
   }
 };
 
+*/
+
+/**
+ * Subject
+ */
+
+var subjectSchema = new Schema({
+  name      : { type : String, default : '' },
+  coursenum : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
+  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  createdAt : { type : Date, default : Date.now }
+});
+
+subjectSchema.methods = {
+
+  addEntry : function (entry, cb) {
+    if(typeof entry !== 'object') return cb(new Error('Wrong entry'));
+
+    var Entry = mongoose.model('Entry');
+
+    entry.subject = this._id;
+
+    var e = new Entry(entry);
+    e.save(function (err, entry) {
+      cb(err, entry);
+    });
+  }
+};
+
 mongoose.model('Subject', subjectSchema);
+
 
 /**
  * Daytime entry
+ */
 
 var entrySchema = new Schema({
   subject   : { type : Schema.Types.ObjectId, ref : 'Subject' },
@@ -104,7 +107,6 @@ var entrySchema = new Schema({
 
 mongoose.model('Entry', entrySchema);
 
-*/
 
 /**
  * Room
@@ -197,71 +199,6 @@ mongoose.model('Group', groupSchema);
 /**
  * Parse
  */
-
-/**
- * Old Parse Schema
-
-var parseSchema = new Schema({
-  link        : { type : String,  default : '' },
-  group       : { type : Schema.Types.ObjectId, ref : 'Group' },
-  customName  : { type : String,  default : '' },
-  startNum    : { type : Number,  default : 0 },
-  version     : { type : Number,  default : 0 },
-  parsed      : { type : Boolean, default : false },
-  description : { type : String,  default : '' },
-  building    : { type : String,  default : '' },
-  outcome     : {
-    weeks    : { type : Number, default : 0 },
-    subjects : { type : Number, default : 0 }
-  },
-  createdAt   : { type : Date,    default : Date.now }
-});
-
-parseSchema.pre('save', function (next, done) {
-  var
-    link = this.link,
-    groupname;
-
-  if(link.length < 1) done('Url is too short');
-
-  link  = link.split('/');
-
-  this.building = link[link.length-3];
-  link = link[link.length-1];
-
-  this.startNum = +link.slice(1, 5);
-  this.link = this.link.replace(this.startNum, '{s}');
-
-  link = link.split('.');
-  link = link[0];
-
-  this.version = +link.slice(-3);
-  this.link = this.link.replace(this.version + '.', '{v}.');
-
-  if(this.customName.length > 0) {
-    this.link = this.link.replace(this.customName, '{g}');
-    next();
-  }
-  else {
-    groupname = link.slice(5, -3);
-    this.link = this.link.replace(groupname, '{g}');
-
-    var Group = mongoose.model('Group'),
-        that = this;
-    Group.findOne({ name: new RegExp(groupname, "i") }, function (err, group) {
-      if(err) console.log(err);
-
-      if(group) {
-        that.group = group._id;
-        next();
-      }
-      else done('No group found');
-    });
-  }
-
-});
-
-*/
 
 var parseSchema = new Schema({
   url         : { type : String,  default : '' },

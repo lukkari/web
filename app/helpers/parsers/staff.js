@@ -4,12 +4,14 @@
 
 var mongoose = require('mongoose');
 
-module.exports = function ($) {
-  var count = {
-    groups   : 0,
-    teachers : 0,
-    rooms    : 0
-  }, tmp, tmp2, i = -1, j;
+function makeLink(parent, child) {
+  return parent.slice(0, parent.lastIndexOf('/') + 1) + child;
+}
+
+module.exports = function ($, link) {
+  var
+    links = [],
+    tmp, tmp2, i = -1, j;
 
   var
     Group   = mongoose.model('Group'),
@@ -27,40 +29,46 @@ module.exports = function ($) {
       // Put elements to array in chronological order
       switch(i) {
         case 0:
+          tmp = $(this).find('a').eq(0).attr('href');
           var group = new Group({
-            name     : tmp2
+            name : tmp2
           });
-          group.save(function (err, group, num) {
-            if(err) console.log(err);
+          group.save(function (err, group) {
+            // Don't show dublicate key error
+            if(err && err.code != 11000) console.log(err);
 
-            count.groups += 1;
+            if(group) console.log('Group: ' + group.name + ' added');
           });
+
+          links.push(makeLink(link, tmp));
           break;
 
         case 1:
           var teacher = new Teacher({
-            name     : tmp2
+            name : tmp2
           });
-          teacher.save(function (err, teacher, num) {
-            if(err) console.log(err);
+          teacher.save(function (err, teacher) {
+            // Don't show dublicate key error
+            if(err && err.code != 11000) console.log(err);
 
-            count.teachers += 1;
+            if(teacher) console.log('Teacher: ' + teacher.name + ' added');
           });
           break;
 
         case 2:
           var room = new Room({
-            name     : tmp2
+            name : tmp2
           });
-          room.save(function (err, room, num) {
-            if(err) console.log(err);
+          room.save(function (err, room) {
+            // Don't show dublicate key error
+            if(err && err.code != 11000) console.log(err);
 
-            count.rooms += 1;
+            if(room) console.log('Room: ' + room.name + ' added');
           });
           break;
       }
     }
   });
 
-  return count;
+  return links;
 };

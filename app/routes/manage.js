@@ -4,8 +4,7 @@
 
  var mongoose = require('mongoose'),
      async    = require('async'),
-     fs       = require('fs'),
-     parser   = require('../helpers/parsers/parser');
+     fs       = require('fs');
 
 /**
  * Counts documents in any collection by model
@@ -631,11 +630,15 @@ exports.apiAddParse = function (req, res) {
 };
 
 var staff = require('../helpers/parsers/staff');
+var schedule = require('../helpers/parsers/schedule');
 
 exports.apiRunParse = function (req, res) {
   var
     id = req.params.id,
-    Parse = mongoose.model('Parse');
+    Parse = mongoose.model('Parse'),
+    Group = mongoose.model('Group'),
+    Teacher = mongoose.model('Teacher'),
+    Room = mongoose.model('Room');
 
   Parse.findById(id, function (err, parse) {
     if(err) {
@@ -654,12 +657,87 @@ exports.apiRunParse = function (req, res) {
       done : function (err, result) {
         if(err) {
           console.log(err);
+          return res.json(err);
         }
 
-        console.log(result);
+        var timetables = [];
 
-        res.json(parse);
+        // transform Array of Arrays of links to just Array
+        result.forEach(function (el) {
+          timetables = timetables.concat(el);
+        });
+
+        console.log('Staff parsed');
+
+        async.series([
+            function (cb) {
+              Group.find({}, { name : 1 }, cb);
+            },
+
+            function (cb) {
+               Teacher.find({}, { name : 1 }, cb);
+            },
+
+            function (cb) {
+               Room.find({}, { name : 1 }, cb);
+            }
+          ],
+          function (err, results) {
+            if(err) console.log(err);
+
+            console.log('Start schedule parsing');
+
+            parser(timetables, {
+              info : results,
+              parser : schedule,
+              done : function (err, result) {
+                console.log(result);
+
+                res.json(result);
+              }
+            });
+          }
+        );
       }
     });
   });
+};
+
+exports.apiTestParse = function (req, res) {
+  var link = ['http://lukkari.turkuamk.fi/ict/1436/x3010ninfos13308.htm'];
+
+  var
+    Group = mongoose.model('Group'),
+    Teacher = mongoose.model('Teacher'),
+    Room = mongoose.model('Room');
+
+  async.series([
+      function (cb) {
+        Group.find({}, { name : 1 }, cb);
+      },
+
+      function (cb) {
+         Teacher.find({}, { name : 1 }, cb);
+      },
+
+      function (cb) {
+         Room.find({}, { name : 1 }, cb);
+      }
+    ],
+    function (err, results) {
+      if(err) console.log(err);
+
+      console.log('Start schedule parsing');
+
+      parser(link, {
+        info : results,
+        parser : schedule,
+        done : function (err, result) {
+          console.log(result);
+
+          res.json(result);
+        }
+      });
+    }
+  );
 };

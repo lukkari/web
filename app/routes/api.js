@@ -141,31 +141,9 @@ exports.getSchedule = function (req, res) {
   }
   else w = new Date().getStudyWeek();
 
-  if(search.toLowerCase() === 'my') {
-
-    if(!req.isAuthenticated()) return res.json(404, { error : { code : 404, msg : 'Not found' }});
-
-    var UserTable = mongoose.model('UserTable');
-
-    UserTable.findOne({ user : req.user._id }, function (err, data) {
-      if(err) console.log(err);
-
-      week.getSchedule({
-        date   : today,
-        type   : 'groups',
-        typeid : req.user.group,
-        usertable : data,
-        cb : function (err, data) {
-          return res.json({ title : 'My schedule', weekdays : data });
-        }
-      });
-    });
-
-    return;
-  }
-
   var Group   = mongoose.model('Group'),
-      Teacher = mongoose.model('Teacher');
+      Teacher = mongoose.model('Teacher'),
+      Room = mongoose.model('Room');
 
   Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
     if(err) {
