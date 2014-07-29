@@ -25,12 +25,11 @@ module.exports = {
 
   /**
    * Get readable timestamp
-   * @param  {Array} day first item of array is date
+   * @param  {Date} date Date object
    * @return {String}    readable time
    */
-  getTime : function (day) {
-    if(!day || !day.length) return 'No time';
-    var d = new Date(day[0].date);
+  getTime : function (date) {
+    var d = new Date(date);
     return d.getHours() + ':' + d.getMinutes();
   },
 

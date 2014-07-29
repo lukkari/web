@@ -26,7 +26,7 @@ module.exports = Backbone.View.extend({
     var prev    = null,
         subjects = [];
 
-    _.each(data.subjects, function(el) {
+    /*_.each(data.subjects, function(el) {
       if(prev) {
         var date  = new Date(el.days[0].date),
             pdate = new Date(prev.date),
@@ -50,9 +50,9 @@ module.exports = Backbone.View.extend({
 
       subjects.push(el);
       prev = el.days[0];
-    });
+    });*/
 
-    data.subjects = subjects;
+    //data.subjects = subjects;
 
     _.extend(data, viewHelper);
 

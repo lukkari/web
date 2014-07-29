@@ -142,9 +142,14 @@ exports.getSchedule = function (req, res) {
   else w = new Date().getStudyWeek();
 
   var
+    start = new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+    end   = new Date(start.getFullYear(), start.getMonth(), start.getDate()+6);
+
+  var
     Group   = mongoose.model('Group'),
     Teacher = mongoose.model('Teacher'),
-    Room    = mongoose.model('Room');
+    Room    = mongoose.model('Room'),
+    Entry   = mongoose.model('Entry');
 
   Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
     if(err) {
@@ -154,8 +159,8 @@ exports.getSchedule = function (req, res) {
 
     if(group) {
       week.getSchedule({
-        date   : today,
-        type   : 'groups',
+        date : today,
+        type : 'groups',
         typeid : group._id,
         cb : function (err, data) {
           res.json({ title : group.name, weekdays : data });

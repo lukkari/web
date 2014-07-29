@@ -3,7 +3,6 @@
  */
 
 var mongoose = require('mongoose'),
-    calendar = require('../helpers/models/calendar'),
     device   = require('../helpers/device');
 
 //########################################################################

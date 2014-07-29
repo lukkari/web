@@ -9,8 +9,7 @@ var week = function () {
       var date = new Date(options.date);
 
       // If saturday or sunday get next week
-      if((date.getDay() === 0) || date.getDay() == 6)
-        date.setDate(date.getDate() + 2);
+      if((date.getDay() === 0) || date.getDay() == 6) date.setDate(date.getDate() + 2);
 
       date.setDate(date.getDate() - date.getDay() + 1);
 

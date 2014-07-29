@@ -6,11 +6,11 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
     <% if(data.subjects.length > 0) { %><% _.each(data.subjects, function (subject) { %>
     div.subject
       div.time
-        div.hour <%= data.getTime(subject.days) %>
+        div.hour <%= data.getTime(subject.date) %>
         div.duration
-          span(class!='dur-<%= data.getDur(subject.days) %>')
-            i#duration <%= data.getDur(subject.days) %>
-            u hour<% if(data.getDur(subject.days) > 1) { %>s<% } %>
+          span(class!='dur-<%= subject.duration %>')
+            i#duration <%= subject.duration %>
+            u hour<% if(subject.duration > 1) { %>s<% } %>
 
       div.info
         div.inner
@@ -18,7 +18,7 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
             <% if(subject.rest) { %>
             div.resttext Break
             <% } else { %>
-            <%= subject.name %>
+            <%= subject.subject.name %>
             <% } %>
 
           div.room <%= data.getRooms(subject.rooms) %>
