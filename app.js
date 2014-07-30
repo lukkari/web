@@ -65,7 +65,7 @@ app
 
   .use(express.static(path.join(appdir, 'public')))
   .use(bodyParser())
-  .use(morgan(loggingOptions))
+  //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
