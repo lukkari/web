@@ -22,6 +22,9 @@ var appdir = path.join(__dirname, 'app');
 // Create express application
 var app = express();
 
+console.log(app.get('env'));
+console.log(process.env.MONGODB_URI);
+
 // Get app files
 var
   config     = require(path.join(appdir, '/config/config'))[app.get('env')];

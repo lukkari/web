@@ -1,6 +1,6 @@
 module.exports = {
   development : {
-    db  : 'mongodb://localhost/lukkari_dev',
+    db  : process.env.MONGODB_URI,
     app : {
       name : 'Lukkari'
     },
