@@ -15,7 +15,7 @@ module.exports = {
   },
 
   production : {
-    db  : process.env.MONGOLAB_URI,
+    db  : process.env.MONGODB_URI,
     app : {
       name : 'Lukkari'
     },
