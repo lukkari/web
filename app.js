@@ -24,13 +24,16 @@ var app = express();
 
 // Get app files
 var
-  config     = require(path.join(appdir, '/config/config'))[app.get('env')],
+  config     = require(path.join(appdir, '/config/config'))[app.get('env')];
+
+/*
   logPath    = path.join(appdir, config.log.path),
   logfile    = fs.createWriteStream(logPath, { flags: 'a+' }),
   loggingOptions = {
     format : config.log.format,
     stream : logfile
   };
+*/
 
 // Specify app's port
 var port = process.env.PORT || 3000;
