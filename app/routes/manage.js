@@ -612,9 +612,9 @@ exports.apiAddParse = function (req, res) {
           return res.json(400, err);
         }
 
-        if(!Array.isArray(result)) return res.json('Nothing to add');
+        if(!Array.isArray(result[0])) return res.json('Nothing to add');
 
-        doc.children = result;
+        doc.children = result[0];
 
         doc.save(function (err, newdoc) {
           if(err) {

@@ -141,22 +141,11 @@ exports.selectGroup = function (req, res) {
     return res.redirect('/');
 
   var Group    = mongoose.model('Group'),
-      Building = mongoose.model('Building'),
       result   = {};
 
-  /*Building.find({}, { name : 1 }, function (err, buildings) {
-    if(err)
-      console.log(err);
 
-    buildings.forEach(function (el) {
-
-    })
-  });*/
-
-  Group.find({}, { name : 1, building : 1 })
-       .populate('building', 'name')
-       .sort({ 'building.name' : 1 })
-       .exec(function (err, groups) {
+  Group.find({}, { name : 1 })
+      .exec(function (err, groups) {
             if(err)
               console.log(err);
 
