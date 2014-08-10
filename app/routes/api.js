@@ -163,7 +163,7 @@ exports.getSchedule = function (req, res) {
         type : 'groups',
         typeid : group._id,
         cb : function (err, data) {
-          res.json({ title : group.name, weekdays : data });
+          res.json({ title : group.name, week : w, weekdays : data });
         }
       });
     }
@@ -180,7 +180,7 @@ exports.getSchedule = function (req, res) {
             type   : 'teachers',
             typeid : teacher._id,
             cb : function (err, data) {
-              res.json({ title : teacher.name, weekdays : data });
+              res.json({ title : teacher.name, week : w, weekdays : data });
             }
           });
         }

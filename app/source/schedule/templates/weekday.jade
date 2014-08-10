@@ -1,6 +1,6 @@
 div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
   div.weekday <%= data.weekday.name %>
-    span.date <%= data.date.day %> <%= data.getMonth(data.date.month) %>
+    span.date <%= data.getDate(data.date) %> <%= data.getMonth(data.date) %>
 
   div.container
     <% if(data.subjects.length > 0) { %><% _.each(data.subjects, function (subject) { %>

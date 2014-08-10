@@ -16,50 +16,16 @@ var weekDay = function () {
       var date    = new Date(options.date);
 
       var data = {
-        week     : date.getWeek(),
         weekday  : {
           name : days[date.getDay()],
           num  : date.getDay()
         },
-        date     : {
-          day   : date.getDate(),
-          month : date.getMonth()
-        },
+        date : date,
         subjects : []
       };
 
       var start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
           end   = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
-
-      /**
-       {
-          $and : [{
-              days : {
-                $elemMatch : {
-                  date : {
-                    $gte : start,
-                    $lt : end
-                  }
-                }
-              }
-            },
-            {
-              $nin : options.usertable.removed
-            },
-            {
-              $or : [{
-                  groups : typeid
-                },
-                {
-                  _id : options.usertable.subjects
-                }
-              ]
-            }
-          ]
-        }
-       */
-
-      options.usertable = options.usertable || {};
 
 
       var query = {

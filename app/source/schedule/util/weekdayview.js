@@ -2,7 +2,9 @@
  * WeekDay view helper
  */
 
-var months = require('./months');
+var
+  months = require('./months'),
+  weekdays = require('./weekdays');
 
 module.exports = {
 
@@ -35,12 +37,11 @@ module.exports = {
 
   /**
    * Get month from its number
-   * @param  {Integer} m month number
+   * @param  {Date} date
    * @return {String}    month
    */
-  getMonth : function (m) {
-    if(m < 0) return 'Unknown';
-    return months.brief[m];
+  getMonth : function (date) {
+    return months.brief[new Date(date).getMonth()];
   },
 
   /**
@@ -54,13 +55,14 @@ module.exports = {
 
   /**
    * Checks if day is today
-   * @param  {Object}  date date to check
+   * @param  {Date}  date date to check
    * @return {Boolean}    if day is today
    */
   isToday : function (date) {
-    date = date || {};
-    var d = new Date();
-    return (d.getDate() == date.day) && (d.getMonth() == date.month);
+    var
+      now = new Date(),
+      d   = new Date(date);
+    return (now.getDate() == d.getDate()) && (now.getMonth() == d.getMonth());
   },
 
   /**
@@ -71,5 +73,14 @@ module.exports = {
   getDur : function (day) {
     if(!day || !day.length) return '0';
     return day[0].duration;
+  },
+
+  /**
+   * Get day of the month from date
+   * @param  {Date} date
+   * @return {Integer}    day from 1 to 31
+   */
+  getDate : function (date) {
+    return new Date(date).getDate();
   }
 };
