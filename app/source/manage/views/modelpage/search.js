@@ -8,8 +8,11 @@ var
 
 var Search = require('../../models/search');
 
+var templates = require('../../dist');
+
 module.exports = Backbone.View.extend({
-  template : '',
+  className : 'searchbox',
+  template : templates.search,
   query : {},
 
   events : {
@@ -19,18 +22,15 @@ module.exports = Backbone.View.extend({
 
   initialize : function (options) {
     this.model = new Search(options);
-
-    this.render();
   },
 
   render : function () {
-    var tmpl = _.template(this.template);
-
     var data = this.model.toJSON();
     data.fields = Object.keys(data.schema);
 
-    this.$el.empty();
-    this.$el.html(tmpl(data));
+    this.$el.html(_.template(this.template,
+                             data,
+                             { variable : 'data' }));
     return this;
   },
 

@@ -8,6 +8,8 @@ var
   Backbone = require('backbone');
 
 var
+  Page = require('./models/page'),
+
   ModelBlocks = require('./collections/modelblocks'),
 
   Parses = require('./collections/parses'),
@@ -51,19 +53,26 @@ module.exports = Backbone.Router.extend({
 
     if(this.view) this.view.remove();
 
-    this.view = new ModelPageView({
-      name : name,
-      page : p
-    });
+    var page = new Page(name);
 
-    this.app.assign(this.view, '#content');
+
+    page.fetch({
+      success : (function () {
+        this.view = new ModelPageView({
+          name : name,
+          page : p,
+          model : page
+        });
+
+        this.app.toContent(this.view.render().el);
+      }).bind(this)
+    });
   },
 
   /**
    * Show parser page
    */
   parser : function () {
-    console.log('parser');
     if(this.view) this.view.remove();
 
     var parses = new Parses();
@@ -83,7 +92,6 @@ module.exports = Backbone.Router.extend({
    * Show dashboard page
    */
   dashboard : function () {
-    console.log('dashboard');
     if(this.view) this.view.remove();
 
     var modelblocks = new ModelBlocks();

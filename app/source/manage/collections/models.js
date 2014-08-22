@@ -1,11 +1,13 @@
 /**
- * Models
+ * Models collection
  */
 
 var Backbone = require('backbone');
 
+var Model = require('../models/model');
+
 module.exports = Backbone.Collection.extend({
-  model : app.Model,
+  model : Model,
   url   : '/manage/api/model/',
 
   initialize : function (data, options) {

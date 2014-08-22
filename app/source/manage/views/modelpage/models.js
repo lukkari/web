@@ -6,8 +6,14 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
+var
+  Models = require('../../collections/models'),
+
+  ModelView = require('./model');
+
 
 module.exports = Backbone.View.extend({
+  tagName : 'ul',
 
   initialize : function (options) {
     options = options || {};
@@ -15,18 +21,19 @@ module.exports = Backbone.View.extend({
     this.limit = +window.app.limit || 10;
     this.page = +options.page;
     options.limit = this.limit;
-    this.collection = new app.Models([], options);
+    this.collection = new Models([], {
+      name : options.name
+    });
 
-    var that = this;
     this.collection.fetch({
       data :  {
         page  : this.page,
         limit : this.limit
       },
 
-      success : function () {
-        that.render();
-      }
+      success : (function () {
+        this.render();
+      }).bind(this)
     });
   },
 
@@ -34,14 +41,15 @@ module.exports = Backbone.View.extend({
     this.$el.empty();
 
     _.each(this.collection.models, function (item, i) {
+      // Find item's global index
       this.renderItem(item, (this.page - 1) * this.limit + (i+1));
-    }.bind(this), this);
+    }, this);
 
     return this;
   },
 
   renderItem : function (item, i) {
-    var modelView = new app.ModelView({
+    var modelView = new ModelView({
       model : item,
       index : i
     });

@@ -51,28 +51,6 @@ function ensureXhr(req, res, next) {
 // Set up router
 module.exports = function (app, passport) {
 
-  var manageRouter = express.Router();
-  manageRouter
-    .use(ensureAuthenticated)
-    .use(ensureAdmin)
-
-    .get('/',             manage.index)
-    .get('/parser',       manage.index)
-    .get('/log',          manage.showLog)
-    .get('/model/:model', manage.model)
-    .get('/model/:model/page/:page', manage.model)
-    .get('/clear/:model', manage.clearModel)
-
-    .get( '/parse',       manage.parse)
-    .post('/parse/add',   manage.addParse)
-    .post('/parse/staff', manage.staffParse)
-
-    .get(   '/parse/:id',   manage.runParse)
-    .delete('/parse/:id',   manage.deleteParse)
-    .put(   '/parse/:id',   manage.clearParse)
-
-    .post('/building', manage.addBuilding);
-
   var manageApiRouter = express.Router();
   manageApiRouter
     .use(ensureAuthenticated)
@@ -90,6 +68,30 @@ module.exports = function (app, passport) {
     .get('/parse/:id/run', manage.apiRunParse)
 
     .get('/parse/test', manage.apiTestParse);
+
+
+  var manageRouter = express.Router();
+  manageRouter
+    .use(ensureAuthenticated)
+    .use(ensureAdmin)
+
+    .get('/parser',       manage.index)
+    .get('/log',          manage.showLog)
+    //.get('/model/:model', manage.model)
+    //.get('/model/:model/page/:page', manage.model)
+    .get('/clear/:model', manage.clearModel)
+
+    .get( '/parse',       manage.parse)
+    .post('/parse/add',   manage.addParse)
+    .post('/parse/staff', manage.staffParse)
+
+    .get(   '/parse/:id',   manage.runParse)
+    .delete('/parse/:id',   manage.deleteParse)
+    .put(   '/parse/:id',   manage.clearParse)
+
+    .post('/building', manage.addBuilding)
+
+    .get('/*', manage.index);
 
   var userRouter = express.Router();
   userRouter
@@ -140,13 +142,12 @@ module.exports = function (app, passport) {
     .post('/signup', users.create)
 
     // Main page
-    //.get('/:q/now', routes.getNow)
     .get('/*',      routes.index);
 
   // Add all routers
   app
-    .use('/manage',     manageRouter)
     .use('/manage/api', manageApiRouter)
+    .use('/manage',     manageRouter)
     .use('/u',          userRouter)
     .use('/api',        apiRouter)
     .use('/',           homeRouter);

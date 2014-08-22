@@ -6,11 +6,12 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
+var templates = require('../../dist');
 
 module.exports = Backbone.View.extend({
   tagName   : 'li',
   className : 'row',
-  template  : '',
+  template  : templates.model,
 
   events : {
     'click .edit'   : 'editModel',
@@ -23,18 +24,18 @@ module.exports = Backbone.View.extend({
     options = options || {};
 
     this.index = +options.index || 1;
+    this.model = options.model;
   },
 
   render : function () {
-    var tmpl = _.template(this.template),
-        data = this.model.toJSON();
-
-    var newdata = {
-      model : JSON.stringify(data, null, '  '),
+    var data = {
+      model : JSON.stringify(this.model.toJSON(), null, '  '),
       index : this.index
     };
 
-    this.$el.html(tmpl(newdata));
+    this.$el.html(_.template(this.template,
+                             data,
+                             { variable : 'data' }));
 
     // Find buttons
     this.$btn = {

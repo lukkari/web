@@ -6,13 +6,13 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
+var templates = require('../../dist');
+
 module.exports = Backbone.View.extend({
-  template : '',
+  template : templates.paginationitem,
 
   render : function () {
-    var tmpl = _.template(this.template);
-
-    this.$el.html(tmpl(this.model.toJSON()));
+    this.$el.html(_.template(this.template, this.model.toJSON(), { variable : 'data' }));
     return this;
   }
 });
