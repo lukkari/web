@@ -27,12 +27,30 @@ subjectSchema.methods = {
 
     var Entry = mongoose.model('Entry');
 
-    entry.subject = this._id;
+    var subject = this;
 
-    var e = new Entry(entry);
-    e.save(function (err, entry) {
-      cb(err, entry);
-    });
+    // Check for dublicate entry
+    Entry.findOne({
+        date      : entry.date,
+        duration  : entry.duration,
+        groups    : entry.groups
+      }, function (err, dublicate) {
+        if(err) console.log(err);
+
+        if(!dublicate) {
+          // If no dublicate found add current entry
+          entry.subject = subject._id;
+
+          var e = new Entry(entry);
+          e.save(function (err, entry) {
+            cb(err, entry);
+          });
+        } else {
+          // Otherwise return dublicate (just in case)
+          cb(err, dublicate);
+        }
+      }
+    );
   }
 };
 

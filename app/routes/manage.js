@@ -652,6 +652,7 @@ exports.apiRunParse = function (req, res) {
       return parse.url + el.url;
     });
 
+    // Parse staff first from the given array of links
     parser(links, {
       parser : staff,
       done : function (err, result) {
@@ -662,13 +663,14 @@ exports.apiRunParse = function (req, res) {
 
         var timetables = [];
 
-        // transform Array of Arrays of links to just Array
+        // Transform Array of Arrays of links to just Array
         result.forEach(function (el) {
           timetables = timetables.concat(el);
         });
 
         console.log('Staff parsed');
 
+        // Fullfill staff object with groups, teachers and rooms
         async.series([
             function (cb) {
               Group.find({}, { name : 1 }, cb);
@@ -687,10 +689,15 @@ exports.apiRunParse = function (req, res) {
 
             console.log('Start schedule parsing');
 
+            // Parse timetables from the given array of links
             parser(timetables, {
               info : results,
               parser : schedule,
               done : function (err, result) {
+                if(err) {
+                  console.log(err);
+                  return res.json(err);
+                }
                 console.log(result);
 
                 res.json(result);
@@ -704,7 +711,7 @@ exports.apiRunParse = function (req, res) {
 };
 
 exports.apiTestParse = function (req, res) {
-  var link = ['http://lukkari.turkuamk.fi/ict/1436/x3010ninfos13308.htm'];
+  var link = ['http://lukkari.turkuamk.fi/ict/1436/x3010ninfos14313.htm'];
 
   var
     Group = mongoose.model('Group'),
@@ -729,15 +736,38 @@ exports.apiTestParse = function (req, res) {
 
       console.log('Start schedule parsing');
 
+      // Parse timetables from the given array of links
       parser(link, {
         info : results,
         parser : schedule,
         done : function (err, result) {
+          if(err) {
+            console.log(err);
+            return res.json(err);
+          }
           console.log(result);
 
           res.json(result);
+
+          // Find dublicates and remove them
+
         }
       });
     }
   );
+};
+
+exports.apiDeleteParse = function (req, res) {
+  var
+    id = req.params.id,
+    Parse = mongoose.model('Parse');
+
+  Parse.findByIdAndRemove(id, function (err) {
+    if(err) {
+      console.log(err);
+      return req.json(400, err);
+    }
+
+    res.json('Success');
+  });
 };

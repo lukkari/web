@@ -34,7 +34,6 @@ module.exports = Backbone.View.extend({
     Backbone.$.ajax({
       url : this.model.runUrl(),
       success : (function () {
-        console.log(this.model);
         btn.removeAttr('disabled');
       }).bind(this)
     });

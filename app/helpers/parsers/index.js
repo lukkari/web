@@ -38,10 +38,9 @@ function runner(url, params, data) {
     if(err) {
       globalErr = err;
       url.length = 0;
-      return;
+    } else {
+      data.push(params.parser($, link, params.info));
     }
-
-    data.push(params.parser($, link, params.info));
 
     runner(url, params, data);
   });

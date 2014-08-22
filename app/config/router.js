@@ -66,6 +66,7 @@ module.exports = function (app, passport) {
     .get('/parse', manage.apiGetParses)
     .post('/parse', manage.apiAddParse)
     .get('/parse/:id/run', manage.apiRunParse)
+    .delete('/parse/:id', manage.apiDeleteParse)
 
     .get('/parse/test', manage.apiTestParse);
 
