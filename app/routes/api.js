@@ -55,29 +55,6 @@ exports.getNow = function (req, res) {
   var today = new Date();
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
 
-  if(search.toLowerCase() === 'my') {
-
-    if(!req.isAuthenticated()) return res.json(404, { error : { code : 404, msg : 'Not found' }});
-
-    var UserTable = mongoose.model('UserTable');
-
-    UserTable.findOne({ user : req.user._id }, function (err, data) {
-      if(err) console.log(err);
-
-      weekday.getSubjects({
-        date   : today,
-        type   : 'groups',
-        typeid : req.user.group,
-        usertable : data,
-        cb : function (err, data) {
-          return res.json(data);
-        }
-      });
-    });
-
-    return;
-  }
-
   var Group   = mongoose.model('Group'),
       Teacher = mongoose.model('Teacher');
 
@@ -93,7 +70,9 @@ exports.getNow = function (req, res) {
         type   : 'groups',
         typeid : group._id,
         cb : function (err, data) {
-          res.json(data);
+          var newdata = data;
+          data.title = group.name;
+          res.json(newdata);
         }
       });
     }
@@ -110,7 +89,9 @@ exports.getNow = function (req, res) {
             type   : 'teachers',
             typeid : teacher._id,
             cb : function (err, data) {
-              res.json(data);
+              var newdata = data;
+              data.title = teacher.name;
+              res.json(newdata);
             }
           });
         }

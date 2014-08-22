@@ -18,12 +18,12 @@ module.exports = Backbone.View.extend({
   template  : templates.schedule,
   className : 'schedule',
 
-  views : {},
+  subviews : {},
 
   initialize : function (options) {
     options = options || {};
 
-    this.views.weekday = new WeekDayView({
+    this.subviews.weekday = new WeekDayView({
       model : this.model
     });
   },
@@ -38,15 +38,10 @@ module.exports = Backbone.View.extend({
 
     // Render days(week)
     //this.views.week.setElement(this.$el.find('#days')).render();
-    this.$el.find('#days').html(this.views.weekday.render().el);
+    this.$el.find('#days').html(this.subviews.weekday.render().el);
 
     return this;
   },
 
-  remove : function () {
-    _.invoke(this.views, 'remove');
-    this.views = {};
-
-    Backbone.View.prototype.remove.apply(this, arguments);
-  }
+  remove : function () {}
 });

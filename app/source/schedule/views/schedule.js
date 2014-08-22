@@ -22,7 +22,7 @@ module.exports = Backbone.View.extend({
   initialize : function (options) {
     options = options || {};
 
-    this.views = {
+    this.subviews = {
       calendar : new CalendarView(options),
       weekbar  : new WeekBarView(options)
     };
@@ -37,20 +37,20 @@ module.exports = Backbone.View.extend({
                        { variable : 'data' }));
 
     // Render calendar
-    this.views.calendar.setElement(this.$el.find('#calendar')).render();
+    this.subviews.calendar.setElement(this.$el.find('#calendar')).render();
 
-    this.views.week = new WeekView(this.model.getDays());
-    this.views.weekbar.setWeek(options);
-    this.views.calendar.setWeek(options);
+    this.subviews.week = new WeekView(this.model.getDays());
+    this.subviews.weekbar.setWeek(options);
+    this.subviews.calendar.setWeek(options);
 
     // Render weekbar
     this
       .$el
       .find('#weekBar')
-      .html(this.views.weekbar.render().el);
+      .html(this.subviews.weekbar.render().el);
 
     // Render days(week)
-    this.views.week.setElement(this.$el.find('#days')).render();
+    this.subviews.week.setElement(this.$el.find('#days')).render();
 
     return this;
   },

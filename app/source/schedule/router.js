@@ -21,7 +21,7 @@ module.exports = Backbone.Router.extend({
   routes : {
     ''               : 'mainpage',
     'search(/:s)(/)' : 'search',
-    'w:w/:q(/)'      : 'getSchedule2',
+    'w:w/:q(/)'      : 'getScheduleViceVersa',
     ':q(/w:w)(/)'    : 'getSchedule',
     ':q/now(/)'      : 'getNowSchedule',
     '*other'         : 'unknown'
@@ -72,7 +72,7 @@ module.exports = Backbone.Router.extend({
   /**
    * Show schedule page with parameters vice versa
    */
-  getSchedule2 : function (w, q) {
+  getScheduleViceVersa : function (w, q) {
     this.getSchedule(q, w);
   },
 

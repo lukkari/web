@@ -1,6 +1,6 @@
 article.schedule(class!='<%= data.extraClass %>')
   div.title: h2#scheduleTitle <%= data.title %>
-  div.switcher: a(href!='<%= data.switcher %>' data-local) Switch
+  div.switcher: a(href!='/<%= data.switcher %>' data-local) Switch
   div#calendar.clearfix
   div#weekBar
   div#days
