@@ -32,6 +32,7 @@ module.exports = Backbone.View.extend({
    */
   searchFocused : function (e) {
     this.trigger('searchFocused');
+    window.app.router.navigate('/search', { trigger : true });
   },
 
   /**

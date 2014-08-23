@@ -24,35 +24,34 @@ module.exports = Backbone.View.extend({
     var data = this.model.toJSON();
 
     var prev    = null,
-        subjects = [];
+        subjects = [],
+        date, pdate, dur;
 
-    /*_.each(data.subjects, function(el) {
+    _.each(data.subjects, function(el) {
       if(prev) {
-        var date  = new Date(el.days[0].date),
-            pdate = new Date(prev.date),
-            dur   = date.getHours() - pdate.getHours() - prev.duration;
+        date  = new Date(el.date),
+        pdate = new Date(prev.date),
+        dur   = date.getHours() - pdate.getHours() - prev.duration;
 
         if(dur > 0) {
           subjects.push({
             rest     : true,
-            days     : [{
-              duration : dur,
-              date : new Date(date.getFullYear(),
-                              date.getMonth(),
-                              date.getDate(),
-                              pdate.getHours() + prev.duration,
-                              15
-                             )
-            }]
+            duration : dur,
+            date : new Date(date.getFullYear(),
+                            date.getMonth(),
+                            date.getDate(),
+                            pdate.getHours() + prev.duration,
+                            15
+                           )
           });
         }
       }
 
       subjects.push(el);
-      prev = el.days[0];
-    });*/
+      prev = el;
+    });
 
-    //data.subjects = subjects;
+    data.subjects = subjects;
 
     _.extend(data, viewHelper);
 

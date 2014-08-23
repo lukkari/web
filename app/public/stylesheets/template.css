@@ -552,6 +552,10 @@ a:focus, input:focus, textarea {
   clear: left;
 }
 
+.schedule .container .restblock {
+  background-color: #f9f9f9;
+}
+
 .schedule .noclasses {
   font-size: 1.2em;
   padding: 10px 0;

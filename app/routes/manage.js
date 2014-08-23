@@ -677,11 +677,11 @@ exports.apiRunParse = function (req, res) {
             },
 
             function (cb) {
-               Teacher.find({}, { name : 1 }, cb);
+              Teacher.find({}, { name : 1 }, cb);
             },
 
             function (cb) {
-               Room.find({}, { name : 1 }, cb);
+              Room.find({}, { name : 1 }, cb);
             }
           ],
           function (err, results) {
