@@ -13,6 +13,14 @@ module.exports = Backbone.View.extend({
   template : template.modelblock,
   tagName : 'li',
 
+  events : {
+    'click .clearLink' : 'clearModel'
+  },
+
+  clearModel : function (e) {
+    console.log('clear');
+  },
+
   initialize : function (options) {
     options = options || {};
 

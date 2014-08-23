@@ -24,7 +24,7 @@ var app = express();
 
 // Get app files
 var
-  config     = require(path.join(appdir, '/config/config'))[app.get('env')];
+  config = require(path.join(appdir, '/config/config'))[app.get('env')];
 
 /*
   logPath    = path.join(appdir, config.log.path),

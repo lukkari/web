@@ -189,7 +189,7 @@ select {
   padding-left: 0.2em;
 }
 
-.manage .container .models li > a.clearlink {
+.manage .container .models li > .clearlink {
   display: block;
   width: 200px;
   text-align: center;
@@ -198,16 +198,19 @@ select {
   background-color: #F2837C;
   text-decoration: none;
   opacity: 0;
+  border: 0;
+  margin: 0;
+  cursor: pointer;
   visibility: hidden;
   transition: opacity 0.4s,
               background-color 0.2s;
 }
 
-.manage .container .models li > a.clearlink:hover {
+.manage .container .models li > .clearlink:hover {
   background-color: #ED564C;
 }
 
-.manage .container .models li:hover > a.clearlink {
+.manage .container .models li:hover > .clearlink {
   visibility: visible;
   opacity: 1;
 }
@@ -251,123 +254,6 @@ select {
 
 .manage #error:first-letter {
   text-transform: uppercase;
-}
-
-.manage .addparseform {
-  padding: 10px 0;
-}
-
-.manage .addparseform .done {
-  background: url('/design/success_icon.png') no-repeat center right;
-}
-
-.manage .addparseform .empty {
-  background-image: none;
-}
-
-.manage .addparseform .long {
-  width: 450px;
-}
-
-.manage .addparseform .button {
-  width: 150px;
-}
-
-.manage .addparseform input.small {
-  width: 70px;
-}
-
-.manage .addparseform select {
-  margin: 3px;
-}
-
-.manage .addparseform .customname {
-  margin: 5px 0 0;
-  background-color: #f5f5f5;
-}
-
-.manage .addparseform .customname label {
-  padding-right: 10px;
-}
-
-.manage .parselist li.parsed {
-  background-color: #ecf0f1;
-}
-
-.manage .parselist li.mistake {
-  box-shadow: inset 8px 0 0 -4px #E6C44A;
-}
-
-.manage .parselist li > div {
-  float: left;
-}
-
-.manage .parselist li:hover > .del, .manage .parselist li:hover > .clear {
-  opacity: 1;
-}
-
-.manage .parselist .del {
-  width: 30px;
-  text-align: left;
-  position: relative;
-  top: -1px;
-  left: 0;
-}
-
-.manage .parselist .group {
-  font-size: 0.9em;
-  width: 200px;
-}
-
-.manage .parselist .link {
-  width: 430px;
-}
-
-.manage .parselist .link a {
-  text-decoration: none;
-  background-color: #eee;
-  color: #3E6383;
-  border: 1px solid #999;
-  padding: 1px 8px;
-  font-size: 1em;
-}
-
-.manage .parselist .link a:hover {
-  background-color: #ddd;
-}
-
-.manage .parselist .link i {
-  margin-left: 4px;
-  font-size: 0.9em;
-}
-
-.manage .parselist .clear {
-  width: 40px;
-}
-
-.manage .parselist .del, .manage .parselist .clear {
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.manage .parselist .del a, .manage .parselist .clear a {
-  font-size: 12px;
-}
-
-.manage .parselist .del a {
-  color: #c00;
-}
-
-.manage .parselist .clear a {
-  color: #F59F15;
-}
-
-.manage .parselist .description {
-  float: none;
-  clear: both;
-  font-size: 13px;
-  padding: 2px 40px;
-  color: #888;
 }
 
 .manage #modelName:after {
@@ -519,4 +405,95 @@ select {
 
 .manage .pagination li.current > a {
   background-color: #fff;
+}
+
+
+/*
+  ##########################################################################################
+  Parser
+ */
+.manage .parser .link-list .link-item {
+  margin: 0.5em 0;
+  border-top: 1px solid #ddd;
+  padding: 0.5em 0;
+}
+
+.manage .parser .link-list .url {
+  font-size: 1.1em;
+  padding: 0.1em 0;
+}
+
+.manage .parser .link-list .description {
+  font-size: 0.9em;
+  color: #444;
+}
+
+.manage .parser .link-list .controls {
+  margin: 0.2em 0;
+}
+
+.manage .parser .link-list .controls button {
+  border: 0;
+  padding: 0.5em 1.5em;
+  margin: 0 0.5em 0 0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  outline: none;
+}
+
+.manage .parser .link-list .controls button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.manage .parser .link-list .run {
+  background-color: #6DC970;
+}
+
+.manage .parser .link-list .run:hover {
+  background-color: #309634;
+}
+
+.manage .parser .link-list .delete {
+  background-color: #F27474;
+}
+
+.manage .parser .link-list .delete:hover {
+  background-color: #CF3E3E;
+}
+
+.manage .parser .link-list .sublinks {
+  margin: 0.5em 0 0.2em 1em;
+  color: #333;
+}
+
+.manage .parser .add-link-form h2 {
+  text-transform: uppercase;
+  color: #666;
+}
+
+.manage .parser .add-link-form .text {
+  border: 1px solid #bbb;
+  padding: 0.3em 0.5em;
+  font-size: 0.9em;
+  margin: 0;
+  min-width: 300px;
+}
+
+.manage .parser .add-link-form .add-btn {
+  margin: 0;
+  padding: 0.4em 1.5em;
+  border: 0;
+  min-width: 300px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s;
+}
+
+.manage .parser .add-link-form .add-btn:hover {
+  background-color: #ccc;
+}
+
+.manage .parser .add-link-form .row {
+  margin: 0.3em 0;
 }

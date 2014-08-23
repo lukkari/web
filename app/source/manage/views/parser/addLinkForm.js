@@ -11,6 +11,8 @@ var templates = require('../../dist/');
 var Parse = require('../../models/parse');
 
 module.exports = Backbone.View.extend({
+  className : 'add-link-form',
+
   template : templates.addLinkForm,
 
   events : {
@@ -27,13 +29,14 @@ module.exports = Backbone.View.extend({
    * Save parse to db and put 'em to the linkList
    */
   addLink : function () {
-    /**
-     * Add fields check
-     */
     var parse = new Parse({
       url : this.$el.find('#link').val(),
       description : this.$el.find('#description').val()
     });
+
+    // When parse is invalid do nothing
+    if(!parse.isValid()) return;
+
     parse.save([], {
       success : (function () {
         // add to parses list

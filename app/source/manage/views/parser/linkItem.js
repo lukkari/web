@@ -10,6 +10,7 @@ var templates = require('../../dist/');
 
 module.exports = Backbone.View.extend({
   tagName : 'li',
+  className : 'link-item',
 
   template : templates.linkItem,
 

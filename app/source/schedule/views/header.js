@@ -54,6 +54,14 @@ module.exports = Backbone.View.extend({
     this.theme = type;
 
     return this;
+  },
+
+  /**
+   * Get search string from input field
+   * @return {String} search string
+   */
+  search : function () {
+    return this.$el.find('#searchInput').val();
   }
 
 });

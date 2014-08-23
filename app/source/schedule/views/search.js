@@ -69,7 +69,7 @@ module.exports = Backbone.View.extend({
   loadChildren : function () {
     var
       sections = ['groups', 'teachers', 'rooms'],
-      i;
+      counter = 0;
 
     //this.filters = new SearchFiltersView();
 
@@ -85,6 +85,11 @@ module.exports = Backbone.View.extend({
           });
           // Append to view
           this.sections[el].setElement(this.$el.find('#' + el)).render();
+
+          counter += 1;
+          // when all sections are loaded call filter function
+          if(counter == sections.length) this.filterView(this.header.search());
+
         }).bind(this)
       });
 

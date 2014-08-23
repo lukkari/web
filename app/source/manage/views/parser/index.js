@@ -15,6 +15,8 @@ var
 module.exports = Backbone.View.extend({
   template : templates.parser,
 
+  className : 'parser',
+
   subviews : {},
 
   initialize : function (options) {
