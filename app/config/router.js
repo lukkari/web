@@ -1,13 +1,25 @@
-var express = require('express'),
-    routes = require('../routes/'),
-    users  = require('../routes/users'),
-    api    = require('../routes/api'),
-    manage = require('../routes/manage');
+/**
+ * Router configuration
+ */
+
+var
+  express = require('express'),
+
+  // Load routes
+  home = require('../routes/'),
+  users  = require('../routes/users'),
+  manage = require('../routes/manage'),
+
+  api = {
+    home : require('../routes/api/home'),
+    manage : require('../routes/api/manage')
+  };
+
 
 
 function handleManage(req, res) {
   if(req.originalUrl.indexOf('manage') !== -1) {
-    routes.index(req, res);
+    home.index(req, res);
     return true;
   }
 
@@ -51,82 +63,89 @@ function ensureXhr(req, res, next) {
 // Set up router
 module.exports = function (app, passport) {
 
+  /**
+   * ===========================================================
+   * API setups
+   *   1) Manage API
+   *   2) Home API
+   */
+
+  /**
+   * Manage API
+   */
   var manageApiRouter = express.Router();
   manageApiRouter
     .use(ensureAuthenticated)
     .use(ensureAdmin)
     .use(ensureXhr)
 
-    .get('/model/:model/config', manage.apiModelConfig)
-    .get('/model/:model', manage.apiModel)
-    .put('/model/:model/:id', manage.apiEditModel)
-    .delete('/model/:model/:id', manage.apiDeleteModel)
+    .get(   '/model/:model/config', api.manage.apiModelConfig)
+    .get(   '/model/:model',        api.manage.apiModel)
+    .put(   '/model/:model/:id',    api.manage.apiEditModel)
+    .delete('/model/:model/:id',    api.manage.apiDeleteModel)
 
-    .get('/model', manage.apiGetModels)
-    .get('/parse', manage.apiGetParses)
-    .post('/parse', manage.apiAddParse)
-    .get('/parse/:id/run', manage.apiRunParse)
-    .delete('/parse/:id', manage.apiDeleteParse)
+    .get('/model', api.manage.apiGetModels)
 
-    .get('/parse/test', manage.apiTestParse);
+    .get(   '/parse',         api.manage.apiGetParses)
+    .post(  '/parse',         api.manage.apiAddParse)
+    .get(   '/parse/:id/run', api.manage.apiRunParse)
+    .delete('/parse/:id',     api.manage.apiDeleteParse)
+
+    // TO DO: remove
+    .get('/parse/test', api.manage.apiTestParse);
+
+  /**
+   * Home API
+   */
+  var apiRouter = express.Router();
+  apiRouter
+    .use(ensureXhr)
+    .get(   '/groups',          api.home.getGroups)
+    .get(   '/teachers',        api.home.getTeachers)
+    .get(   '/rooms',           api.home.getRooms)
+    .get(   '/schedule/:q',     api.home.getSchedule)
+    .get(   '/schedule/:q/now', api.home.getNow)
+    //.post(  '/messages',        api.home.sendMsg)
+    .get(   '*',                api.home.notFound);
 
 
+  /**
+   * =====================================================
+   * Page setups
+   *   1) Manage page
+   *   2) User page
+   *   3) Home page
+   */
+
+  /**
+   * Manage page
+   */
   var manageRouter = express.Router();
   manageRouter
     .use(ensureAuthenticated)
     .use(ensureAdmin)
 
-    .get('/parser',       manage.index)
-    .get('/log',          manage.showLog)
-    //.get('/model/:model', manage.model)
-    //.get('/model/:model/page/:page', manage.model)
-    .get('/clear/:model', manage.clearModel)
-
-    .get( '/parse',       manage.parse)
-    .post('/parse/add',   manage.addParse)
-    .post('/parse/staff', manage.staffParse)
-
-    .get(   '/parse/:id',   manage.runParse)
-    .delete('/parse/:id',   manage.deleteParse)
-    .put(   '/parse/:id',   manage.clearParse)
-
-    .post('/building', manage.addBuilding)
+    .get('/parser', manage.index)
+    .get('/log',    manage.showLog)
 
     .get('/*', manage.index);
 
+  /**
+   * User page
+   */
   var userRouter = express.Router();
   userRouter
-    // User page
     .use(ensureAuthenticated)
     .get( '/',       users.me)
     .post('/',       users.update)
-    .get( '/group', users.selectGroup)
-    .post('/group', users.addGroup)
+    .get( '/group',  users.selectGroup)
+    .post('/group',  users.addGroup)
 
-    // Log out
-    .get('/logout', users.logout);
+    .get('/logout',  users.logout);
 
-
-  var apiRouter = express.Router();
-  apiRouter
-    // "API"
-    .use(ensureXhr)
-    .get(   '/groups',          api.getGroups)
-    .get(   '/teachers',        api.getTeachers)
-    .get(   '/rooms',           api.getRooms)
-    .get(   '/schedule/:q',     api.getSchedule)
-    .get(   '/schedule/:q/now', api.getNow)
-    .post(  '/messages',        api.sendMsg)
-    .get(   '/subject/:q',      api.getSubject)
-    .delete('/subject/:q',      api.removeSubject)
-    .post(  '/subject/:q',      api.addSubject)
-    .get(   '/subject/short/:q',api.getSubjects)
-    .get(   '*',                api.notFound);
-
-  // Experiments
-  //app.get('/editor', ensureAuthenticated);
-  //app.get('/editor', routes.editor);
-
+  /**
+   * Home page
+   */
   var homeRouter = express.Router();
   homeRouter
     // Log in
@@ -143,9 +162,13 @@ module.exports = function (app, passport) {
     .post('/signup', users.create)
 
     // Main page
-    .get('/*',      routes.index);
+    .get('/*',      home.index);
 
-  // Add all routers
+
+  /**
+   * ==================================================
+   * Add all routers to the app
+   */
   app
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)

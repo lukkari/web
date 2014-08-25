@@ -1,21 +1,16 @@
 /*
- * GET home page.
+ * Home page routes
  */
 
-var mongoose = require('mongoose'),
-    device   = require('../helpers/device');
+var device = require('../helpers/device');
 
-//########################################################################
 /**
- * Main page
+ * GET '/*' Homepage
  */
-
 exports.index = function(req, res) {
-
   res.render('index', {
-                        title    : 'Schedule',
-                        logged   : req.isAuthenticated(),
-                        mobile   : device.isMobile(req)
-                      }
-  );
+    title    : 'Schedule',
+    logged   : req.isAuthenticated(),
+    mobile   : device.isMobile(req)
+  });
 };

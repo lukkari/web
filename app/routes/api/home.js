@@ -1,7 +1,16 @@
-var mongoose = require('mongoose'),
-    week     = require('../helpers/models/week'),
-    weekday  = require('../helpers/models/weekday');
+/**
+ * Home(public) API routes
+ */
 
+var
+  mongoose = require('mongoose'),
+  week     = require('../../helpers/models/week'),
+  weekday  = require('../../helpers/models/weekday');
+
+
+/**
+ * GET '/api/groups' [description]
+ */
 exports.getGroups = function (req, res) {
 
   var Group = mongoose.model('Group');
@@ -17,6 +26,10 @@ exports.getGroups = function (req, res) {
 
 };
 
+
+/**
+ * GET '/api/teachers' [description]
+ */
 exports.getTeachers = function (req, res) {
 
   var Teacher = mongoose.model('Teacher');
@@ -32,6 +45,10 @@ exports.getTeachers = function (req, res) {
 
 };
 
+
+/**
+ * GET '/api/rooms' [description]
+ */
 exports.getRooms = function (req, res) {
 
   var Room = mongoose.model('Room');
@@ -46,6 +63,10 @@ exports.getRooms = function (req, res) {
   });
 };
 
+
+/**
+ * GET '/api/schedule/:q/now' [description]
+ */
 exports.getNow = function (req, res) {
 
   var search = req.params.q;
@@ -103,6 +124,10 @@ exports.getNow = function (req, res) {
   });
 };
 
+
+/**
+ * GET '/api/schedule/:q' [description]
+ */
 exports.getSchedule = function (req, res) {
 
   var search = req.params.q,
@@ -173,6 +198,10 @@ exports.getSchedule = function (req, res) {
 
 };
 
+
+/**
+ * POST '/api/messages' [description]
+ */
 exports.sendMsg = function (req, res) {
 
   var text = encodeURI(req.param('msg')),
@@ -193,117 +222,10 @@ exports.sendMsg = function (req, res) {
 
 };
 
-exports.getSubject = function (req, res) {
 
-  var q = decodeURIComponent(req.params.q);
-
-  if(q && q.length) {
-    var Subject = mongoose.model('Subject');
-    q = q.replace(/_/g, ' ');
-
-    Subject.find({ name : new RegExp(q, 'i') },
-                 { 'name'      : 1,
-                   'groups'    : 1,
-                   'teachers'  : 1,
-                   'days'      : 1
-                 })
-           .populate('groups', 'name')
-           .populate('teachers', 'name')
-           .exec(function (err, subject) {
-                    if(err) console.log(err);
-                    if(subject.length) subject = subject[0];
-                    return res.json(subject);
-                 });
-  }
-  else
-    return res.json(400, { error : 'Wrong request' });
-};
-
-exports.getSubjects = function (req, res) {
-  var q = decodeURIComponent(req.params.q);
-
-  if(q && q.length) {
-    var Subject = mongoose.model('Subject');
-    q = q.replace(/_/g, ' ');
-
-    Subject.find({ name : new RegExp(q, 'i') },
-                 { 'name' : 1 })
-           .limit(20)
-           .exec(function (err, subjects) {
-                    if(err) console.log(err);
-                    return res.json({ data : subjects });
-                 });
-  }
-  else
-    return res.json(400, { error : 'Wrong request' });
-};
-
-exports.removeSubject = function (req, res) {
-
-  var q = decodeURIComponent(req.params.q);
-
-  if(!q || !q.length) return res.json(400, 'wrong request');
-
-  var UserTable = mongoose.model('UserTable');
-
-  UserTable.findOneAndUpdate(
-    { user : req.user._id },
-    {
-      $addToSet : { removed : q },
-      $pull : { subjects : q },
-      updatedAt : new Date()
-    },
-
-    function (err, doc) {
-      if(err) console.log(err);
-      if(!doc) {
-        var userTable = new UserTable({
-          user    : req.user._id,
-          removed : q
-        });
-        userTable.save(function (err) {
-          if(err) console.log(err);
-          return res.json('success');
-        });
-      }
-      else return res.json('success');
-    }
-  );
-};
-
-exports.addSubject = function (req, res) {
-
-  var q = decodeURIComponent(req.params.q);
-
-  if(!q || !q.length) return res.json(400, 'wrong request');
-
-  var UserTable = mongoose.model('UserTable');
-
-  UserTable.findOneAndUpdate(
-    { user : req.user._id },
-    {
-      $addToSet : { subjects : q },
-      $pull : { removed : q },
-      updatedAt : new Date()
-    },
-
-    function (err, doc) {
-      if(err) console.log(err);
-      if(!doc) {
-        var userTable = new UserTable({
-          user     : req.user._id,
-          subjects : q
-        });
-        userTable.save(function (err) {
-          if(err) console.log(err);
-          return res.json('success');
-        });
-      }
-      else return res.json('success');
-    }
-  );
-};
-
+/**
+ * GET '/api/*' [description]
+ */
 exports.notFound = function (req, res) {
   res.json(404, { error : 'Not found' });
 };

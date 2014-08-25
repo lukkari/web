@@ -1,3 +1,7 @@
+/**
+ * User page routes
+ */
+
 var mongoose = require('mongoose'),
     User     = mongoose.model('User'),
     device   = require('../helpers/device');
