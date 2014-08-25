@@ -7,6 +7,11 @@ var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
   urlRoot : '/manage/api/parse',
 
+
+  /*initialize : function () {
+    this.urlRoot = this.url() + '/' + this.get('_id');
+  },*/
+
   runUrl : function () {
     return this.urlRoot + '/' + this.get('id') + '/run';
   },

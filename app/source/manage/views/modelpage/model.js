@@ -8,6 +8,8 @@ var
 
 var templates = require('../../dist');
 
+var util = require('../../util');
+
 module.exports = Backbone.View.extend({
   tagName   : 'li',
   className : 'row',
@@ -110,16 +112,15 @@ module.exports = Backbone.View.extend({
 
       this.$pre.attr('contenteditable', 'false');
 
-      //this.model.set(json);
       old = this.model.attributes;
       if(!this.updateModel(old, json)) return;
 
       this.model.sync('update', this.model, {
-        error : function () {
+        error : (function () {
           this.model.set(old);
           this.render();
           this.$error.text('Cannot save document');
-        }.bind(this)
+        }).bind(this)
       });
     } catch (err) {
       this.$error.text(err);
@@ -133,7 +134,7 @@ module.exports = Backbone.View.extend({
    * @return {Boolean}       if model was updated
    */
   updateModel : function (old, recent) {
-    var dif = helpers.difference(old, recent);
+    var dif = util.difference(old, recent);
 
     if(!_.isEmpty(dif)) {
       this.model.set(dif);

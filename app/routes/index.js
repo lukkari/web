@@ -19,15 +19,3 @@ exports.index = function(req, res) {
                       }
   );
 };
-
-exports.getNow = function(req, res) {
-
-  res.render('now', {
-                      title  : req.params.q + ' - now',
-                      link   : req.params.q,
-                      mobile : true,
-                      logged : req.isAuthenticated()
-                    }
-  );
-
-};

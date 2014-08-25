@@ -485,13 +485,13 @@ exports.apiEditModel = function (req, res) {
 
     delete doc._id;
 
-    model.findByIdAndUpdate(req.params.id, doc, function (err) {
+    model.findByIdAndUpdate(req.params.id, doc, function (err, newdoc) {
       if(err) {
         console.log(err);
         return res.json(500, { error : err });
       }
 
-      res.json({ success : true });
+      res.json(newdoc);
     });
 
   } catch (err) {
