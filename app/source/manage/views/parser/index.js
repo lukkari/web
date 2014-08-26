@@ -13,8 +13,6 @@ var
   AddLinkFormView = require('./addLinkForm');
 
 module.exports = Backbone.View.extend({
-  template : templates.parser,
-
   className : 'parser',
 
   subviews : {},

@@ -1,26 +1,27 @@
-h2 <%= data.name %>
-table
-  tr.row
-    td.labels.nopadding {
+h2 <%= data.name %> &mdash; Model
+div.search-form
+  table
+    tr.row
+      td.labels.nopadding {
 
-  <% _.each(data.fields, function (field) { %>
-  tr.row
-    td.labels: label(for!='<%= field %>') <%= field %>
-    td.colons :
-    td.inputs
-      input.text.field(type='text' id!='<%= field %>' placeholder='your query')
-  <% }); %>
+    <% _.each(data.fields, function (field) { %>
+    tr.row
+      td.labels: label(for!='<%= field %>') <%= field %>
+      td.colons :
+      td.inputs
+        input.text.field(type='text' id!='<%= field %>' placeholder='your query')
+    <% }); %>
 
-  tr.row
-    td.labels.nopadding }
+    tr.row
+      td.labels.nopadding }
 
-  tr.row.with-separator
-    td(colspan=3).inputs
-      textarea#query(placeholder='final query')
+    tr.row.with-separator
+      td(colspan=3).inputs
+        textarea#query(placeholder='final query')
 
-  tr.row
-    td(colspan=3): input.button(type='button' value='Search')
+    tr.row
+      td(colspan=3): input.button(type='button' value='Search')
 
-  tr.row
-    td(colspan=3)
-      div#error.error
+    tr.row
+      td(colspan=3)
+        div#error.error

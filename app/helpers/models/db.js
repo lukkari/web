@@ -188,16 +188,19 @@ mongoose.model('Parse', parseSchema);
  * Messages from the main page
  */
 
-var contactSchema = new Schema({
+var messageSchema = new Schema({
   message   : { type : String, default : '' },
   from      : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
   createdAt : { type : Date,   default : Date.now }
 });
 
-contactSchema.index({ "createdAt" : 1 }, { expireAfterSeconds : (60*60*24*60) });
+messageSchema.index(
+  { "createdAt" : 1 },
+  { expireAfterSeconds : (60*60*24*60) } // 60 days
+);
 
-mongoose.model('Contact', contactSchema);
+mongoose.model('Message', messageSchema);
 
 
 /**

@@ -17,8 +17,18 @@ module.exports = Backbone.View.extend({
     options = options || {};
 
     this.params = options;
-    this.collection = options.collection || [];
+    this.collection = options.collection;
     this.ModelView = options.ModelView;
+
+    try {
+      this.listenTo(this.collection, 'sync', this.render);
+      this.listenTo(this.collection, 'error', this.syncFail);
+      this.collection.fetch();
+    } catch (e) {}
+  },
+
+  syncFail : function () {
+    console.log('sync failed');
   },
 
   render : function () {

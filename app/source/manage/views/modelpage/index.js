@@ -19,7 +19,6 @@ module.exports = Backbone.View.extend({
     options = options || {};
 
     this.modelName = options.name;
-    //this.$modelName.text(options.name);
     this.pageNum = options.page;
     this.model = options.model;
 

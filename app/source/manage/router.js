@@ -10,15 +10,18 @@ var
 var
   Page = require('./models/page'),
 
+  ServerData  = require('./collections/serverdata'),
   ModelBlocks = require('./collections/modelblocks'),
-
-  Parses = require('./collections/parses'),
+  Messages    = require('./collections/messages'),
+  Parses      = require('./collections/parses'),
 
   AppView = require('./views/app'),
 
-  DashboardView = require('./views/dashboard'),
-  SectionView = require('./views/dashboard/section'),
+  DashboardView  = require('./views/dashboard'),
+  SectionView    = require('./views/dashboard/section'),
+  ServerDataItemView = require('./views/dashboard/serverdataitem'),
   ModelBlockView = require('./views/dashboard/modelblock'),
+  MessageView    = require('./views/dashboard/message'),
 
   ModelPageView = require('./views/modelpage'),
 
@@ -79,13 +82,15 @@ module.exports = Backbone.Router.extend({
 
     parses.fetch({
       success : (function () {
-        this.view = new ParserView({
-          parses : parses
-        });
 
-        this.app.toContent(this.view.render().el);
       }).bind(this)
     });
+
+    this.view = new ParserView({
+      parses : parses
+    });
+
+    this.app.toContent(this.view.render().el);
   },
 
   /**
@@ -94,23 +99,36 @@ module.exports = Backbone.Router.extend({
   dashboard : function () {
     if(this.view) this.view.remove();
 
-    var modelblocks = new ModelBlocks();
+    var
+      serverData = new ServerData(),
+      modelBlocks = new ModelBlocks(),
+      messages = new Messages();
 
-    modelblocks.fetch({
-      success : (function () {
-        this.view = new DashboardView({
-          subviews : {
-            modelblocks : new SectionView({
-              title : 'Database models',
-              className : 'models',
-              collection : modelblocks,
-              ModelView : ModelBlockView
-            })
-          }
-        });
+    this.view = new DashboardView({
+      subviews : {
+        serverdata : new SectionView({
+          title : 'Server data',
+          className : 'server-data',
+          collection : serverData,
+          ModelView : ServerDataItemView
+        }),
 
-        this.app.toContent(this.view.render().el);
-      }).bind(this)
+        modelblocks : new SectionView({
+          title : 'Database models',
+          className : 'models',
+          collection : modelBlocks,
+          ModelView : ModelBlockView
+        }),
+
+        messages : new SectionView({
+          title : 'Messages',
+          className : 'messages',
+          collection : messages,
+          ModelView : MessageView
+        })
+      }
     });
+
+    this.app.toContent(this.view.render().el);
   }
 });

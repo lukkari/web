@@ -24,5 +24,11 @@ div.wrapper
     h2 Support
     div.block You found a bug? You want to support us? Help us by submiting the issue:
 
-    div.block.quicklinks
-      a.issuelink(href='//github.com/zaynetro/lukkari/issues' target='_blank') Submit the issue
+    div.feedback
+      textarea#message(placeholder='Type your message here...')
+
+    div.feedback-btn
+      div.success-block#successBlock Your message has been sent
+      button.send-btn#sendBtn Send your message to us
+
+    div.info.note Don't forget to leave your name, so we can know whom to thank

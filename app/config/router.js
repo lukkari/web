@@ -79,20 +79,23 @@ module.exports = function (app, passport) {
     .use(ensureAdmin)
     .use(ensureXhr)
 
-    .get(   '/model/:model/config', api.manage.apiModelConfig)
-    .get(   '/model/:model',        api.manage.apiModel)
-    .put(   '/model/:model/:id',    api.manage.apiEditModel)
-    .delete('/model/:model/:id',    api.manage.apiDeleteModel)
+    .get(   '/model/:model/config', api.manage.modelConfig)
+    .get(   '/model/:model',        api.manage.model)
+    .put(   '/model/:model/:id',    api.manage.editModel)
+    .delete('/model/:model/:id',    api.manage.deleteModel)
 
-    .get('/model', api.manage.apiGetModels)
+    .get('/model', api.manage.getModels)
 
-    .get(   '/parse',         api.manage.apiGetParses)
-    .post(  '/parse',         api.manage.apiAddParse)
-    .get(   '/parse/:id/run', api.manage.apiRunParse)
-    .delete('/parse/:id',     api.manage.apiDeleteParse)
+    .get(   '/parse',         api.manage.getParses)
+    .post(  '/parse',         api.manage.addParse)
+    .get(   '/parse/:id/run', api.manage.runParse)
+    .delete('/parse/:id',     api.manage.deleteParse)
+
+    .get('/message', api.manage.getMessages)
+    .get('/serverdata', api.manage.getServerData)
 
     // TO DO: remove
-    .get('/parse/test', api.manage.apiTestParse);
+    .get('/parse/test', api.manage.testParse);
 
   /**
    * Home API
@@ -105,7 +108,7 @@ module.exports = function (app, passport) {
     .get(   '/rooms',           api.home.getRooms)
     .get(   '/schedule/:q',     api.home.getSchedule)
     .get(   '/schedule/:q/now', api.home.getNow)
-    //.post(  '/messages',        api.home.sendMsg)
+    .post(  '/message',         api.home.sendMsg)
     .get(   '*',                api.home.notFound);
 
 

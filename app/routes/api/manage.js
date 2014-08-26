@@ -43,7 +43,7 @@ function countCollection (name, cb) {
 /**
  * GET '/manage/api/model/:model' [description]
  */
-exports.apiModel = function (req, res) {
+exports.model = function (req, res) {
 
   try {
     var
@@ -76,7 +76,7 @@ exports.apiModel = function (req, res) {
 /**
  * GET '/manage/api/model/:model/config' [description]
  */
-exports.apiModelConfig = function (req, res) {
+exports.modelConfig = function (req, res) {
 
   try {
     var model = mongoose.model(req.params.model);
@@ -101,7 +101,7 @@ exports.apiModelConfig = function (req, res) {
 /**
  * PUT '/manage/api/model/:model/:id' [description]
  */
-exports.apiEditModel = function (req, res) {
+exports.editModel = function (req, res) {
 
   try {
 
@@ -130,7 +130,7 @@ exports.apiEditModel = function (req, res) {
 /**
  * DELETE '/manage/api/model/:model/:id' [description]
  */
-exports.apiDeleteModel = function (req, res) {
+exports.deleteModel = function (req, res) {
 
   try {
 
@@ -154,53 +154,33 @@ exports.apiDeleteModel = function (req, res) {
 /**
  * GET '/manage/api/model' [description]
  */
-exports.apiGetModels = function (req, res) {
+exports.getModels = function (req, res) {
 
-  var Contact  = mongoose.model('Contact'),
-      models   = [],
-      messages,
-      modelslist = Object.keys(mongoose.connection.base.models);
+  var
+    models   = [],
+    modelslist = Object.keys(mongoose.connection.base.models),
+    l = modelslist.length,
+    i = 0;
 
-  async.parallel([
-      function (cb) {
-        var l = modelslist.length,
-            i = 0;
-
-        modelslist.forEach(function (el) {
-          countCollection(el, function (err, num) {
-            if(err) {
-              console.log(err);
-              num = 0;
-            }
-            models.push({
-              name  : el.capitalize(),
-              count : num
-            });
-            i += 1;
-            if(i >= l) cb(null);
-          });
-        });
-      },
-
-      function (cb) {
-        Contact
-          .find({})
-          .sort({ createdAt : -1 })
-          .limit(50)
-          .exec(function (err, data) {
-            if(err) console.log(err);
-            else messages = data;
-
-            cb(null);
-          });
+  modelslist.forEach(function (el) {
+    countCollection(el, function (err, num) {
+      if(err) {
+        console.log(err);
+        num = 0;
       }
-    ],
 
-    function (err) {
-      var date = new Date();
-      res.json(models);
-    }
-  );
+      models.push({
+        name  : el.capitalize(),
+        count : num
+      });
+
+      i += 1;
+      if(i >= l) {
+        // When all collections are counted return data
+        return res.json(models);
+      }
+    });
+  });
 
 };
 
@@ -208,7 +188,7 @@ exports.apiGetModels = function (req, res) {
 /**
  * GET '/manage/api/parse' [description]
  */
-exports.apiGetParses = function (req, res) {
+exports.getParses = function (req, res) {
 
   var Parse = mongoose.model('Parse');
 
@@ -229,7 +209,7 @@ exports.apiGetParses = function (req, res) {
 /**
  * POST '/manage/api/parse' [description]
  */
-exports.apiAddParse = function (req, res) {
+exports.addParse = function (req, res) {
 
   var Parse = mongoose.model('Parse');
 
@@ -271,7 +251,7 @@ exports.apiAddParse = function (req, res) {
 /**
  * GET '/manage/api/parse/:id/run' [description]
  */
-exports.apiRunParse = function (req, res) {
+exports.runParse = function (req, res) {
   var
     id = req.params.id,
     Parse = mongoose.model('Parse'),
@@ -353,7 +333,7 @@ exports.apiRunParse = function (req, res) {
 /**
  * GET '/manage/api/parse/test' [description]
  */
-exports.apiTestParse = function (req, res) {
+exports.testParse = function (req, res) {
   var link = ['http://lukkari.turkuamk.fi/ict/1436/x3010ninfos14313.htm'];
 
   var
@@ -404,7 +384,7 @@ exports.apiTestParse = function (req, res) {
 /**
  * DELETE '/manage/api/parse/:id' [description]
  */
-exports.apiDeleteParse = function (req, res) {
+exports.deleteParse = function (req, res) {
   var
     id = req.params.id,
     Parse = mongoose.model('Parse');
@@ -417,4 +397,45 @@ exports.apiDeleteParse = function (req, res) {
 
     res.json('Success');
   });
+};
+
+/**
+ * GET '/manage/api/messages' Returns list of messages
+ */
+exports.getMessages = function (req, res) {
+
+  var Message = mongoose.model('Message');
+
+  Message
+    .find({})
+    .sort({ createdAt : -1 })
+    .exec(function (err, messages) {
+      if(err) {
+        console.log(err);
+        return res.json(400, err);
+      }
+
+      res.json(messages);
+    });
+};
+
+
+/**
+ * GET '/manage/api/serverdata' Returns server data: server time and server study week
+ */
+exports.getServerData = function (req, res) {
+  var
+    date = new Date(),
+    week = date.getStudyWeek();
+
+  res.json([
+    {
+      name  : 'date',
+      value : date
+    },
+    {
+      name  : 'week',
+      value : week
+    }
+  ]);
 };

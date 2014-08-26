@@ -15,8 +15,6 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    //_.invoke(this.subviews, 'render');
-
     _.each(this.subviews, function (subview) {
       this.$el.append(subview.render().el);
     }, this);

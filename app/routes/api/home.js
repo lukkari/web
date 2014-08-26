@@ -200,24 +200,25 @@ exports.getSchedule = function (req, res) {
 
 
 /**
- * POST '/api/messages' [description]
+ * POST '/api/message' [description]
  */
 exports.sendMsg = function (req, res) {
 
-  var text = encodeURI(req.param('msg')),
-      from = encodeURI(req.param('from'));
+  var text = encodeURI(req.param('message'));
 
-  if(text.length < 2) return res.json('success');
+  if(text.length < 4) return res.json('success');
 
-  var Contact = mongoose.model('Contact'),
-      contact = new Contact({ message : text, from : from });
+  var
+    Message = mongoose.model('Message'),
+    message = new Message({ message : text });
 
-  contact.save(function (err) {
+  message.save(function (err) {
     if(err) {
       console.log(err);
-      res.json(400, 'error');
+      return res.json(400, err);
     }
-    else res.json('success');
+
+    res.json('success');
   });
 
 };
