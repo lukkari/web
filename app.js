@@ -72,7 +72,7 @@ app
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
-    store  : new MongoStore({ url : config.db })
+    store  : new MongoStore({ mongoose_connection: mongoose.connection })
   }))
   .use(passport.initialize())
   .use(passport.session());

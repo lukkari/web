@@ -80,23 +80,6 @@ select {
   left: 1px;
 }
 
-#app > footer {
-  width: 100%;
-  text-align: center;
-  font-size: 0.8em;
-  padding: 10px 0;
-  color: #888;
-}
-
-#app > footer a {
-  color: #777;
-  margin: 0 4px;
-}
-
-.footlinks {
-  padding-right: 15px;
-}
-
 .attention {
   background-color: #FCF0B0;
 }
@@ -120,6 +103,40 @@ select {
 
 a:focus {
   outline: none;
+}
+
+#app > footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 0;
+  color: #888;
+}
+
+#app > footer a {
+  color: #777;
+  margin: 0 4px;
+}
+
+#app > footer > span {
+  padding: 0 0.7em;
+}
+
+#app > footer .reflinks a {
+  text-decoration: none;
+  color: #777;
+  transition: color 0.2s;
+}
+
+#app > footer .reflinks a:hover {
+  color: #222;
+}
+
+#app > footer .reflinks .github:before {
+  font-family: 'icomoon';
+  speak: none;
+  content: "\e607";
+  font-size: 1.5em;
 }
 
 /**
@@ -193,16 +210,16 @@ a:focus {
 }
 
 .mainnav li > .home:before {
-  content: "\e600";
+  content: "\e602";
 }
 
 .mainnav li > .menu:before {
   content: "\e604";
 }
 
-.mainnav li > .user:before {
+/*.mainnav li > .user:before {
   content: "\e602";
-}
+}*/
 
 @media screen and (max-width: 650px) {
   .top .searchbox {
@@ -405,6 +422,15 @@ a:focus {
   background-color: #3498db;
   font-size: 1em;
   transition: background-color 0.2s;
+}
+
+.mainpage .feedback-btn button:before {
+  font-family: 'icomoon';
+  speak: none;
+  content: "\e600";
+  color: #222;
+  margin: 0 0.5em 0 0;
+  font-size: 1em;
 }
 
 .mainpage .feedback-btn button:disabled {

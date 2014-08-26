@@ -48,10 +48,14 @@ module.exports = Backbone.View.extend({
    * @param  {String} type theme name
    */
   goTheme : function (type) {
-    if(type && type.length) this.$el.addClass(type);
-    else if(this.theme.length) this.$el.removeClass(this.theme);
-
-    this.theme = type;
+    if(type && type.length) {
+      this.$el.addClass(type);
+      this.theme = type;
+    }
+    else if(this.theme.length) {
+      this.$el.removeClass(this.theme);
+      this.theme = '';
+    }
 
     return this;
   },
