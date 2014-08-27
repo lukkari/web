@@ -89,3 +89,9 @@ require(path.join(appdir, '/config/router'))(app, passport);
 // Start the server
 app.listen(port);
 console.log('Server is running on port ' + port);
+
+
+/**
+ * Set up jobs
+ */
+require(path.join(appdir, 'helpers/jobs'));

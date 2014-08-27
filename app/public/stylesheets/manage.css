@@ -467,9 +467,13 @@ a, button, input, textarea {
   color: #333;
 }
 
-.manage .parser .add-link-form h2 {
+.manage .parser .add-link-form .row h2 {
   text-transform: uppercase;
   color: #666;
+}
+
+.manage .parser .add-link-form .note {
+  margin: 1em 0;
 }
 
 .manage .parser .add-link-form .text {

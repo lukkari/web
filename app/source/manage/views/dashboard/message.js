@@ -20,12 +20,8 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var data = this.model.toJSON();
-
-    data.date = new Date(data.createdAt).toGMTString();
-
     this.$el.html(_.template(this.template,
-                             data,
+                             this.model.toJSON(),
                              { variable : 'data' }));
 
     return this;

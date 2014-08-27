@@ -13,7 +13,7 @@ var Parse = require('../../models/parse');
 module.exports = Backbone.View.extend({
   className : 'add-link-form',
 
-  template : templates.addLinkForm,
+  template : templates.addlinkform,
 
   events : {
     'click #addLink' : 'addLink'

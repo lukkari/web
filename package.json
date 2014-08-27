@@ -24,7 +24,8 @@
     "underscore": "~1.6.0",
     "backbone": "~1.1.2",
     "jquery": "~2.1.1",
-    "cheerio": "~0.17.0"
+    "cheerio": "~0.17.0",
+    "cron": "~1.0.4"
   },
   "engines": {
     "node": "0.10.x"

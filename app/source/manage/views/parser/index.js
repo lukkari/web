@@ -20,11 +20,12 @@ module.exports = Backbone.View.extend({
   initialize : function (options) {
     options = options || {};
 
-    this.subviews.linkList = new LinkListView({
-      collection : options.parses
-    });
     this.subviews.addLinkForm = new AddLinkFormView({
       linkListView : this.subviews.linkList
+    });
+
+    this.subviews.linkList = new LinkListView({
+      collection : options.parses
     });
   },
 

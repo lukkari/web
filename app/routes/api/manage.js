@@ -8,10 +8,11 @@ var
 
 // Load parsers
 var
-  parser   = require('../../helpers/parsers'),
-  mainLink = require('../../helpers/parsers/mainLink'),
-  staff    = require('../../helpers/parsers/staff'),
-  schedule = require('../../helpers/parsers/schedule');
+  parser    = require('../../helpers/parsers'),
+  mainLink  = require('../../helpers/parsers/mainLink'),
+  staff     = require('../../helpers/parsers/staff'),
+  schedule  = require('../../helpers/parsers/schedule'),
+  runParser = require('../../helpers/functions/runParser');
 
 
 /**
@@ -254,77 +255,22 @@ exports.addParse = function (req, res) {
 exports.runParse = function (req, res) {
   var
     id = req.params.id,
-    Parse = mongoose.model('Parse'),
-    Group = mongoose.model('Group'),
-    Teacher = mongoose.model('Teacher'),
-    Room = mongoose.model('Room');
+    Parse = mongoose.model('Parse');
 
   Parse.findById(id, function (err, parse) {
     if(err) {
       console.log(err);
-      return res.json(err);
+      return res.json(400, err);
     }
 
-    if(!Array.isArray(parse.children)) return res.json('Nothing to parse');
-
-    var links = parse.children.map(function (el) {
-      return parse.url + el.url;
-    });
-
-    // Parse staff first from the given array of links
-    parser(links, {
-      parser : staff,
-      done : function (err, result) {
-        if(err) {
-          console.log(err);
-          return res.json(err);
-        }
-
-        var timetables = [];
-
-        // Transform Array of Arrays of links to just Array
-        result.forEach(function (el) {
-          timetables = timetables.concat(el);
-        });
-
-        console.log('Staff parsed');
-
-        // Fullfill staff object with groups, teachers and rooms
-        async.series([
-            function (cb) {
-              Group.find({}, { name : 1 }, cb);
-            },
-
-            function (cb) {
-              Teacher.find({}, { name : 1 }, cb);
-            },
-
-            function (cb) {
-              Room.find({}, { name : 1 }, cb);
-            }
-          ],
-          function (err, results) {
-            if(err) console.log(err);
-
-            console.log('Start schedule parsing');
-
-            // Parse timetables from the given array of links
-            parser(timetables, {
-              info : results,
-              parser : schedule,
-              done : function (err, result) {
-                if(err) {
-                  console.log(err);
-                  return res.json(err);
-                }
-                console.log(result);
-
-                res.json(result);
-              }
-            });
-          }
-        );
+    runParser(parse, function (err, result) {
+      // Err is not passed, then result is in err
+      if(err) {
+        console.log(err);
+        return res.json(err, result);
       }
+
+      res.json(result);
     });
   });
 };
