@@ -9,23 +9,6 @@ var
 module.exports = {
 
   /**
-   * Get rooms string
-   * @param  {Array} arr array of rooms
-   * @return {String}    readable string of rooms
-   */
-  getRooms : function (arr) {
-    var str ='in ';
-
-    if(!arr || arr.length < 1) return '';
-
-    for(var i = 0; i < arr.length; i += 1) {
-      str += arr[i].name + ', ' ;
-    }
-
-    return str.substr(0, str.length - 2);
-  },
-
-  /**
    * Get readable timestamp
    * @param  {Date} date Date object
    * @return {String}    readable time

@@ -21,7 +21,10 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
             <%= subject.subject.name %>
             <% } %>
 
-          div.room <%= data.getRooms(subject.rooms) %>
+          div.rooms
+            <% _.each(subject.rooms, function (room) { %>
+            a(href!='/<%= data.toUrl(room.name) %>' data-local) <%= room.name %>
+            <% }); %>
 
           ul.teachers
             <% _.each(subject.teachers, function (teacher) { %>

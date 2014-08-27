@@ -52,6 +52,16 @@ gulp.task('scripts', function () {
   });
 });
 
+gulp.task('min-js', function () {
+  paths.pages.forEach(function (page) {
+    gulp
+    .src(tWay(page, paths.builds.src))
+    .pipe(browserify({ debug : false }))
+    .pipe(uglify())
+    .pipe(gulp.dest(tWay(page, paths.builds.dest)));
+  });
+});
+
 gulp.task('jade', function () {
 
   paths.pages.forEach(function (page) {

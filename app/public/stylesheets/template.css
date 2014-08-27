@@ -740,9 +740,18 @@ a:focus {
   color: #2C6D98;
 }
 
-.schedule .subject .room {
+.schedule .subject .rooms {
   margin: 4px 0;
+}
+
+.schedule .subject .rooms a {
   font-style: italic;
+  color: #000;
+}
+
+.schedule .subject .rooms a:not(:last-child):after {
+  content: ",";
+  margin-right: 0.3em;
 }
 
 .schedule .subject .teachers li, .subjectpage .teachers li {

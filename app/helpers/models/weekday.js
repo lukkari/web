@@ -4,9 +4,6 @@ var weekDay = function () {
   var
     Subject = mongoose.model('Subject'),
     Entry   = mongoose.model('Entry'),
-    Group   = mongoose.model('Group'),
-    Teacher = mongoose.model('Teacher'),
-    Room    = mongoose.model('Room'),
     days    = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return {

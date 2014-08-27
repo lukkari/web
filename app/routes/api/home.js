@@ -77,7 +77,8 @@ exports.getNow = function (req, res) {
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
 
   var Group   = mongoose.model('Group'),
-      Teacher = mongoose.model('Teacher');
+      Teacher = mongoose.model('Teacher'),
+      Room    = mongoose.model('Room');
 
   Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
     if(err) {
@@ -96,8 +97,7 @@ exports.getNow = function (req, res) {
           res.json(newdata);
         }
       });
-    }
-    else {
+    } else {
       Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
         if(err) {
           console.log(err);
@@ -115,8 +115,28 @@ exports.getNow = function (req, res) {
               res.json(newdata);
             }
           });
+        } else {
+          Room.findOne({ name : new RegExp(search, "i") }, function (err, room) {
+            if(err) {
+              console.log(err);
+              return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+            }
+
+            if(room) {
+              weekday.getSubjects({
+                date   : today,
+                type   : 'rooms',
+                typeid : room._id,
+                cb : function (err, data) {
+                  var newdata = data;
+                  data.title = room.name;
+                  res.json(newdata);
+                }
+              });
+            } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+
+          });
         }
-        else res.json(404, { error : { code : 404, msg : 'Not found' }});
 
       });
     }
@@ -190,7 +210,25 @@ exports.getSchedule = function (req, res) {
             }
           });
         }
-        else res.json(404, { error : { code : 404, msg : 'Not found' }});
+        else {
+          Room.findOne({ name : new RegExp(search, "i") }, function (err, room) {
+            if(err) {
+              console.log(err);
+              return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+            }
+
+            if(room) {
+              week.getSchedule({
+                date   : today,
+                type   : 'rooms',
+                typeid : room._id,
+                cb : function (err, data) {
+                  res.json({ title : room.name, week : w, weekdays : data });
+                }
+              });
+            } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+          });
+        }
 
       });
     }
