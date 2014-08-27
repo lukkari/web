@@ -267,7 +267,7 @@ exports.runParse = function (req, res) {
       // Err is not passed, then result is in err
       if(err) {
         console.log(err);
-        return res.json(err, result);
+        return res.json(400, err);
       }
 
       res.json(result);
