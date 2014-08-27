@@ -10,5 +10,4 @@ app/cache/*
 app/public/js/builds/*
 app/source/*/dist
 
-nodemon.json
 # Procfile

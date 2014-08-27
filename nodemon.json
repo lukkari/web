@@ -1,0 +1,11 @@
+{
+  "verbose" : "true",
+  "ignore" : [
+    "app/source",
+    "node_modules",
+    "app/public"
+  ],
+  "env" : {
+    "MONGODB_URI" : "mongodb://localhost/learnnode_dev"
+  }
+}
