@@ -1,12 +1,15 @@
+/**
+ * Gulp tasks
+ */
+
 var
   gulp       = require('gulp'),
   browserify = require('gulp-browserify'),
   uglify     = require('gulp-uglify'),
   jade       = require('gulp-jade'),
+  minifyCSS  = require('gulp-minify-css'),
   fs         = require('fs'),
   path       = require('path');
-
-var production = (process.env.NODE_ENV === 'production');
 
 var paths = {
   watch : './app/source/**/*.js',
@@ -28,6 +31,11 @@ var paths = {
     }
   },
 
+  css : {
+    src  : './app/public/stylesheets/*.css',
+    dest : './app/public/stylesheets/min/'
+  },
+
   pages : ['schedule', 'manage']
 };
 
@@ -41,27 +49,38 @@ function tWay(page, way) {
   return way.replace(/\{page\}/ig, page);
 }
 
+
+/**
+ * Build js files from the source folder
+ */
 gulp.task('scripts', function () {
 
   paths.pages.forEach(function (page) {
     gulp
     .src(tWay(page, paths.builds.src))
     .pipe(browserify({ debug : true }))
-    //.pipe(uglify())
-    .pipe(gulp.dest(tWay(page, paths.builds.dest)));
+    .pipe(gulp.dest(paths.builds.dest));
   });
 });
 
+
+/**
+ * Same as `scripts`, but minified versions
+ */
 gulp.task('min-js', function () {
   paths.pages.forEach(function (page) {
     gulp
     .src(tWay(page, paths.builds.src))
     .pipe(browserify({ debug : false }))
     .pipe(uglify())
-    .pipe(gulp.dest(tWay(page, paths.builds.dest)));
+    .pipe(gulp.dest(paths.builds.dest));
   });
 });
 
+
+/**
+ * Compile jade templates into html
+ */
 gulp.task('jade', function () {
 
   paths.pages.forEach(function (page) {
@@ -72,6 +91,10 @@ gulp.task('jade', function () {
   });
 });
 
+
+/**
+ * Add all html files into one browserifyable
+ */
 gulp.task('templates', function () {
 
   paths.pages.forEach(function (page) {
@@ -109,6 +132,10 @@ gulp.task('templates', function () {
   });
 });
 
+
+/**
+ * Watch file changes and execute `scripts` task
+ */
 gulp.task('watch', ['scripts'], function () {
   var watcher = gulp.watch(paths.watch, ['scripts']);
   watcher.on('change', function (event) {
@@ -116,4 +143,18 @@ gulp.task('watch', ['scripts'], function () {
   });
 });
 
+
+/**
+ * Execute `scripts` and then `watch`
+ */
 gulp.task('default', ['scripts', 'watch']);
+
+
+/**
+ * Minify css files
+ */
+gulp.task('min-css', function () {
+  gulp.src(paths.css.src)
+    .pipe(minifyCSS())
+    .pipe(gulp.dest(paths.css.dest));
+});

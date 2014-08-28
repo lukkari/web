@@ -5,10 +5,20 @@
 # Deployed apps should consider commenting this line out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
-# app/config/config.js
+
+# Cache
 app/cache/*
+
+# Builds
 app/public/js/builds/*
+
+# Analytics
 app/public/js/libs/analytics.js
+
+# Distributives
 app/source/*/dist
+
+# Minified css
+app/public/stylesheets/min
 
 # Procfile

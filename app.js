@@ -11,6 +11,7 @@ var
   fs           = require('fs'),
   mongoose     = require('mongoose'),
   morgan       = require('morgan'),
+  compression  = require('compression'),
   bodyParser   = require('body-parser'),
   cookieParser = require('cookie-parser'),
   session      = require('express-session'),
@@ -66,7 +67,22 @@ app
   .set('views', path.join(appdir, 'views'))
   .set('view engine', 'jade')
 
-  .use(express.static(path.join(appdir, 'public')))
+  .use(function (req, res, next) {
+
+    if('production' == app.get('env')) {
+      // In production return minified css
+      if(/\/stylesheets\//.test(req.path)) {
+        // When css is asked add min folder to the request
+        req.path = req.path.replace('/stylesheets/', '/stylesheets/min/');
+      }
+    }
+
+    return next();
+  })
+  .use(compression({
+    threshold : 0 // set file size limit to 0
+  }))
+  .use(express.static(path.join(appdir, 'public'), { maxAge : (1000*60*60*24) }))
   .use(bodyParser())
   //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())
