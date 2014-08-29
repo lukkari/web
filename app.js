@@ -56,7 +56,6 @@ mongoose.connection.on('disconnected', function (err) {
 
 // Add helpers files
 require(path.join(appdir, '/helpers'));
-//require(path.join(appdir, '/helpers/cache'))(config.cache).clear();
 require(path.join(appdir, '/helpers/models/db'));
 require(path.join(appdir, '/config/passport'))(passport);
 
@@ -82,7 +81,7 @@ app
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))
-  .use(express.static(path.join(appdir, 'public'), { maxAge : (1000*60*60*24) }))
+  .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.statics }))
   .use(bodyParser())
   //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())

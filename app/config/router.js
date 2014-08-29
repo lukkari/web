@@ -4,6 +4,7 @@
 
 var
   express = require('express'),
+  config  = require('./config'),
 
   // Load routes
   home = require('../routes/'),
@@ -14,8 +15,6 @@ var
     home : require('../routes/api/home'),
     manage : require('../routes/api/manage')
   };
-
-
 
 function handleManage(req, res) {
   if(req.originalUrl.indexOf('manage') !== -1) {
@@ -62,7 +61,7 @@ function ensureXhr(req, res, next) {
 
 function setCacheHeader(req, res, next) {
   // Set cache header for one day
-  res.set('Cache-Control', 'public, max-age=' + (1000*60*60*24));
+  res.set('Cache-Control', 'public, max-age=' + config[req.app.get('env')].cache.apis);
 
   next();
 }

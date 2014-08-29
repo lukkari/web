@@ -9,8 +9,8 @@ module.exports = {
       format : 'default'
     },
     cache : {
-      path   : 'app/cache/',
-      expire : 60*60*24*7 // Expire in a week
+      statics : 0,
+      apis    : 0
     }
   },
 
@@ -24,8 +24,8 @@ module.exports = {
       format : 'default'
     },
     cache : {
-      path   : 'app/cache/',
-      expire : 60*60*24*7 // Expire in a week
+      statics : (1000*60*60*24*7), // One week
+      apis    : (1000*60*60*24)    // One day
     }
   }
 };
