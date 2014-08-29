@@ -35,8 +35,7 @@ module.exports = Backbone.View.extend({
 
   renderWeekDay : function (item) {
     var weekDayView = new WeekDayView({
-      model    : item,
-      editable : this.editable
+      model    : item
     });
     this.$el.append(weekDayView.render().el);
 

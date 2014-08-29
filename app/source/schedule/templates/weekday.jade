@@ -23,17 +23,17 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
 
           div.rooms
             <% _.each(subject.rooms, function (room) { %>
-            a(href!='/<%= data.toUrl(room.name) %>' data-local) <%= room.name %>
+            a(href!='/<%= data.toUrl(room.name, data.date) %>' data-local) <%= room.name %>
             <% }); %>
 
           ul.teachers
             <% _.each(subject.teachers, function (teacher) { %>
-            li: a(href!='/<%= data.toUrl(teacher.name) %>' data-local) <%= teacher.name %>
+            li: a(href!='/<%= data.toUrl(teacher.name, data.date) %>' data-local) <%= teacher.name %>
             <% }); %>
 
       ul.groups.clearfix
         <% _.each(subject.groups, function (group) { %>
-        li: a(href!='/<%= data.toUrl(group.name) %>' data-local) <%= group.name %>
+        li: a(href!='/<%= data.toUrl(group.name, data.date) %>' data-local) <%= group.name %>
         <% }); %>
 
     <% }); %><% } else { %>

@@ -16,6 +16,7 @@ var
   ScheduleView = require('./views/schedule'),
   NowScheduleView = require('./views/nowschedule');
 
+require('./util');
 
 module.exports = Backbone.Router.extend({
   routes : {
@@ -48,6 +49,8 @@ module.exports = Backbone.Router.extend({
 
     if(this.view) this.view.remove();
 
+    document.title = 'Schedule';
+
     this.view = new FrontPageView();
     this.app.toContent(this.view.render().el);
   },
@@ -59,6 +62,8 @@ module.exports = Backbone.Router.extend({
   search : function (s) {
 
     if(this.view) this.view.remove();
+
+    document.title = 'Search - Schedule';
 
     this.view = new SearchView({
       filter : s,
@@ -97,6 +102,8 @@ module.exports = Backbone.Router.extend({
     options.week = w;
     options.query += '?w=' + w;
 
+    document.title = q.fromUrl().toUpperCase() + ' - Schedule';
+
     var schedule = new Schedule([], {
       url : options.query
     });
@@ -118,10 +125,13 @@ module.exports = Backbone.Router.extend({
 
     if(this.view) this.view.remove();
 
+    document.title = q.fromUrl().toUpperCase() + ' - Today\'s Schedule';
+
     var schedule = new Schedule([], {
       url : q + '/now',
       extraClass : 'nowpage'
     });
+
     schedule.fetch({
       success : (function () {
         this.view = new NowScheduleView({

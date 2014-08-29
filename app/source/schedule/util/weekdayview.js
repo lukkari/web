@@ -6,6 +6,8 @@ var
   months = require('./months'),
   weekdays = require('./weekdays');
 
+require('./');
+
 module.exports = {
 
   /**
@@ -29,11 +31,17 @@ module.exports = {
 
   /**
    * Convert string to url
-   * @param  {String} name to-work-on string
-   * @return {String}      url-ready string
+   * @param  {String}  name to-work-on string
+   * @param  {Date}    date Current day date
+   * @return {String}       url-ready string
    */
-  toUrl : function (name) {
-    return encodeURIComponent(name.replace(/\s/g, '_').toLowerCase());
+  toUrl : function (name, date) {
+    var
+      url = encodeURIComponent(name.replace(/\s/g, '_').toLowerCase()),
+      d   = new Date(date);
+
+    url += '/w' + d.getWeek();
+    return url;
   },
 
   /**

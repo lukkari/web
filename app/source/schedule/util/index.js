@@ -15,6 +15,14 @@ String.prototype.toUrl = function () {
 };
 
 /**
+ * Convert string from url
+ * @return {String}
+ */
+String.prototype.fromUrl = function () {
+  return this.replace(/\_/g, " ");
+};
+
+/**
  * Get current week
  * @return {number}
  */

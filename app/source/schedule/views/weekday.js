@@ -15,9 +15,7 @@ module.exports = Backbone.View.extend({
   className : 'bwrap',
   template  : templates.weekday,
 
-  initialize : function (options) {
-    //this.editable = options.editable;
-  },
+  initialize : function (options) {},
 
   render : function () {
 
