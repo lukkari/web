@@ -47,7 +47,7 @@ function ensureAdmin(req, res, next) {
 }
 
 function ensureXhr(req, res, next) {
-  //if(!req.xhr) return res.json({ error : 'Only xhr requests' });
+  if(!req.xhr) return res.send('');
 
   /**
    * For CORS
@@ -56,6 +56,13 @@ function ensureXhr(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
    */
+
+  next();
+}
+
+function setCacheHeader(req, res, next) {
+  // Set cache header for one day
+  res.set('Cache-Control', 'public, max-age=' + (1000*60*60*24));
 
   next();
 }
@@ -103,12 +110,15 @@ module.exports = function (app, passport) {
   var apiRouter = express.Router();
   apiRouter
     .use(ensureXhr)
+    .post(  '/message',         api.home.sendMsg)
+    .get(   '/schedule/:q/now', api.home.getNow)
+
+    // For some API methods set cache header
+    .use(setCacheHeader)
     .get(   '/groups',          api.home.getGroups)
     .get(   '/teachers',        api.home.getTeachers)
     .get(   '/rooms',           api.home.getRooms)
     .get(   '/schedule/:q',     api.home.getSchedule)
-    .get(   '/schedule/:q/now', api.home.getNow)
-    .post(  '/message',         api.home.sendMsg)
     .get(   '*',                api.home.notFound);
 
 
@@ -164,6 +174,7 @@ module.exports = function (app, passport) {
     .get( '/signup', users.signup)
     .post('/signup', users.create)
 
+    .use(setCacheHeader)
     // Main page
     .get('/*',      home.index);
 
