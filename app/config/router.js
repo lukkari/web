@@ -46,7 +46,8 @@ function ensureAdmin(req, res, next) {
 }
 
 function ensureXhr(req, res, next) {
-  if(!req.xhr) return res.send('');
+  // Requests from mobile app are not xhr, therefore don't use for now
+  //if(!req.xhr) return res.send('');
 
   /**
    * For CORS
