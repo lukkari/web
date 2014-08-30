@@ -23,6 +23,7 @@
     "jsdom": "*",
     "mongoose": "~3.8.12",
     "morgan": "~1.1.1",
+    "newrelic": "~1.10.3",
     "passport": "~0.2.0",
     "passport-local": "~1.0.0",
     "request": "~2.36.0",

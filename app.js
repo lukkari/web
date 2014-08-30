@@ -3,6 +3,8 @@
  * Server setup
  */
 
+if(process.env.NODE_ENV && ('production' == process.env.NODE_ENV)) require('newrelic');
+
 // Get required modules
 var
   express      = require('express'),

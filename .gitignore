@@ -22,3 +22,6 @@ app/source/*/dist
 app/public/stylesheets/min
 
 # Procfile
+
+# New Relic configuration
+newrelic.js
