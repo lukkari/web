@@ -3,7 +3,9 @@
  * Server setup
  */
 
-if(process.env.NODE_ENV && ('production' == process.env.NODE_ENV)) require('newrelic');
+try {
+  require('newrelic');
+} catch (e) {}
 
 // Get required modules
 var

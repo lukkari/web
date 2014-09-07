@@ -40,7 +40,7 @@ module.exports = function ($, link) {
             if(group) console.log('Group: ' + group.name + ' added');
           });
 
-          links.push(makeLink(link, tmp));
+          //links.push(makeLink(link, tmp));
           break;
 
         case 1:
@@ -56,6 +56,7 @@ module.exports = function ($, link) {
           break;
 
         case 2:
+          tmp = $(this).find('a').eq(0).attr('href');
           var room = new Room({
             name : tmp2
           });
@@ -65,6 +66,8 @@ module.exports = function ($, link) {
 
             if(room) console.log('Room: ' + room.name + ' added');
           });
+
+          links.push(makeLink(link, tmp));
           break;
       }
     }

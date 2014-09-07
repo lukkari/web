@@ -37,6 +37,7 @@ module.exports = function ($, link, staff) {
 
   var
     Subject = mongoose.model('Subject'),
+    Entry   = mongoose.model('Entry'),
     obj = {
       groups    : [],
       teachers  : [],
@@ -71,6 +72,24 @@ module.exports = function ($, link, staff) {
       for(i = 0; i < 5; i += 1) {
         dates[i] = new Date(date.getFullYear(), date.getMonth(), date.getDate() + i).getTime();
       }
+
+      var
+        d = new Date(dates[0]),
+        twoMinutesAgo = new Date(new Date().getTime() - (1000*60*2));
+
+      // Remove old entries
+      Entry.remove({
+          date : {
+            $gte : new Date(d),
+            $lt  : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 5)
+          },
+          createdAt : {
+            $lt : twoMinutesAgo
+          }
+        }, function (err) {
+          if(err) console.log(err);
+        }
+      );
     }
 
     if(index > 1) {

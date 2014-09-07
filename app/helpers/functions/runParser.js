@@ -25,11 +25,15 @@ function run(parse, finish) {
 
   if(!Array.isArray(parse.children)) return finish(new Error('Nothing to parse'));
 
-  var week = new Date().getWeek();
+  var
+    d    = new Date(),
+    week = d.getWeek();
 
-  // Return objects only after current week
+  // If current day is Saturday or Sunday force week to be next
+  if((d.getDay() > 4) || (d.getDay() < 1)) week++;
+  // Return objects starting from current week
   var links = parse.children.filter(function (el) {
-    return el.week > week;
+    return el.week >= week;
   });
 
   // Add parse url to links url

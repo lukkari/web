@@ -3,4 +3,4 @@
  */
 
 // Run parser job
-require('./runParser');
+// require('./runParser');
