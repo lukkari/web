@@ -17,9 +17,9 @@ var content = require('./content');
  */
 function runner(url, params, data) {
   var defaults = {
-    info : null,
-    parser : function () { return null; },
-    done : function () { return null; }
+    helpers : {},
+    parser  : function () { return null; },
+    done    : function () { return null; }
   };
 
   var globalErr = null;

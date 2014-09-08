@@ -140,6 +140,7 @@ roomSchema.statics = {
     this
       .find({})
       .sort({ 'name' : 1 })
+      .lean()
       .exec(cb);
   }
 
@@ -169,6 +170,7 @@ teacherSchema.statics = {
     this
       .find({})
       .sort({ 'name' : 1 })
+      .lean()
       .exec(cb);
   }
 
@@ -198,6 +200,7 @@ groupSchema.statics = {
     this
       .find({})
       .sort({ 'name' : 1 })
+      .lean()
       .exec(cb);
   }
 

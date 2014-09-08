@@ -80,68 +80,77 @@ exports.getNow = function (req, res) {
       Teacher = mongoose.model('Teacher'),
       Room    = mongoose.model('Room');
 
-  Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-    if(err) {
-      console.log(err);
-      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
-    }
+  Group
+    .findOne({ name : new RegExp(search, "i") })
+    .lean()
+    .exec(function (err, group) {
+      if(err) {
+        console.log(err);
+        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+      }
 
-    if(group) {
-      weekday.getSubjects({
-        date   : today,
-        type   : 'groups',
-        typeid : group._id,
-        cb : function (err, data) {
-          var newdata = data;
-          data.title = group.name;
-          res.json(newdata);
-        }
-      });
-    } else {
-      Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-        if(err) {
-          console.log(err);
-          return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
-        }
-
-        if(teacher) {
-          weekday.getSubjects({
-            date   : today,
-            type   : 'teachers',
-            typeid : teacher._id,
-            cb : function (err, data) {
-              var newdata = data;
-              data.title = teacher.name;
-              res.json(newdata);
-            }
-          });
-        } else {
-          Room.findOne({ name : new RegExp(search, "i") }, function (err, room) {
+      if(group) {
+        weekday.getSubjects({
+          date   : today,
+          type   : 'groups',
+          typeid : group._id,
+          cb : function (err, data) {
+            var newdata = data;
+            data.title = group.name;
+            res.json(newdata);
+          }
+        });
+      } else {
+        Teacher
+          .findOne({ name : new RegExp(search, "i") })
+          .lean()
+          .exec(function (err, teacher) {
             if(err) {
               console.log(err);
               return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
             }
 
-            if(room) {
+            if(teacher) {
               weekday.getSubjects({
                 date   : today,
-                type   : 'rooms',
-                typeid : room._id,
+                type   : 'teachers',
+                typeid : teacher._id,
                 cb : function (err, data) {
                   var newdata = data;
-                  data.title = room.name;
+                  data.title = teacher.name;
                   res.json(newdata);
                 }
               });
-            } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+            } else {
+              Room
+                .findOne({ name : new RegExp(search, "i") })
+                .lean()
+                .exec(function (err, room) {
+                  if(err) {
+                    console.log(err);
+                    return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+                  }
+
+                  if(room) {
+                    weekday.getSubjects({
+                      date   : today,
+                      type   : 'rooms',
+                      typeid : room._id,
+                      cb : function (err, data) {
+                        var newdata = data;
+                        data.title = room.name;
+                        res.json(newdata);
+                      }
+                    });
+                  } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+
+                });
+            }
 
           });
-        }
+      }
 
-      });
-    }
-
-  });
+    });
 };
 
 
@@ -177,62 +186,69 @@ exports.getSchedule = function (req, res) {
     Room    = mongoose.model('Room'),
     Entry   = mongoose.model('Entry');
 
-  Group.findOne({ name : new RegExp(search, "i") }, function (err, group) {
-    if(err) {
-      console.log(err);
-      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
-    }
+  Group
+    .findOne({ name : new RegExp(search, "i") })
+    .lean()
+    .exec(function (err, group) {
+      if(err) {
+        console.log(err);
+        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+      }
 
-    if(group) {
-      week.getSchedule({
-        date : today,
-        type : 'groups',
-        typeid : group._id,
-        cb : function (err, data) {
-          res.json({ title : group.name, week : w, weekdays : data });
-        }
-      });
-    }
-    else {
-      Teacher.findOne({ name : new RegExp(search, "i") }, function (err, teacher) {
-        if(err) {
-          console.log(err);
-          return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
-        }
-
-        if(teacher) {
-          week.getSchedule({
-            date   : today,
-            type   : 'teachers',
-            typeid : teacher._id,
-            cb : function (err, data) {
-              res.json({ title : teacher.name, week : w, weekdays : data });
-            }
-          });
-        }
-        else {
-          Room.findOne({ name : new RegExp(search, "i") }, function (err, room) {
+      if(group) {
+        week.getSchedule({
+          date : today,
+          type : 'groups',
+          typeid : group._id,
+          cb : function (err, data) {
+            res.json({ title : group.name, week : w, weekdays : data });
+          }
+        });
+      } else {
+        Teacher
+          .findOne({ name : new RegExp(search, "i") })
+          .lean()
+          .exec(function (err, teacher) {
             if(err) {
               console.log(err);
               return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
             }
 
-            if(room) {
+            if(teacher) {
               week.getSchedule({
                 date   : today,
-                type   : 'rooms',
-                typeid : room._id,
+                type   : 'teachers',
+                typeid : teacher._id,
                 cb : function (err, data) {
-                  res.json({ title : room.name, week : w, weekdays : data });
+                  res.json({ title : teacher.name, week : w, weekdays : data });
                 }
               });
-            } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
-          });
-        }
+            } else {
+              Room
+                .findOne({ name : new RegExp(search, "i") })
+                .lean()
+                .exec(function (err, room) {
+                  if(err) {
+                    console.log(err);
+                    return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+                  }
 
-      });
-    }
-  });
+                  if(room) {
+                    week.getSchedule({
+                      date   : today,
+                      type   : 'rooms',
+                      typeid : room._id,
+                      cb : function (err, data) {
+                        res.json({ title : room.name, week : w, weekdays : data });
+                      }
+                    });
+                  } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+                });
+            }
+
+          });
+      }
+    });
 
 };
 

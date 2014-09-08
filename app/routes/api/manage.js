@@ -60,6 +60,7 @@ exports.model = function (req, res) {
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ 'createdAt' : -1 })
+      .lean()
       .exec(
         function (err, docs) {
         if(err) {
@@ -196,6 +197,7 @@ exports.getParses = function (req, res) {
   Parse
     .find({})
     .sort({ createdAt : '1' })
+    .lean()
     .exec(function (err, parses) {
       if(err) {
         console.log(err);
@@ -355,6 +357,7 @@ exports.getMessages = function (req, res) {
   Message
     .find({})
     .sort({ createdAt : -1 })
+    .lean()
     .exec(function (err, messages) {
       if(err) {
         console.log(err);
