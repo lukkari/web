@@ -57,21 +57,29 @@ module.exports = {
   },
 
   /**
-   * Get subject duration
-   * @param  {Array} day first element of array is duration
-   * @return {String}    duration
-   */
-  getDur : function (day) {
-    if(!day || !day.length) return '0';
-    return day[0].duration;
-  },
-
-  /**
    * Get day of the month from date
    * @param  {Date} date
    * @return {Integer}    day from 1 to 31
    */
   getDate : function (date) {
     return new Date(date).getDate();
+  },
+
+  /**
+   * Get status of current class from date
+   * @param  {Date}   date     Date of current class
+   * @param {Integer} duration Duration of current class
+   * @return {String}          Status
+   */
+  getStatus : function (date, duration) {
+
+    var
+      nowHour     = new Date().getHours(),
+      subjectHour = new Date(date).getHours();
+
+    if(nowHour >= (subjectHour + duration)) return 'ended';
+    if((nowHour >= subjectHour) && (nowHour < (subjectHour + duration))) return 'now';
+
+    return '';
   }
 };

@@ -4,7 +4,7 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
 
   div.container
     <% if(data.subjects.length > 0) { %><% _.each(data.subjects, function (subject) { %>
-    div.subject(class!='<%= (subject.rest) ? "restblock" : "" %>')
+    div.subject(class!='<%= (subject.rest) ? "restblock " : "" %><%= data.getStatus(subject.date, subject.duration) %>')
       div.time
         div.hour <%= data.getTime(subject.date) %>
         div.duration

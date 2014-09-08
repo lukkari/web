@@ -955,10 +955,10 @@ a:focus {
   margin: 0 auto;
 }
 
-.nowpage .schedule .ended {
+.nowpage .bwrap .ended {
   opacity: 0.4;
 }
 
-.nowpage .schedule .now {
+.nowpage .bwrap .now {
   background-color: #EDFCF4;
 }
