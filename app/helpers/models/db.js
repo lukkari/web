@@ -99,6 +99,8 @@ subjectSchema.methods = {
   }
 };
 
+subjectSchema.ensureIndex({ name : 1 });
+
 mongoose.model('Subject', subjectSchema);
 
 
