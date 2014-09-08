@@ -168,7 +168,7 @@ Saver.prototype.addToDb = function (obj, next) {
 
   if(!obj.subject || !obj.entry) return next(new Error('Empty object'));
 
-  Subject.findOne({ name : new RegExp(obj.subject.name, 'i') }, function (err, subject) {
+  Subject.findOne({ name : new RegExp(RegExp.escape(obj.subject.name), 'i') }, function (err, subject) {
     if(err) console.log(err);
 
     // If exists, add Entry to Subject

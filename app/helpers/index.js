@@ -42,3 +42,12 @@ Date.prototype.getDateOfISOWeek = function (w, y) {
 String.prototype.capitalize = function () {
   return this.slice(0, 1).toUpperCase() + this.slice(1);
 };
+
+/**
+ * Escape special characters for regular expressions
+ * @param  {String} text String to be escaped
+ * @return {String}      Escaped string
+ */
+RegExp.escape = function(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
