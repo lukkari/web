@@ -10,8 +10,8 @@ var content = require('./content');
  * Run specified Parser and provide results
  * @param {Array}  url Array of links to-be-parsed
  * @param {Object} params Object containing parameters
- *                         info - data to send to parser
- *                         parser - Parser function
+ *                         helpers - object to send to parser
+ *                         parser  - Parser function
  *                         done - function to-be-run after parsing
  * @param {Array} data Data from previous function run
  */
@@ -39,7 +39,7 @@ function runner(url, params, data) {
       globalErr = err;
       url.length = 0;
     } else {
-      data.push(params.parser($, link, params.info));
+      data.push(params.parser($, link, params.helpers));
     }
 
     runner(url, params, data);

@@ -33,7 +33,7 @@ function remInStrFromArr(str, arr) {
   return str;
 }
 
-module.exports = function ($, link, staff) {
+module.exports = function ($, link, helpers) {
 
   var
     Subject = mongoose.model('Subject'),
@@ -77,7 +77,7 @@ module.exports = function ($, link, staff) {
         d = new Date(dates[0]),
         twoMinutesAgo = new Date(new Date().getTime() - (1000*60*2));
 
-      // Remove old entries
+      // Remove old entries from this week
       Entry.remove({
           date : {
             $gte : new Date(d),
@@ -134,13 +134,13 @@ module.exports = function ($, link, staff) {
                                       parseInt(time[1]) * 60 * 1000);
 
             // Find group, teacher, room and subject and remove from the string
-            obj.groups = inStrInArr(tmp2, staff[0]);
+            obj.groups = inStrInArr(tmp2, helpers.staff[0]);
             tmp2 = remInStrFromArr(tmp2, obj.groups);
 
-            obj.teachers = inStrInArr(tmp2, staff[1]);
+            obj.teachers = inStrInArr(tmp2, helpers.staff[1]);
             tmp2 = remInStrFromArr(tmp2, obj.teachers);
 
-            obj.rooms = inStrInArr(tmp2, staff[2]);
+            obj.rooms = inStrInArr(tmp2, helpers.staff[2]);
             tmp2 = remInStrFromArr(tmp2, obj.rooms);
 
             obj.coursenum = /^\d{6,8}[A-Z]?/g.exec(tmp2);
@@ -162,40 +162,22 @@ module.exports = function ($, link, staff) {
               teachers : obj.teachers
             };
 
-            // Find subject
-            Subject.findOne({ name : new RegExp(subjectName, 'i') }, function (err, subject) {
-              if(err) console.log(err);
-
-              // If exists, add Entry to Subject
-              if(subject) {
-                subject.addEntry(entry, function (err) {
-                  if(err) console.log(err);
-
-                  console.log('Entry added');
-                });
-
-                return true;
-              }
-
-              // If not, save subject
-              subject = new Subject({
-                name : subjectName,
-                courseNum : obj.coursenum
+            // Add subject and entry to the adding queue
+            helpers
+              .saver
+              .add({
+                subject : {
+                  name      : subjectName,
+                  courseNum : obj.coursenum
+                },
+                entry : {
+                  date     : date,
+                  duration : j,
+                  rooms    : obj.rooms,
+                  groups   : obj.groups,
+                  teachers : obj.teachers
+                }
               });
-
-              subject.save(function (err, subject) {
-                if(err) return console.log(err);
-
-                // Add Entry to saved subject
-                subject.addEntry(entry, function (err) {
-                  if(err) console.log(err);
-
-                  console.log('Subject added: ' + subjectName);
-                });
-              });
-
-
-            });
 
             count += 1;
           }

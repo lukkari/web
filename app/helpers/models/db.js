@@ -51,6 +51,51 @@ subjectSchema.methods = {
         }
       }
     );
+  },
+
+  /**
+   * Transfer entries from dublicate subjects
+   * @param  {Array}   dublicates Array of dublicate subjects ids
+   * @param  {Function} cb        Callback
+   */
+  transferFrom : function (dublicates, cb) {
+    var
+      subject = this,
+      Entry   = mongoose.model('Entry'),
+      Subject = mongoose.model('Subject');
+
+    if(typeof cb != 'function') {
+      cb = function (err) {
+        if(err) console.log(err);
+      };
+    }
+
+    Entry.find({
+      subject : {
+        $in : dublicates
+      }
+    }, function (err, entries) {
+      if(err) return cb(err);
+
+      if(!entries || !Array.isArray(entries)) return cb();
+
+      console.log('Start changing subject id from entry');
+      // Change subject id to Original document for every entry
+      entries.forEach(function (entry) {
+        entry.subject = subject._id;
+        entry.save();
+      });
+
+      console.log('Start removing dublicates');
+      // Remove dublicate subjects
+      Subject.remove({
+        $id : {
+          $in : dublicates
+        }
+      });
+
+      return cb();
+    });
   }
 };
 
