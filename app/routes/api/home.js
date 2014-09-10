@@ -284,3 +284,13 @@ exports.sendMsg = function (req, res) {
 exports.notFound = function (req, res) {
   res.json(404, { error : 'Not found' });
 };
+
+
+/**
+ * GET '/api/wakeup'
+ */
+exports.wakeup = function (req, res) {
+  var d = new Date();
+  console.log('Wake up triggered: ' + d);
+  res.send(d);
+};
