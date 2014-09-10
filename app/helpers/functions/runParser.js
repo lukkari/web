@@ -81,6 +81,7 @@ function run(parse, finish) {
 
           var helpers = {
             staff : results,
+            parse : parse._id,
             saver : new Saver()
           };
 

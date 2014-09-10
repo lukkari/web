@@ -31,31 +31,6 @@ function runner(parses, data, cb) {
   });
 }
 
-/*
-new CronJob(
-  '00 00 04 * * 6',
-  function () {
-    Parse.find({}, function (err, parses) {
-      if(err) {
-        return console.log(err);
-      }
-
-      runner(parses, [], function (err, results) {
-        if(err) {
-          return console.log(err);
-        }
-
-        console.log('Parses parsed completely');
-        console.log(results);
-        console.log('---------------------------');
-      });
-    });
-  },
-  null,
-  true
-);
-*/
-
 module.exports = function () {
   Parse.find({}, function (err, parses) {
     if(err) {

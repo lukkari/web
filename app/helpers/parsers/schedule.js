@@ -35,6 +35,8 @@ function remInStrFromArr(str, arr) {
 
 module.exports = function ($, link, helpers) {
 
+  helpers = helpers || {};
+
   var
     Subject = mongoose.model('Subject'),
     Entry   = mongoose.model('Entry'),
@@ -168,14 +170,16 @@ module.exports = function ($, link, helpers) {
               .add({
                 subject : {
                   name      : subjectName,
-                  courseNum : obj.coursenum
+                  courseNum : obj.coursenum,
+                  parse     : helpers.parse
                 },
                 entry : {
                   date     : date,
                   duration : j,
                   rooms    : obj.rooms,
                   groups   : obj.groups,
-                  teachers : obj.teachers
+                  teachers : obj.teachers,
+                  parse    : helpers.parse
                 }
               });
 
