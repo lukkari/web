@@ -109,6 +109,8 @@ require(path.join(appdir, '/config/router'))(app, passport);
 app.listen(port);
 console.log('Server is running on port ' + port);
 
+console.log('Node environment: ' + app.get('env'));
+
 
 /**
  * Set up jobs

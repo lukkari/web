@@ -70,8 +70,6 @@ module.exports = Backbone.Router.extend({
       header : this.app.subviews.header
     });
     this.app.toContent(this.view.render().el);
-
-    this.app.subviews.header.goTheme('dark');
   },
 
   /**
@@ -156,5 +154,17 @@ module.exports = Backbone.Router.extend({
     url = url.replace(/\/w\d+/, '') + '/w' + week;
 
     this.navigate(url, true);
+  },
+
+  /**
+   * Go back in history or to main page
+   */
+  goBack : function () {
+    // When user came from other resource
+    if(document.referer && document.referer.length) {
+      this.navigate('/', true);
+    }
+
+    window.history.back();
   }
 });

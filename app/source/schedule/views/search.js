@@ -21,6 +21,10 @@ module.exports = Backbone.View.extend({
   filters : {},
   sections : {},
 
+  events : {
+    'click #backBtn' : 'goBack'
+  },
+
   initialize : function (options) {
     options = options || {};
 
@@ -34,8 +38,7 @@ module.exports = Backbone.View.extend({
   render : function () {
     this
       .$el
-      .html(_.template(this.template, {}, { variable : 'data' }))
-      .fadeIn('fast');
+      .html(_.template(this.template, {}, { variable : 'data' }));
 
     _.invoke(this.subViews, 'render');
 
@@ -99,11 +102,16 @@ module.exports = Backbone.View.extend({
   },
 
   /**
+   * Get to previous page
+   */
+  goBack : function () {
+    window.app.router.goBack();
+  },
+
+  /**
    * Rewrite remove function to switch header theme first and remove children
    */
   remove : function () {
-    this.header.goTheme();
-
     _.invoke(this.filters, "remove");
     _.invoke(this.sections, "remove");
 
