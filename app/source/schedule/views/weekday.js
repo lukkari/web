@@ -25,7 +25,22 @@ module.exports = Backbone.View.extend({
         subjects = [],
         date, pdate, dur;
 
-    _.each(data.subjects, function(el) {
+    _.each(data.subjects, function(el, index) {
+      if(index === 0) {
+        // Add block with starting time
+        date = new Date(el.date);
+
+        subjects.push({
+            timeBlock : true,
+            date : new Date(date.getFullYear(),
+                            date.getMonth(),
+                            date.getDate(),
+                            date.getHours(),
+                            15
+                           )
+          });
+      }
+
       if(prev) {
         date  = new Date(el.date),
         pdate = new Date(prev.date),
@@ -48,6 +63,23 @@ module.exports = Backbone.View.extend({
       subjects.push(el);
       prev = el;
     });
+
+    if(prev) {
+      // Add block with ending time
+      pdate = new Date(prev.date);
+      date = pdate;
+
+      subjects.push({
+        timeBlock : true,
+        duration  : 0,
+        date : new Date(date.getFullYear(),
+                        date.getMonth(),
+                        date.getDate(),
+                        pdate.getHours() + prev.duration,
+                        0
+                       )
+      });
+    }
 
     data.subjects = subjects;
 

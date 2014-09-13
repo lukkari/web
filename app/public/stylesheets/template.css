@@ -282,7 +282,7 @@ a:focus {
   padding: 0.3em 0.4em;
   margin: 0.1em 0.1em;
   background-color: #ABD9F7;
-  color: #555;
+  color: #444;
   text-decoration: none;
   font-size: 1.1em;
   transition: background-color 0.1s;
@@ -638,7 +638,6 @@ a:focus {
 }
 
 .schedule .subject:last-child {
-  padding-bottom: 5px;
   border: 0;
 }
 
@@ -712,6 +711,14 @@ a:focus {
   font-size: 1.3em;
   padding: 8px 5px 10px 20px;
   color: #333;
+}
+
+.schedule .subject .endtime {
+  text-align: center;
+  font-size: 0.9em;
+  padding: 0.2em 0 0.2em;
+  font-weight: bold;
+  background-color: #f9f9f9;
 }
 
 .schedule .subject .inner .name {

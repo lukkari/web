@@ -17,7 +17,7 @@ module.exports = {
    */
   getTime : function (date) {
     var d = new Date(date);
-    return d.getHours() + ':' + d.getMinutes();
+    return d.getHours() + ':' + ((d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes());
   },
 
   /**
