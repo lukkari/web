@@ -110,6 +110,7 @@ module.exports = function (app, passport) {
   var apiRouter = express.Router();
   apiRouter
     .use('/wakeup', api.home.wakeup) // wake up app heroku hack
+    .use('/baseurl', api.home.baseurl) // return url to schedule server (for future use)
 
     .use(ensureXhr)
     .post(  '/message',         api.home.sendMsg)
