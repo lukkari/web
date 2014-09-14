@@ -112,7 +112,5 @@ console.log('Server is running on port ' + port);
 console.log('Node environment: ' + app.get('env'));
 
 
-/**
- * Set up jobs
- */
+//Set up jobs
 require(path.join(appdir, 'helpers/jobs'));
