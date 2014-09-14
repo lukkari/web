@@ -31,8 +31,8 @@ function run(parse, finish) {
     d    = new Date(),
     week = d.getWeek();
 
-  // If current day is Saturday or Sunday force week to be next
-  if((d.getDay() > 4) || (d.getDay() < 1)) week++;
+  // If current day is Saturday force week to be next
+  if(d.getDay() > 4) week++;
   // Return objects starting from current week
   var links = parse.children.filter(function (el) {
     return el.week >= week;

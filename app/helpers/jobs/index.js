@@ -8,7 +8,7 @@ var CronJob   = require('cron').CronJob;
 var runParser = require('./runParser');
 
 new CronJob(
-  '00 01 01 * * *',
+  '00 02 01 * * *',
   function () {
     console.log('Start parsing automatically');
     runParser();
