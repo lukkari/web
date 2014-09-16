@@ -1,15 +1,25 @@
 # LUKKARI
 
-Custom schedule of the ICT-building of TUAS
+School schedule representer. Currently aimed to ICT-building of TUAS.
 
 *(work in progress)*
+
+Complete description and installation instuctions could be found in [project wiki](https://github.com/zaynetro/lukkari/wiki).
+
+Brief description is provided below.
+
+## Requirements
+
+1. Node.js v0.10.x
+2. MongoDB v3.8+
+
 
 ## Install
 
 ### Clone project
 
 1. `git clone https://github.com/zaynetro/lukkari.git`
-2. `cd lukkari/app`
+2. `cd lukkari`
 3. `npm istall`
 
 ### Build project
@@ -31,6 +41,8 @@ For production:
 ### Configure envrironments
 
 1. Setup `MONGODB_URI` *(url to mongo database)*
+2. Specify port number `PORT` *if needed (default: 3000)*
+3. For production: `NODE_ENV=production`
 
 
 ## Run
@@ -40,31 +52,31 @@ For production:
 
 ## Gulp tasks
 
-#### `gulp jade`
+#### gulp jade
 
 Compile *.jade* files from `app/source/*/templates/` into *.html* files to `app/source/*/dist/`
 
 
-#### `gulp templates`
+#### gulp templates
 
 Combine all *.html* files into one distributive file to work with browserify.
 
-#### `gulp scripts`
+#### gulp scripts
 
 Launch browserify on `app/source/*/*page.js`
 
-#### `gulp min-js`
+#### gulp min-js
 
 Launch browserify and uglify(minify js) on `app/source/*/*page.js`
 
-#### `gulp min-css`
+#### gulp min-css
 
 Minify css from `app/public/stylesheets/*.css` to `app/public/stylesheets/min/*.css`
 
-#### `gulp watch`
+#### gulp watch
 
 Watch file changes and runs when file has been edited.
 
-#### `gulp`
+#### gulp
 
 Runs `gulp scripts` and watch task `gulp watch` afterwards.
