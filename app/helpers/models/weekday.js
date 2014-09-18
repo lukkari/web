@@ -37,8 +37,7 @@ var weekDay = function () {
 
       Entry
         .find(query, {
-            'parse' : 0,
-            'createdAt' : 0
+            'parse' : 0
           })
         .populate('groups', 'name')
         .populate('teachers', 'name')

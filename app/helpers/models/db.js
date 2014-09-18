@@ -119,6 +119,8 @@ var entrySchema = new Schema({
   createdAt : { type : Date, default : Date.now }
 });
 
+entrySchema.index({ subject : 1 });
+
 mongoose.model('Entry', entrySchema);
 
 
