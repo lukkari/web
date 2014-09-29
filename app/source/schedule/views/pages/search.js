@@ -6,13 +6,13 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
 var
-  SearchSection = require('../collections/searchsection'),
+  SearchSection = require('../../collections/searchsection'),
 
-  SearchFiltersView = require('./searchfilters'),
-  SearchSectionView = require('./searchsection');
+  SearchFiltersView = require('../searchfilters'),
+  SearchSectionView = require('../searchsection');
 
 
 module.exports = Backbone.View.extend({

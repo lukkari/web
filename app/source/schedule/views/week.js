@@ -22,6 +22,10 @@ module.exports = Backbone.View.extend({
     this.collection = new Week(data, options);
   },
 
+  update : function (data) {
+    this.collection.set(data);
+  },
+
   render : function () {
     var that = this;
 

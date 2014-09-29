@@ -121,6 +121,7 @@ module.exports = function (app, passport) {
     .get(   '/groups',          api.home.getGroups)
     .get(   '/teachers',        api.home.getTeachers)
     .get(   '/rooms',           api.home.getRooms)
+    .get(   '/schedule/my',     api.home.getMySchedule)
     .get(   '/schedule/:q',     api.home.getSchedule)
     .get(   '*',                api.home.notFound);
 

@@ -6,16 +6,19 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
-var WeekBar = require('../models/weekbar');
+var WeekBar = require('../../models/weekbar');
 
 module.exports = Backbone.View.extend({
   className : 'weekselector',
   template  : templates.weekbar,
 
-  initialize : function () {
+  initialize : function (options) {
+    options = options || {};
+
     this.model = new WeekBar();
+    this.setWeek(options);
   },
 
   render : function () {

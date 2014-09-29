@@ -6,11 +6,11 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
 var
-  WeekDay = require('../models/weekday'),
-  WeekDayView = require('./weekday');
+  WeekDay = require('../../models/weekday'),
+  WeekDayView = require('../weekday');
 
 
 module.exports = Backbone.View.extend({

@@ -277,7 +277,6 @@ exports.sendMsg = function (req, res) {
 
 };
 
-
 /**
  * GET '/api/*' [description]
  */
@@ -300,4 +299,44 @@ exports.wakeup = function (req, res) {
  */
 exports.baseurl = function (req, res) {
   res.send('http://lukkari.herokuapp.com/');
+};
+
+exports.getMySchedule = function (req, res) {
+
+  var w = req.param('w');
+
+  var today = new Date();
+
+  if(typeof w !== 'undefined') {
+    var i = 0;
+    if(today.getStudyWeek() > (w + 35)) i = 1;
+
+    today = today.getDateOfISOWeek(w, today.getFullYear() + i);
+  }
+  else w = new Date().getStudyWeek();
+
+  var Group = mongoose.model('Group');
+
+  Group
+    .findOne({ name : 'NINFOS13' })
+    .lean()
+    .exec(function (err, group) {
+      if(err) {
+        console.log(err);
+        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+      }
+
+      if(group) {
+        week.getSchedule({
+          date : today,
+          type : 'groups',
+          typeid : group._id,
+          cb : function (err, data) {
+            res.json({ title : 'My schedule', week : w, weekdays : data });
+          }
+        });
+      } else {
+        return res.json(400, { error : "Doesn't work" });
+      }
+    });
 };

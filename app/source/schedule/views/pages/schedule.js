@@ -6,12 +6,12 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
 var
-  CalendarView = require('./calendar'),
-  WeekBarView = require('./weekbar'),
-  WeekView = require('./week');
+  CalendarView = require('../blocks/calendar'),
+  WeekBarView = require('../blocks/weekbar'),
+  WeekView = require('../week');
 
 
 module.exports = Backbone.View.extend({
@@ -48,6 +48,10 @@ module.exports = Backbone.View.extend({
       .$el
       .find('#weekBar')
       .html(this.subviews.weekbar.render().el);
+
+    if(this.model.isEditable()) {
+      this.$el.find('#editBar').show();
+    }
 
     // Render days(week)
     this.subviews.week.setElement(this.$el.find('#days')).render();

@@ -10,16 +10,17 @@ var
 var templates = require('../dist/');
 
 var
+  Schedule = require('../models/schedule'),
+
   HeaderView = require('./header'),
   FooterView = require('./footer'),
-  ScheduleView = require('./schedule');
+  ScheduleView = require('./pages/schedule');
 
 module.exports = Backbone.View.extend({
 
   template : templates.app,
 
   subviews : {},
-
 
   initialize : function (options) {
     options = options || {};
@@ -31,7 +32,9 @@ module.exports = Backbone.View.extend({
     this.subviews.footer = new FooterView();
 
     // Init schedule view
-    this.subviews.schedule = new ScheduleView();
+    this.subviews.schedule = new ScheduleView({
+      model : new Schedule()
+    });
   },
 
   render : function () {

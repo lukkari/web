@@ -8,11 +8,11 @@ var
   Backbone = require('backbone');
 
 var
-  Month = require('../models/month'),
+  Month = require('../../models/month'),
 
-  Months = require('../collections/months'),
+  Months = require('../../collections/months'),
 
-  MonthView = require('./month');
+  MonthView = require('../month');
 
 
 module.exports = Backbone.View.extend({

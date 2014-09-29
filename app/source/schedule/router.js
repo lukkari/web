@@ -11,16 +11,18 @@ var
   Schedule = require('./models/schedule'),
 
   AppView = require('./views/app'),
-  FrontPageView = require('./views/frontpage'),
-  SearchView = require('./views/search'),
-  ScheduleView = require('./views/schedule'),
-  NowScheduleView = require('./views/nowschedule');
+  FrontPageView = require('./views/pages/front'),
+  SearchView = require('./views/pages/search'),
+  ScheduleView = require('./views/pages/schedule'),
+  NowScheduleView = require('./views/pages/nowschedule'),
+  UnknownPageView = require('./views/pages/unknown');
 
 require('./util');
 
 module.exports = Backbone.Router.extend({
   routes : {
     ''               : 'mainpage',
+    //'my(/w:w)(/)'    : 'getMySchedule',
     'search(/:s)(/)' : 'search',
     'w:w/:q(/)'      : 'getScheduleViceVersa',
     ':q(/w:w)(/)'    : 'getSchedule',
@@ -100,7 +102,12 @@ module.exports = Backbone.Router.extend({
     options.week = w;
     options.query += '?w=' + w;
 
-    document.title = q.fromUrl().toUpperCase() + ' - Schedule';
+    var isMySchedule = (q == 'my');
+
+    options.isMySchedule = isMySchedule;
+
+    var title = isMySchedule ? 'My schedule' : q.fromUrl().toUpperCase() + ' - Schedule';
+    document.title = title;
 
     var schedule = new Schedule([], {
       url : options.query
@@ -111,6 +118,10 @@ module.exports = Backbone.Router.extend({
         this.view = this.app.subviews.schedule;
         this.view.model = schedule;
         this.app.assign(this.view, '#content', options);
+      }).bind(this),
+
+      error : (function () {
+        this.unknown();
       }).bind(this)
     });
   },
@@ -136,12 +147,23 @@ module.exports = Backbone.Router.extend({
           model : schedule
         });
         this.app.assign(this.view, '#content');
+      }).bind(this),
+
+      error : (function () {
+        this.unknown();
       }).bind(this)
     });
   },
 
+  /**
+   * Unknown page
+   */
   unknown : function () {
-    //app.pagesCtrl.toggle('unknown');
+    if(this.view) this.view.remove();
+
+    document.title = 'Unknown page';
+    this.view = new UnknownPageView();
+    this.app.assign(this.view, '#content');
   },
 
   /**
@@ -149,7 +171,6 @@ module.exports = Backbone.Router.extend({
    * @param  {Integer} week Week number
    */
   goToWeek : function (week) {
-
     var url = window.location.pathname;
     url = url.replace(/\/w\d+/, '') + '/w' + week;
 

@@ -952,3 +952,33 @@ a:focus {
 .nowpage .bwrap .now {
   background-color: #EDFCF4;
 }
+
+/**
+ * User schedule page
+ */
+.schedule-edit-bar {
+  display: none;
+  margin: 0.5em 0 0.2em;
+}
+
+.schedule-edit-bar button {
+  border: 0;
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0.5em 0;
+  cursor: pointer;
+}
+
+.schedule-edit-bar button#edit,
+.schedule-edit-bar button#done {
+  width: 100%;
+}
+
+.schedule-edit-bar button#edit {
+  background: #f1c40f;
+}
+
+.schedule-edit-bar button#done {
+  display: none;
+  background: #27ae60;
+}
