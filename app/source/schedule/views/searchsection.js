@@ -24,13 +24,9 @@ module.exports = Backbone.View.extend({
   },
 
   render : function (list) {
-    this
-      .$el
-      .html(_.template(this.template,
-                      { name : this.name.capitalize() },
-                      { variable : 'data' }));
+    var tmpl = _.template(this.template, { variable : 'data' });
 
-
+    this.$el.html(tmpl({ name : this.name.capitalize() }));
     this.$el.find('ul').empty();
 
     if(!Array.isArray(list)) list = this.collection.models;

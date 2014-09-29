@@ -29,12 +29,9 @@ module.exports = Backbone.View.extend({
   },
 
   render : function (options) {
+    var tmpl = _.template(this.template, { variable : 'data' });
     // Render template
-    this
-      .$el
-      .html(_.template(this.template,
-                       this.model.getDefaults(),
-                       { variable : 'data' }));
+    this.$el.html(tmpl(this.model.getDefaults()));
 
     // Render calendar
     this.subviews.calendar.setElement(this.$el.find('#calendar')).render();

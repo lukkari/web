@@ -30,14 +30,14 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var data = {
-      model : JSON.stringify(this.model.toJSON(), null, '  '),
-      index : this.index
-    };
+    var
+      data = {
+        model : JSON.stringify(this.model.toJSON(), null, '  '),
+        index : this.index
+      },
+      tmpl = _.template(this.template, { variable : 'data' });
 
-    this.$el.html(_.template(this.template,
-                             data,
-                             { variable : 'data' }));
+    this.$el.html(tmpl(data));
 
     // Find buttons
     this.$btn = {

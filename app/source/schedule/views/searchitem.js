@@ -13,14 +13,12 @@ module.exports = Backbone.View.extend({
   template : templates.searchitem,
 
   render : function () {
-    var data = this.model.toJSON();
-    data.url = data.name.toUrl();
+    var
+      data = this.model.toJSON(),
+      tmpl = _.template(this.template, { variable : 'data' });
 
-    this
-      .$el
-      .html(_.template(this.template,
-                       data,
-                       { variable : 'data' }));
+    data.url = data.name.toUrl();
+    this.$el.html(tmpl(data));
 
     return this;
   }

@@ -32,18 +32,18 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var sectionData;
+    var
+      tmpl = _.template(this.template, { variable : 'data' }),
+      $sectionData;
 
-    this.$el.html(_.template(this.template,
-                            {
-                              title : this.params.title || 'Section',
-                              className : this.params.className || ''
-                            },
-                            { variable : 'data' }));
+    this.$el.html(tmpl({
+      title : this.params.title || 'Section',
+      className : this.params.className || ''
+    }));
 
-    sectionData = this.$el.find('.section-data');
+    $sectionData = this.$el.find('.section-data');
     _.each(this.collection.models, function (item) {
-      sectionData.append(this.renderItem(item));
+      $sectionData.append(this.renderItem(item));
     }, this);
 
     return this;

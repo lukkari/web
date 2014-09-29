@@ -20,6 +20,7 @@ module.exports = Backbone.View.extend({
   render : function () {
 
     var data = this.model.toJSON();
+    var tmpl = _.template(this.template, { variable : 'data' });
 
     var prev    = null,
         subjects = [],
@@ -85,9 +86,7 @@ module.exports = Backbone.View.extend({
 
     _.extend(data, viewHelper);
 
-    this.$el.html(_.template(this.template,
-                             data,
-                             { variable : 'data' }));
+    this.$el.html(tmpl(data));
 
     return this;
   }

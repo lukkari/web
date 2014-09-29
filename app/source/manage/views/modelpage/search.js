@@ -25,12 +25,12 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var data = this.model.toJSON();
-    data.fields = Object.keys(data.schema);
+    var
+      data = this.model.toJSON(),
+      tmpl = _.template(this.template, { variable : 'data' });
 
-    this.$el.html(_.template(this.template,
-                             data,
-                             { variable : 'data' }));
+    data.fields = Object.keys(data.schema);
+    this.$el.html(tmpl(data));
     return this;
   },
 

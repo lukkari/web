@@ -12,7 +12,6 @@ var
   WeekDay = require('../../models/weekday'),
   WeekDayView = require('../weekday');
 
-
 module.exports = Backbone.View.extend({
 
   template  : templates.schedule,
@@ -29,13 +28,9 @@ module.exports = Backbone.View.extend({
   },
 
   render : function (options) {
+    var tmpl = _.template(this.template, { variable : 'data' });
     // Render template
-    this
-      .$el
-      .html(_.template(this.template,
-                       this.model.getDefaults(true),
-                       { variable : 'data' }));
-
+    this.$el.html(tmpl(this.model.getDefaults(true)));
     // Render days(week)
     //this.views.week.setElement(this.$el.find('#days')).render();
     this.$el.find('#days').html(this.subviews.weekday.render().el);

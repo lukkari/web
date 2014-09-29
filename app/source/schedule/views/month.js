@@ -31,12 +31,8 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    this
-      .$el
-      .html(_.template(this.template,
-                       this.model.toJSON(),
-                       { variable : 'data' }));
-
+    var tmpl = _.template(this.template, { variable : 'data' });
+    this.$el.html(tmpl(this.model.toJSON()));
     return this;
   }
 });

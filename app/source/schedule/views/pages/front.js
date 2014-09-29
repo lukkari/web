@@ -66,7 +66,7 @@ module.exports = Backbone.View.extend({
   render : function () {
     this
       .$el
-      .html(_.template(this.template, {}, { variable : 'data' }))
+      .html(_.template(this.template, { variable : 'data' }))
       .fadeIn('fast');
 
     return this;

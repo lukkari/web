@@ -30,7 +30,7 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    this.$el.html(_.template(this.template, {}, { variable : 'data' }));
+    this.$el.html(_.template(this.template, { variable : 'data' }));
 
     this.assign(this.subviews.sidebar, '#appSidebar');
     this.assign(this.subviews.footer, '#appFooter');
