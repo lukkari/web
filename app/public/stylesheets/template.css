@@ -647,11 +647,24 @@ a:focus {
 }
 
 .schedule .subject .remove-block > button {
-  padding: 0.4em 0.5em;
-  background-color: #c00;
+  padding: 0.2em 0.2em;
   text-align: center;
   border: 0;
   cursor: pointer;
+  font-size: 1.3rem;
+  font-family: 'icomoon';
+  color: #F51D1D;
+  background-color: #ecf0f1;
+  border-radius: 100%;
+  transition: background-color 0.2s;
+}
+
+.schedule .subject .remove-block > button:hover {
+  background-color: #ccc;
+}
+
+.schedule .subject .remove-block > button:before {
+  content: '\e60a';
 }
 
 .schedule .editing-mode .remove-block {
@@ -766,14 +779,18 @@ a:focus {
   margin-right: 0.3em;
 }
 
-.schedule .subject .teachers li, .subjectpage .teachers li {
+.schedule .subject .teachers li {
   margin: 2px 0;
 }
 
-.schedule .subject .teachers li > a, .subjectpage .teachers li > a {
-  background: url('/design/teacher_icon.png') no-repeat left center;
-  padding-left: 20px;
+.schedule .subject .teachers li > a {
   color: #3A3D3F;
+}
+
+.schedule .subject .teachers li > a:before {
+  font-family: 'icomoon';
+  content: '\e601';
+  margin-right: 0.2em;
 }
 
 .schedule .subject .groups {
@@ -787,7 +804,7 @@ a:focus {
   margin: 6px 4px 6px 0;
 }
 
-.schedule .subject .groups li > a, .subjectpage .groups li > a {
+.schedule .subject .groups li > a {
   border: 2px solid #dadada;
   border-radius: 5px;
   font-size: 0.9em;
@@ -796,7 +813,7 @@ a:focus {
   color: #666;
 }
 
-.schedule .subject .groups li > a:hover, .subjectpage .groups li > a:hover {
+.schedule .subject .groups li > a:hover {
   text-decoration: none;
   border-color: #bbb;
   color: #444;
