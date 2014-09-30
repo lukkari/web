@@ -52,6 +52,10 @@ module.exports = Backbone.View.extend({
     return this;
   },
 
+  assignContent : function (view, options) {
+    view.setElement(this.$('#content')).render(options);
+  },
+
   assign : function (view, selector, options) {
     view.setElement(this.$(selector)).render(options);
   },

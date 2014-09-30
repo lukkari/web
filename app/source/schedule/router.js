@@ -113,24 +113,16 @@ module.exports = Backbone.Router.extend({
       url : options.query
     });
 
-    schedule.fetch();
+    schedule.fetch({
+      error : (function () {
+        this.unknown();
+      }).bind(this)
+    });
 
     this.view = this.app.subviews.schedule;
     this.view.setModel(schedule);
     this.view.updateStatics(options);
-    this.app.assign(this.view, '#content', options);
-
-    /*schedule.fetch({
-      success : (function () {
-        this.view = this.app.subviews.schedule;
-        this.view.setModel(schedule);
-        this.app.assign(this.view, '#content', options);
-      }).bind(this),
-
-      error : (function () {
-        this.unknown();
-      }).bind(this)
-    });*/
+    this.app.assignContent(this.view);
   },
 
   /**
@@ -149,17 +141,15 @@ module.exports = Backbone.Router.extend({
     });
 
     schedule.fetch({
-      success : (function () {
-        this.view = new NowScheduleView({
-          model : schedule
-        });
-        this.app.assign(this.view, '#content');
-      }).bind(this),
-
       error : (function () {
         this.unknown();
       }).bind(this)
     });
+
+    this.view = new NowScheduleView({
+      model : schedule
+    });
+    this.app.assignContent(this.view);
   },
 
   /**
@@ -170,7 +160,7 @@ module.exports = Backbone.Router.extend({
 
     document.title = 'Unknown page';
     this.view = new UnknownPageView();
-    this.app.assign(this.view, '#content');
+    this.app.assignContent(this.view);
   },
 
   /**

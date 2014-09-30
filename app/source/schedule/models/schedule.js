@@ -39,10 +39,6 @@ module.exports = Backbone.Model.extend({
     };
   },
 
-  getTitle : function () {
-    return this.get('title');
-  },
-
   isEditable : function () {
     return this.get('title') == 'My schedule';
   },

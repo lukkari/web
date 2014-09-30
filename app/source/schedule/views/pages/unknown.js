@@ -16,5 +16,10 @@ module.exports = Backbone.View.extend({
     this.$el.html(_.template(this.template, { variable : 'data' }));
 
     return this;
+  },
+
+  remove : function () {
+    this.$el.empty();
+    this.undelegateEvents();
   }
 });

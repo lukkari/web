@@ -22,21 +22,32 @@ module.exports = Backbone.View.extend({
   initialize : function (options) {
     options = options || {};
 
-    this.subviews.weekday = new WeekDayView({
-      model : this.model
-    });
+    this.model.on('sync', this.updateView, this);
   },
 
-  render : function (options) {
+  render : function () {
     var tmpl = _.template(this.template, { variable : 'data' });
     // Render template
     this.$el.html(tmpl(this.model.getDefaults(true)));
     // Render days(week)
-    //this.views.week.setElement(this.$el.find('#days')).render();
-    this.$el.find('#days').html(this.subviews.weekday.render().el);
+
+    if(this.subviews.weekday) {
+      this.$el.find('#days').html(this.subviews.weekday.render().el);
+    }
 
     return this;
   },
 
-  remove : function () {}
+  updateView : function () {
+    this.subviews.weekday = new WeekDayView({
+      model : new WeekDay(this.model.attributes)
+    });
+
+    this.render();
+  },
+
+  remove : function () {
+    this.$el.empty();
+    this.undelegateEvents();
+  }
 });
