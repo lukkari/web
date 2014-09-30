@@ -15,6 +15,10 @@ module.exports = Backbone.View.extend({
   className : 'bwrap',
   template  : templates.weekday,
 
+  events : {
+    'click #removeBtn' : 'removeSubject'
+  },
+
   initialize : function (options) {},
 
   render : function () {
@@ -89,5 +93,9 @@ module.exports = Backbone.View.extend({
     this.$el.html(tmpl(data));
 
     return this;
+  },
+
+  removeSubject : function (e) {
+    var subject_id = this.$el.find(e.target).attr('data-subject');
   }
 });

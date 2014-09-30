@@ -8,6 +8,9 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
       <% if(subject.timeBlock) { %>
       div.endtime <%= data.getTime(subject.date) %>
       <% } else { %>
+      div.remove-block
+        button#removeBtn(data-subject!='<%= subject._id %>') X
+
       div.time
         div.hour <%= data.getTime(subject.date) %>
         div.duration

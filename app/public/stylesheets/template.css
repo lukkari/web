@@ -212,9 +212,9 @@ a:focus {
   content: "\e604";
 }
 
-/*.mainnav li > .user:before {
-  content: "\e602";
-}*/
+.mainnav li > .user:before {
+  content: "\e608";
+}
 
 @media screen and (max-width: 650px) {
   .top .searchbox {
@@ -614,6 +614,7 @@ a:focus {
 
 .schedule .container {
   clear: left;
+  position: relative;
 }
 
 .schedule .container .restblock {
@@ -631,10 +632,30 @@ a:focus {
   clear: left;
   overflow: hidden;
   border-bottom: 2px dashed #ddd;
+  position: relative;
 }
 
 .schedule .subject:hover {
   background-color: #E2F4FF;
+}
+
+.schedule .subject .remove-block {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.schedule .subject .remove-block > button {
+  padding: 0.4em 0.5em;
+  background-color: #c00;
+  text-align: center;
+  border: 0;
+  cursor: pointer;
+}
+
+.schedule .editing-mode .remove-block {
+  display: block;
 }
 
 .schedule .subject:last-child {
@@ -705,6 +726,7 @@ a:focus {
 
 .schedule .subject .inner {
   padding: 4px 10px 0;
+  overflow: hidden;
 }
 
 .schedule .subject .resttext {

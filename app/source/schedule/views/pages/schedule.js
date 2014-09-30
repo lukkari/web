@@ -19,6 +19,11 @@ module.exports = Backbone.View.extend({
   template  : templates.schedule,
   className : 'schedule',
 
+  events : {
+    'click #edit' : 'startEditing',
+    'click #done' : 'doneEditing'
+  },
+
   initialize : function (options) {
     options = options || {};
 
@@ -51,9 +56,27 @@ module.exports = Backbone.View.extend({
     }
 
     // Render days(week)
-    this.subviews.week.setElement(this.$el.find('#days')).render();
+    this.$days = this.$el.find('#days');
+    this.subviews.week.setElement(this.$days).render();
+
+    this.$buttons = {
+      edit : this.$el.find('#edit'),
+      done : this.$el.find('#done')
+    };
 
     return this;
+  },
+
+  startEditing : function () {
+    this.$buttons.edit.hide();
+    this.$buttons.done.show();
+    this.$days.addClass('editing-mode');
+  },
+
+  doneEditing : function () {
+    this.$buttons.done.hide();
+    this.$buttons.edit.show();
+    this.$days.removeClass('editing-mode');
   },
 
   remove : function () {}
