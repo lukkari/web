@@ -5,8 +5,13 @@
 
 var Backbone = require('backbone');
 
+var Week = require('../collections/week');
+
 module.exports = Backbone.Model.extend({
   urlRoot : '/api/schedule/',
+
+  week : null,
+  isEditing : false,
 
   defaults : {
     extraClass : '',
@@ -18,10 +23,8 @@ module.exports = Backbone.Model.extend({
     options = options || {};
     this.urlRoot += options.url;
     this.set('extraClass', options.extraClass || '');
-  },
 
-  getDays : function () {
-    return this.get('weekdays');
+    this.on('sync', this.setWeek, this);
   },
 
   getDefaults : function (isNow) {
@@ -42,5 +45,17 @@ module.exports = Backbone.Model.extend({
 
   isEditable : function () {
     return this.get('title') == 'My schedule';
+  },
+
+  setWeek : function () {
+    this.week = new Week(this.get('weekdays'));
+    this.unset('weekdays');
+    // When subject is removed from the week,
+    // or added update schedule
+    this.week.on('change', this.fetch, this);
+  },
+
+  getWeek : function () {
+    return this.week;
   }
 });

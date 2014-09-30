@@ -790,7 +790,7 @@ a:focus {
 .schedule .subject .teachers li > a:before {
   font-family: 'icomoon';
   content: '\e601';
-  margin-right: 0.2em;
+  margin-right: 0.3em;
 }
 
 .schedule .subject .groups {

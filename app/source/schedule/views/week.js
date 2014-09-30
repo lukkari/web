@@ -6,32 +6,16 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-
 var
   Week = require('../collections/week'),
   WeekDayView = require('./weekday');
 
 module.exports = Backbone.View.extend({
 
-  editable     : false,
-  subjectUrl   : '/api/subject',
-
-  initialize : function (data, options) {
-    options = options || {};
-
-    this.collection = new Week(data, options);
-  },
-
-  update : function (data) {
-    this.collection.set(data);
-  },
-
   render : function () {
-    var that = this;
-
     this.$el.empty();
     _.each(this.collection.models, function (item) {
-      that.renderWeekDay(item);
+      this.$el.append(this.renderWeekDay(item).el);
     }, this);
 
     return this;
@@ -39,11 +23,10 @@ module.exports = Backbone.View.extend({
 
   renderWeekDay : function (item) {
     var weekDayView = new WeekDayView({
-      model    : item
+      model : item
     });
-    this.$el.append(weekDayView.render().el);
 
-    return this;
+    return weekDayView.render();
   }
 
 });

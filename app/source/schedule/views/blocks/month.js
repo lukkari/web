@@ -6,23 +6,19 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
 module.exports = Backbone.View.extend({
 
   tagName : 'table',
   template : templates.month,
 
-  initialize : function (data, options) {
-    options = options || {};
-  },
-
   events : {
     'click tbody tr' : 'goToWeek'
   },
 
   /**
-   * When needed week is click, go to that week
+   * Navigate to selected week
    * @param  {Object} e Event
    */
   goToWeek : function (e) {

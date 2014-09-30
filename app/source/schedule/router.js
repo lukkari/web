@@ -113,17 +113,24 @@ module.exports = Backbone.Router.extend({
       url : options.query
     });
 
-    schedule.fetch({
+    schedule.fetch();
+
+    this.view = this.app.subviews.schedule;
+    this.view.setModel(schedule);
+    this.view.updateStatics(options);
+    this.app.assign(this.view, '#content', options);
+
+    /*schedule.fetch({
       success : (function () {
         this.view = this.app.subviews.schedule;
-        this.view.model = schedule;
+        this.view.setModel(schedule);
         this.app.assign(this.view, '#content', options);
       }).bind(this),
 
       error : (function () {
         this.unknown();
       }).bind(this)
-    });
+    });*/
   },
 
   /**
