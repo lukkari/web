@@ -94,14 +94,14 @@ module.exports = Backbone.Model.extend({
   removeBySubjectId : function (subjectId) {
     if(!subjectId) return this;
 
-    this.deleteSubject(subjectId, function (data) {
+    this.deleteSubject(subjectId, (function (data) {
       var filteredArr = _.filter(this.get('subjects'), function (subject) {
         if(subject.subject) return subject.subject._id !== subjectId;
         return false;
       });
 
       this.set('subjects', filteredArr);
-    });
+    }).bind(this));
 
     return this;
   },

@@ -313,8 +313,8 @@ mongoose.model('User', userSchema);
  */
 
 var UserTableSchema = new Schema({
-  user      : [{ type : Schema.Types.ObjectId, ref: 'User' }],
-  subjects  : [{ type : Schema.Types.ObjectId, ref : 'Subject' }],
+  user      : [{ type : Schema.Types.ObjectId, ref : 'User' }],
+  added     : [{ type : Schema.Types.ObjectId, ref : 'Subject' }],
   removed   : [{ type : Schema.Types.ObjectId, ref : 'Subject' }],
   updatedAt : { type : Date, default : Date.now }
 });
