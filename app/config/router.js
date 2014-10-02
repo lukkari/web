@@ -125,12 +125,12 @@ module.exports = function (app, passport) {
     .post(  '/message',         api.home.sendMsg)
     .get(   '/schedule/:q/now', api.home.getNow)
 
+    .get(   '/schedule/my',     api.home.getMySchedule)
     // For some API methods set cache header
     .use(setCacheHeader)
     .get(   '/groups',          api.home.getGroups)
     .get(   '/teachers',        api.home.getTeachers)
     .get(   '/rooms',           api.home.getRooms)
-    .get(   '/schedule/my',     api.home.getMySchedule)
     .get(   '/schedule/:q',     api.home.getSchedule)
     .get(   '*',                api.home.notFound);
 

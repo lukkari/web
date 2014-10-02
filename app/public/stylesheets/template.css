@@ -491,61 +491,58 @@ a:focus {
 
 .schedule .weekselector {
   clear: both;
-  width: 100%;
+  width: 400px;
   overflow: hidden;
-  margin: 5px 0 0;
+  margin: 0.5em auto;
 }
 
 .schedule .weekcontent {
   float: left;
   width: 80%;
   display: block;
-  padding: 7px 0;
   text-align: center;
-  background-color: #fff;
-  text-shadow: 0 1px 5px #fff;
-  font-size: 1.4em;
+  font-size: 1.4rem;
   text-decoration: none;
-  transition: background-color 0.2s;
-}
-
-.schedule .weekcontent:hover {
-  background-color: #C1E4FB;
 }
 
 .schedule .weekcontent span {
-  padding-left: 0.2em;
+  padding-left: 0.2rem;
 }
 
 .schedule .neighbourweek {
+  box-sizing: border-box;
   float: left;
   display: block;
   overflow: hidden;
   width: 10%;
-  padding: 7px 0;
-  background-color: #fafafa;
+  padding: 0.2rem;
+  border-radius: 100%;
   text-align: center;
-  font-size: 1.4em;
+  font-size: 1.4rem;
   color: #777;
   text-decoration: none;
-  transition: background-color 0.2s;
+  font-family: 'icomoon';
+  transition: background-color 0.3s;
 }
 
-.schedule .neighbourweek:first-of-type {
-  box-shadow: inset -6px 0 0 -4px rgba(0,0,0,0.2);
+.schedule .neighbourweek:hover {
+  background-color: #B8CDDB;
 }
 
-.schedule .neighbourweek:last-of-type {
-  box-shadow: inset 6px 0 0 -4px rgba(0,0,0,0.2);
+.schedule .neighbourweek:first-of-type:before {
+  content: '\e60b';
+}
+
+.schedule .neighbourweek:last-of-type:before {
+  content: '\e60c';
 }
 
 .schedule .neighbourweek:hover {
   color: #666;
-  background-color: #C1E4FB;
 }
 
 .schedule #days {
-  margin-top: 10px;
+  padding-top: 0.5rem;
   clear: both;
   overflow: hidden;
 }
@@ -997,27 +994,69 @@ a:focus {
  */
 .schedule-edit-bar {
   display: none;
-  margin: 0.5em 0 0.2em;
+  margin: 0.5em 0 0 1em;
+}
+
+.schedule-edit-bar #editProgress {
+  display: none;
 }
 
 .schedule-edit-bar button {
   border: 0;
-  font-size: 1.2em;
-  margin: 0;
-  padding: 0.5em 0;
+  border-radius: 100%;
+  font-size: 1.2rem;
+  margin: 0 0.5em;
+  padding: 0.7em;
   cursor: pointer;
-}
-
-.schedule-edit-bar button#edit,
-.schedule-edit-bar button#done {
-  width: 100%;
+  font-family: 'icomoon';
 }
 
 .schedule-edit-bar button#edit {
   background: #f1c40f;
 }
 
+.schedule-edit-bar button#edit:before {
+  content: '\e603';
+}
+
 .schedule-edit-bar button#done {
-  display: none;
   background: #27ae60;
+}
+
+.schedule-edit-bar button#done:before {
+  content: '\e606';
+}
+
+.schedule-edit-bar button#add {
+  background: #95a5a6;
+}
+
+.schedule-edit-bar button#add:before {
+  content: '\e609';
+}
+
+
+.absolute-block {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  width: 800px;
+  margin-left: -400px;
+  background: #fff;
+  box-shadow: 0 0 20px 10px #ccc;
+  box-sizing: border-box;
+}
+
+.absolute-block .block-searchbar {
+  margin: 0.1rem 2rem;
+}
+
+.absolute-block .block-searchbar-text {
+  width: 100%;
+  padding: 0.2rem 0.2rem;
+  font-size: 1rem;
+}
+
+.absolute-block .block-subjects {
+  min-height: 50px;
 }

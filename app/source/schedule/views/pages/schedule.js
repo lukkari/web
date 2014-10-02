@@ -11,7 +11,9 @@ var templates = require('../../dist');
 var
   CalendarView = require('../blocks/calendar'),
   WeekBarView = require('../blocks/weekbar'),
-  WeekView = require('../week');
+  WeekView = require('../week'),
+  SelectSubjectView = require('../blocks/selectsubject'),
+  Subjects = require('../../collections/subjects');
 
 
 module.exports = Backbone.View.extend({
@@ -21,7 +23,8 @@ module.exports = Backbone.View.extend({
 
   events : {
     'click #edit' : 'startEditing',
-    'click #done' : 'doneEditing'
+    'click #done' : 'doneEditing',
+    'click #add'  : 'addSubject'
   },
 
   initialize : function (options) {
@@ -61,9 +64,9 @@ module.exports = Backbone.View.extend({
     this.$days = this.$el.find('#days');
     this.subviews.week.setElement(this.$days).render();
 
-    this.$buttons = {
-      edit : this.$el.find('#edit'),
-      done : this.$el.find('#done')
+    this.$bars = {
+      init : this.$el.find('#editInit'),
+      progress : this.$el.find('#editProgress')
     };
 
     if(this.model.isEditing) this.startEditing();
@@ -85,17 +88,28 @@ module.exports = Backbone.View.extend({
   },
 
   startEditing : function () {
-    this.$buttons.edit.hide();
-    this.$buttons.done.show();
+    this.$bars.init.hide();
+    this.$bars.progress.show();
     this.$days.addClass('editing-mode');
     this.model.isEditing = true;
   },
 
   doneEditing : function () {
-    this.$buttons.done.hide();
-    this.$buttons.edit.show();
+    this.$bars.progress.hide();
+    this.$bars.init.show();
     this.$days.removeClass('editing-mode');
     this.model.isEditing = false;
+  },
+
+  addSubject : function () {
+    if(!this.subviews.selectSubject) {
+      this.subviews.selectSubject = new SelectSubjectView({
+        collection : new Subjects()
+      });
+      this.$el.find('#selectSubject').html(this.subviews.selectSubject.render().el);
+    }
+
+    this.subviews.selectSubject.show();
   },
 
   remove : function () {}

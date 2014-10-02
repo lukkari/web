@@ -74,6 +74,10 @@
   padding: 3px 4px;
 }
 
+.schedule .weekselector {
+  width: 100%;
+}
+
 @media screen and (orientation: landscape) {
   .schedule .bwrap {
     width: 50%;
