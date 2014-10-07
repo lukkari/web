@@ -1038,6 +1038,7 @@ a:focus {
 
 .absolute-block {
   position: fixed;
+  display: none;
   top: 10%;
   left: 50%;
   width: 800px;
@@ -1059,4 +1060,14 @@ a:focus {
 
 .absolute-block .block-subjects {
   min-height: 50px;
+  margin: 1rem 2rem;
+}
+
+.absolute-block .block-subjects > li {
+  padding: 0.4rem 0.2rem;
+  cursor: pointer;
+}
+
+.absolute-block .block-subjects > li:hover {
+  background-color: #eee;
 }

@@ -80,3 +80,29 @@ exports.addSubject = function (req, res) {
     }
   );
 };
+
+/**
+ * GET '/api/user/subject' Find subject by key
+ */
+exports.findSubject = function (req, res) {
+
+  var key = decodeURIComponent(req.query.key);
+
+  if(!key.length) return res.json(500, { error : 'Wrong request' });
+
+  var Subject = mongoose.model('Subject');
+
+  Subject
+    .find({
+        name : new RegExp(key, 'i')
+      },
+      { name : 1 })
+    .lean()
+    .limit(10)
+    .sort('name')
+    .exec(function (err, subjects) {
+      if(err) console.log(err);
+
+      res.json(subjects);
+    });
+};

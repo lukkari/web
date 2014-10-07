@@ -107,6 +107,11 @@ module.exports = Backbone.View.extend({
         collection : new Subjects()
       });
       this.$el.find('#selectSubject').html(this.subviews.selectSubject.render().el);
+
+      // Watch for schedule change event
+      this.subviews.selectSubject.on('updateSchedule', function () {
+        this.model.fetch();
+      }, this);
     }
 
     this.subviews.selectSubject.show();
