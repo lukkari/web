@@ -99,7 +99,7 @@ subjectSchema.methods = {
   }
 };
 
-subjectSchema.index({ name : 1 });
+subjectSchema.index({ name : 'text' });
 
 mongoose.model('Subject', subjectSchema);
 
