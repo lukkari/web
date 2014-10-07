@@ -216,6 +216,10 @@ a:focus {
   content: "\e608";
 }
 
+.mainnav li > .profile:before {
+  content: "\e60d";
+}
+
 @media screen and (max-width: 650px) {
   .top .searchbox {
     margin: 0.5em 0 0 0.5em;
