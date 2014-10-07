@@ -169,7 +169,10 @@ Saver.prototype.addToDb = function (obj, next) {
 
   if(!obj.subject || !obj.entry) return next(new Error('Empty object'));
 
-  Subject.findOne({ name : new RegExp(RegExp.escape(obj.subject.name), 'i') }, function (err, subject) {
+  var search = RegExp.escape(obj.subject.name);
+  search = RegExp.exactWord(search);
+
+  Subject.findOne({ name : new RegExp(search, 'i') }, function (err, subject) {
     if(err) console.log(err);
 
     // If exists, add Entry to Subject
@@ -208,6 +211,7 @@ Saver.prototype.addToDb = function (obj, next) {
   return this;
 };
 
+/*
 function dublicateCheck() {
   console.log('Start dublicate check');
   Subject.aggregate([
@@ -250,5 +254,6 @@ function dublicateCheck() {
     });
   });
 }
+*/
 
 module.exports = run;

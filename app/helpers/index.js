@@ -48,6 +48,15 @@ String.prototype.capitalize = function () {
  * @param  {String} text String to be escaped
  * @return {String}      Escaped string
  */
-RegExp.escape = function(text) {
+RegExp.escape = function (text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
+/**
+ * Add ^ to the begginng and $ to the end of the text
+ * @param  {String} text
+ * @return {String}
+ */
+RegExp.exactWord = function (text) {
+  return '^' + text + '$';
 };
