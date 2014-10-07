@@ -9,6 +9,6 @@
 
   $('.cancelbtn').on('click', function () {
     $confirm.fadeOut('fast');
-  })
+  });
 
 })(jQuery);

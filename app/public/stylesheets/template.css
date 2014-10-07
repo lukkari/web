@@ -256,7 +256,21 @@ a:focus {
 }
 
 .navwindow .back-content button {
+  font-family: 'icomoon';
+  font-size: 2rem;
+  color: #666;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
 
+.navwindow .back-content button:hover {
+  color: #444;
+}
+
+.navwindow .back-content button:before {
+  content: '\e60e';
 }
 
 .navwindow header {
@@ -502,7 +516,7 @@ a:focus {
 
 .schedule .weekcontent {
   float: left;
-  width: 80%;
+  width: 60%;
   display: block;
   text-align: center;
   font-size: 1.4rem;
@@ -518,7 +532,7 @@ a:focus {
   float: left;
   display: block;
   overflow: hidden;
-  width: 10%;
+  width: 20%;
   padding: 0.2rem;
   border-radius: 100%;
   text-align: center;
@@ -825,90 +839,6 @@ a:focus {
   height: 1px;
 }
 
-@media screen and (max-width: 480px) {
-  .schedule .bwrap {
-    width: 100%;
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 480px) and (max-width: 550px) {
-  .schedule .bwrap {
-    width: 100%;
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 550px) and (max-width: 740px) {
-  .schedule .bwrap {
-    width: 50%;
-  }
-
-  .schedule .bwrap:nth-of-type(3n) {
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 740px) and (max-width: 980px) {
-  .schedule .bwrap {
-    width: 33.3333333333%;
-  }
-
-  .schedule .bwrap:nth-of-type(4n) {
-    clear: left;
-  }
-}
-
-@media screen and (min-width: 980px) and (max-width: 1200px) {
-  .schedule .bwrap {
-    width: 25%;
-  }
-
-  .schedule .bwrap:nth-of-type(5n) {
-    clear: left;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .schedule .bwrap {
-    width: 20%;
-  }
-}
-
-@media screen and (min-width: 1980px) {
-  .schedule .bwrap {
-    width: 18%;
-  }
-
-  .schedule #days {
-    margin: 0 5%;
-  }
-}
-
 .unknown {
   font-size: 1.4em;
   text-align: center;
@@ -1039,17 +969,33 @@ a:focus {
   content: '\e609';
 }
 
-
 .absolute-block {
   position: fixed;
   display: none;
   top: 10%;
   left: 50%;
-  width: 800px;
-  margin-left: -400px;
+  width: 740px;
+  margin-left: -370px;
   background: #fff;
   box-shadow: 0 0 20px 10px #ccc;
   box-sizing: border-box;
+}
+
+.absolute-block .block-close-btn button {
+  font-family: 'icomoon';
+  font-size: 2rem;
+  border: 0;
+  background: none;
+  transition: color 0.2s;
+  color: #666;
+}
+
+.absolute-block .block-close-btn button:hover {
+  color: #444;
+}
+
+.absolute-block .block-close-btn button:before {
+  content: '\e60e';
 }
 
 .absolute-block .block-searchbar {
@@ -1080,4 +1026,83 @@ a:focus {
   margin: 1rem 3rem;
   font-size: 1.1rem;
   text-align: center;
+}
+
+
+@media screen and (max-width: 480px) {
+  .schedule .bwrap {
+    width: 100%;
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 550px) {
+  .schedule .bwrap {
+    width: 100%;
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+}
+
+@media screen and (min-width: 550px) and (max-width: 740px) {
+  .schedule .bwrap {
+    width: 50%;
+  }
+
+  .schedule .bwrap:nth-of-type(3n) {
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+}
+
+@media screen and (min-width: 740px) and (max-width: 980px) {
+  .schedule .bwrap {
+    width: 33.3333333333%;
+  }
+
+  .schedule .bwrap:nth-of-type(4n) {
+    clear: left;
+  }
+}
+
+@media screen and (min-width: 980px) and (max-width: 1200px) {
+  .schedule .bwrap {
+    width: 25%;
+  }
+
+  .schedule .bwrap:nth-of-type(5n) {
+    clear: left;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .schedule .bwrap {
+    width: 20%;
+  }
+}
+
+@media screen and (min-width: 1980px) {
+  .schedule .bwrap {
+    width: 18%;
+  }
+
+  .schedule #days {
+    margin: 0 5%;
+  }
 }

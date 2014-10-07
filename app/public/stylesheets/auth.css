@@ -282,3 +282,22 @@ select {
 .loginpage #confirm .text:focus {
   box-shadow: 0 0 20px 2px #C5D4DF;
 }
+
+/**
+ * ========================= Profile ========================================
+ */
+.loginpage .subjects > li {
+  padding: 0.5rem 0.3rem;
+}
+
+.loginpage .subjects > li:hover {
+  background-color: #ddd;
+}
+
+.loginpage .subjects > li.added {
+  color: #27ae60;
+}
+
+.loginpage .subjects > li.removed {
+  color: #e74c3c;
+}
