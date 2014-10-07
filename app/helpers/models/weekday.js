@@ -2,9 +2,8 @@ var mongoose = require('mongoose');
 
 var weekDay = function () {
   var
-    Subject = mongoose.model('Subject'),
-    Entry   = mongoose.model('Entry'),
-    days    = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    Entry = mongoose.model('Entry'),
+    days  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return {
     getSubjects : function (options) {
@@ -22,18 +21,64 @@ var weekDay = function () {
       };
 
       var start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-          end   = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
+          end   = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
 
-      var query = {
-        'date' : {
-          $gte : start,
-          $lt  : end
-        }
-      };
+      /**
+       * QUERY
+       *
+       *  $and : [{
+       *    date : {
+       *      $gte : start,
+       *      $lt  : end
+       *    }
+       *  }, {
+       *    subject : { $nin : usertable.removed }
+       *  }, {
+       *    $or : [{
+       *      type : typeid
+       *    }, {
+       *      subject : { $in : usertable.added }
+       *    }]
+       *  }]
+       *
+       */
 
-      query[options.type] = options.typeid;
+      var usertable = options.usertable || null;
 
+      var query;
+      var qtype = {};
+
+      if(!usertable) {
+        query = {
+          'date' : {
+            $gte : start,
+            $lt  : end
+          }
+        };
+
+        query[options.type] = options.typeid;
+      } else {
+        qtype[options.type] = options.typeid;
+
+        query = {
+          $and : [{
+            'date' : {
+              $gte : start,
+              $lt  : end
+            }
+          }, {
+            subject : { $nin : usertable.removed }
+          }]
+        };
+
+        query.$and.push({
+          $or : [qtype, {
+            subject : { $in : usertable.added }
+          }]
+        });
+
+      }
 
       Entry
         .find(query, {

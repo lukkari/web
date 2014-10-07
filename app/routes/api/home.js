@@ -303,6 +303,8 @@ exports.baseurl = function (req, res) {
 
 exports.getMySchedule = function (req, res) {
 
+  if(!req.isAuthenticated()) return res.json(401, { error : 'Authentication is required' });
+
   var w = req.param('w');
 
   var today = new Date();
@@ -315,28 +317,24 @@ exports.getMySchedule = function (req, res) {
   }
   else w = new Date().getStudyWeek();
 
-  var Group = mongoose.model('Group');
+  var UserTable = mongoose.model('UserTable');
 
-  Group
-    .findOne({ name : 'NINFOS13' })
-    .lean()
-    .exec(function (err, group) {
-      if(err) {
-        console.log(err);
-        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
-      }
+  UserTable
+    .findOne({ user : req.user._id }, {
+      added : 1,
+      removed : 1
+    })
+    .exec(function (err, usertable) {
+      if(err) console.log(err);
 
-      if(group) {
-        week.getSchedule({
-          date : today,
-          type : 'groups',
-          typeid : group._id,
-          cb : function (err, data) {
-            res.json({ title : 'My schedule', week : w, weekdays : data });
-          }
-        });
-      } else {
-        return res.json(400, { error : "Doesn't work" });
-      }
+      week.getSchedule({
+        date   : today,
+        type   : 'groups',
+        typeid : req.user.group,
+        usertable : usertable,
+        cb : function (err, data) {
+          return res.json({ title : 'My schedule', week : w, weekdays : data });
+        }
+      });
     });
 };
