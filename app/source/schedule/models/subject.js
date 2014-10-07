@@ -13,7 +13,6 @@ module.exports = Backbone.Model.extend({
         // Trigger schedule update request
         view.trigger('updateSchedule');
       }
-
     });
   },
 
@@ -30,8 +29,6 @@ module.exports = Backbone.Model.extend({
       });
   },
 
-  removeFromPlan : function () {
-
-  }
+  removeFromPlan : function () {}
 
 });

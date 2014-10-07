@@ -32,8 +32,15 @@ module.exports = Backbone.View.extend({
 
     this.subviews = {
       calendar : new CalendarView(options),
-      weekbar  : new WeekBarView(options)
+      weekbar  : new WeekBarView(options),
+      selectSubject : new SelectSubjectView({
+        collection : new Subjects()
+      })
     };
+
+    this.subviews.selectSubject.on('updateSchedule', function () {
+      this.model.fetch();
+    }, this);
   },
 
   render_lazy : function () {
@@ -71,6 +78,9 @@ module.exports = Backbone.View.extend({
 
     if(this.model.isEditing) this.startEditing();
 
+    // Render select subject
+    this.subviews.selectSubject.setElement(this.$el.find('#selectSubject')).render();
+
     return this;
   },
 
@@ -102,18 +112,6 @@ module.exports = Backbone.View.extend({
   },
 
   addSubject : function () {
-    if(!this.subviews.selectSubject) {
-      this.subviews.selectSubject = new SelectSubjectView({
-        collection : new Subjects()
-      });
-      this.$el.find('#selectSubject').html(this.subviews.selectSubject.render().el);
-
-      // Watch for schedule change event
-      this.subviews.selectSubject.on('updateSchedule', function () {
-        this.model.fetch();
-      }, this);
-    }
-
     this.subviews.selectSubject.show();
   },
 

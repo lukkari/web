@@ -1075,3 +1075,9 @@ a:focus {
 .absolute-block .block-subjects > li:hover {
   background-color: #eee;
 }
+
+.unknownpage {
+  margin: 1rem 3rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
