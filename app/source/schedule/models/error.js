@@ -17,7 +17,10 @@ module.exports = Backbone.Model.extend({
 
     this.set('status', xhr.status);
     this.set('title', xhr.statusText);
-    this.set('content', xhr.responseText.toString());
+
+    var content = xhr.responseText;
+    if(content.error) content = content.error;
+    this.set('content', content.toString());
 
     if(this.get('status') == 401) this.set('isUnathorized', true);
   }

@@ -892,9 +892,18 @@ a:focus {
 /**
  * CALENDAR
  */
+#calendar {
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+  height: 205px;
+}
 
 #calendar table {
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
   border-spacing: 0;
   border: 0;
   margin: 10px;
@@ -1021,6 +1030,7 @@ a:focus {
   background: none;
   transition: color 0.2s;
   color: #666;
+  cursor: pointer;
 }
 
 .absolute-block .block-close-btn button:hover {

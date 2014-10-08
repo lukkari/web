@@ -50,6 +50,14 @@ module.exports = Backbone.View.extend({
       this.$el.append(this.renderItem(item).el);
     }.bind(this));
 
+    var offset = this
+                  .$el
+                  .find('tr.current')
+                  .closest('table')
+                  .offset();
+
+    if(offset && offset.left) this.$el.scrollLeft(offset.left - 50);
+
     return this;
   },
 

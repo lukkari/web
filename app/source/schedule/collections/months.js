@@ -16,8 +16,8 @@ module.exports = Backbone.Collection.extend({
     var
       d = new Date(),   // current date
       m = d.getMonth(), // current month
-      prec = 1,         // number of preceding months to show
-      follow = 2,       // number of following months to show
+      prec = 3,         // number of preceding months to show
+      follow = 4,       // number of following months to show
       model, i, j;
 
     for(i = -prec; i <= follow; i += 1) {
