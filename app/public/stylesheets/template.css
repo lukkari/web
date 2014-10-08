@@ -848,12 +848,45 @@ a:focus {
   margin: 20px auto;
 }
 
-.notfound {
-  font-size: 1.4em;
-  width: 300px;
-  margin: 20px auto;
+.unknownpage-content-links {
+  width: 100%;
+  max-width: 480px;
+  margin: 1.5rem auto 0;
+}
+
+.unknownpage-content-links a {
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 0.5rem 0;
+  font-size: 1.2rem;
+  box-sizing: border-box;
   text-align: center;
-  padding: 10px 0;
+  text-decoration: none;
+  color: #000;
+  transition: background-color 0.2s;
+}
+
+.unknownpage-content-links a:active {
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
+.unknownpage-content-links a.login-link {
+  background-color: #2ecc71;
+}
+
+.unknownpage-content-links a.login-link:hover {
+  background-color: #27ae60;
+}
+
+.unknownpage-content-links a.signup-link {
+  background-color: #3498db;
+}
+
+.unknownpage-content-links a.signup-link:hover {
+  background-color: #2980b9;
 }
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Unknown page view
+ * Error page view
  */
 
 var
@@ -10,16 +10,14 @@ var templates = require('../../dist');
 
 module.exports = Backbone.View.extend({
 
-  template : templates.unknownpage,
+  className : 'unknownpage',
+
+  template : templates.errorpage,
 
   render : function () {
-    this.$el.html(_.template(this.template, { variable : 'data' }));
+    var tmpl = _.template(this.template, { variable : 'data' });
+    this.$el.html(tmpl(this.model.toJSON()));
 
     return this;
-  },
-
-  remove : function () {
-    this.$el.empty();
-    this.undelegateEvents();
   }
 });

@@ -9,25 +9,25 @@ var
 
 var
   Schedule = require('./models/schedule'),
+  ErrorModel = require('./models/error'),
 
   AppView = require('./views/app'),
   FrontPageView = require('./views/pages/front'),
   SearchView = require('./views/pages/search'),
   ScheduleView = require('./views/pages/schedule'),
   NowScheduleView = require('./views/pages/nowschedule'),
-  UnknownPageView = require('./views/pages/unknown');
+  ErrorPageView = require('./views/pages/error');
 
 require('./util');
 
 module.exports = Backbone.Router.extend({
   routes : {
     ''               : 'mainpage',
-    //'my(/w:w)(/)'    : 'getMySchedule',
     'search(/:s)(/)' : 'search',
     'w:w/:q(/)'      : 'getScheduleViceVersa',
     ':q(/w:w)(/)'    : 'getSchedule',
     ':q/now(/)'      : 'getNowSchedule',
-    '*other'         : 'unknown'
+    '*other'         : 'errorpage'
   },
 
   initialize : function () {
@@ -114,8 +114,8 @@ module.exports = Backbone.Router.extend({
     });
 
     schedule.fetch({
-      error : (function () {
-        this.unknown();
+      error : (function (model, xhr) {
+        this.errorPage(xhr);
       }).bind(this)
     });
 
@@ -141,8 +141,8 @@ module.exports = Backbone.Router.extend({
     });
 
     schedule.fetch({
-      error : (function () {
-        this.unknown();
+      error : (function (model, xhr) {
+        this.errorPage(xhr);
       }).bind(this)
     });
 
@@ -153,14 +153,22 @@ module.exports = Backbone.Router.extend({
   },
 
   /**
-   * Unknown page
+   * Error page (includes unknown page)
+   * @param  {[type]} xhr [description]
+   * @return {[type]}     [description]
    */
-  unknown : function () {
+  errorPage : function (xhr) {
     if(this.view) this.view.remove();
 
-    document.title = 'Unknown page';
-    this.view = new UnknownPageView();
-    this.app.assignContent(this.view);
+    document.title = xhr.statusText || 'Unknown page';
+
+    var errorModel = new ErrorModel();
+    if(xhr) errorModel.fromXHR(xhr);
+
+    this.view = new ErrorPageView({
+      model : errorModel
+    });
+    this.app.toContent(this.view.render().el);
   },
 
   /**
