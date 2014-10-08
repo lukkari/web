@@ -11,7 +11,7 @@ var
 exports.removeSubject = function (req, res) {
   var id = decodeURIComponent(req.params.id);
 
-  if(!id || !id.length) return res.json(500, { error : 'Wrong request' });
+  if(!id || !id.length) return res.status(500).send('Wrong request');
 
   var UserTable = mongoose.model('UserTable');
 
@@ -34,7 +34,7 @@ exports.removeSubject = function (req, res) {
         userTable.save(function (err) {
           if(err) {
             console.log(err);
-            return res.json(500, { error : "Changes hasn't been saved" });
+            return res.status(500).send("Changes hasn't been saved");
           }
           return res.send('success');
         });
@@ -49,7 +49,7 @@ exports.removeSubject = function (req, res) {
 exports.addSubject = function (req, res) {
   var id = decodeURIComponent(req.params.id);
 
-  if(!id || !id.length) return res.json(500, { error : 'Wrong request' });
+  if(!id || !id.length) return res.status(500).send('Wrong request');
 
   var UserTable = mongoose.model('UserTable');
 
@@ -72,7 +72,7 @@ exports.addSubject = function (req, res) {
         userTable.save(function (err) {
           if(err) {
             console.log(err);
-            return res.json(500, { error : "Changes hasn't been saved" });
+            return res.status(500).send("Changes hasn't been saved");
           }
           return res.send('success');
         });
@@ -88,7 +88,7 @@ exports.findSubject = function (req, res) {
 
   var key = decodeURIComponent(req.query.key);
 
-  if(!key.length) return res.json(500, { error : 'Wrong request' });
+  if(!key.length) return res.status(500).send('Wrong request');
 
   var Subject = mongoose.model('Subject');
 

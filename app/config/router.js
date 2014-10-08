@@ -40,7 +40,7 @@ function ensureAuthenticatedAPI(req, res, next) {
   if (req.isAuthenticated()) return next();
 
   res.set('X-Auth-Required', 'true');
-  res.json(401, { error : 'Authentication is required' });
+  res.status(401).send('Authentication is required');
 }
 
 function ensureAdmin(req, res, next) {
