@@ -3,7 +3,8 @@
   "ignore" : [
     "app/source",
     "node_modules",
-    "app/public"
+    "app/public",
+    "*.log"
   ],
   "env" : {
     "MONGODB_URI" : "mongodb://localhost/learnnode_dev"
