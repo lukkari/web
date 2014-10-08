@@ -18,7 +18,7 @@ exports.getGroups = function (req, res) {
   Group.getAll(function (err, groups) {
     if(err) {
       console.log(err);
-      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
+      return res.status(400).send('Unknown mistake');
     }
 
     return res.json(groups);
@@ -37,7 +37,7 @@ exports.getTeachers = function (req, res) {
   Teacher.getAll(function (err, teacher) {
     if(err) {
       console.log(err);
-      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
+      return res.status(400).send('Unknown mistake');
     }
 
     return res.json(teacher);
@@ -56,7 +56,7 @@ exports.getRooms = function (req, res) {
   Room.getAll(function (err, room) {
     if(err) {
       console.log(err);
-      return res.json(400, { error : { code : 400, msg : 'Unknown mistake' } });
+      return res.status(400).send('Unknown mistake');
     }
 
     return res.json(room);
@@ -71,7 +71,7 @@ exports.getNow = function (req, res) {
 
   var search = req.params.q;
 
-  if(!search || !search.length) return res.json(400, { error : { code : 500, msg :'Wrong request' }});
+  if(!search || !search.length) return res.status(400).send('Wrong request');
 
   var today = new Date();
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
@@ -86,7 +86,7 @@ exports.getNow = function (req, res) {
     .exec(function (err, group) {
       if(err) {
         console.log(err);
-        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+        return res.status(400).send('Unknown mistake');
       }
 
       if(group) {
@@ -107,7 +107,7 @@ exports.getNow = function (req, res) {
           .exec(function (err, teacher) {
             if(err) {
               console.log(err);
-              return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+              return res.status(400).send('Unknown mistake');
             }
 
             if(teacher) {
@@ -128,7 +128,7 @@ exports.getNow = function (req, res) {
                 .exec(function (err, room) {
                   if(err) {
                     console.log(err);
-                    return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+                    return res.status(400).send('Unknown mistake');
                   }
 
                   if(room) {
@@ -142,7 +142,7 @@ exports.getNow = function (req, res) {
                         res.json(newdata);
                       }
                     });
-                  } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+                  } else return res.status(404).send('Not found');
 
                 });
             }
@@ -163,7 +163,7 @@ exports.getSchedule = function (req, res) {
       w      = req.param('w');
 
 
-  if(!search || !search.length) return res.json(400, { error : { code : 400, msg :'Wrong request' }});
+  if(!search || !search.length) return res.status(400).send('Wrong request');
 
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
   var today = new Date();
@@ -192,7 +192,7 @@ exports.getSchedule = function (req, res) {
     .exec(function (err, group) {
       if(err) {
         console.log(err);
-        return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+        return res.status(400).send('Unknown mistake');
       }
 
       if(group) {
@@ -211,7 +211,7 @@ exports.getSchedule = function (req, res) {
           .exec(function (err, teacher) {
             if(err) {
               console.log(err);
-              return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+              return res.status(400).send('Unknown mistake');
             }
 
             if(teacher) {
@@ -230,7 +230,7 @@ exports.getSchedule = function (req, res) {
                 .exec(function (err, room) {
                   if(err) {
                     console.log(err);
-                    return res.json(400, { error : { code : 400, msg : 'Unknown mistake' }});
+                    return res.status(400).send('Unknown mistake');
                   }
 
                   if(room) {
@@ -242,7 +242,7 @@ exports.getSchedule = function (req, res) {
                         res.json({ title : room.name, week : w, weekdays : data });
                       }
                     });
-                  } else return res.json(404, { error : { code : 404, msg : 'Not found' }});
+                  } else return res.status(404).send('Not found');
                 });
             }
 
@@ -269,10 +269,10 @@ exports.sendMsg = function (req, res) {
   message.save(function (err) {
     if(err) {
       console.log(err);
-      return res.json(400, err);
+      return res.status(400).send("Message can't be send");
     }
 
-    res.json('success');
+    res.send('success');
   });
 
 };

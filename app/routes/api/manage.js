@@ -70,7 +70,7 @@ exports.model = function (req, res) {
         res.json(docs);
       });
   } catch(e) {
-    return res.json(400, { error : "Model doesn't exist" });
+    return res.status(400).send("Model doesn't exist");
   }
 };
 
@@ -95,7 +95,7 @@ exports.modelConfig = function (req, res) {
       });
     });
   } catch (e) {
-    return res.json(400, { error : "Model doesn't exist" });
+    return res.status(400).send("Model doesn't exist");
   }
 };
 
@@ -116,14 +116,14 @@ exports.editModel = function (req, res) {
     model.findByIdAndUpdate(req.params.id, doc, function (err, newdoc) {
       if(err) {
         console.log(err);
-        return res.json(500, { error : err });
+        return res.status(500).send(err);
       }
 
       res.json(newdoc);
     });
 
   } catch (err) {
-    res.json(400, { error : err });
+    res.status(400).send(err);
   }
 
 };
@@ -141,14 +141,14 @@ exports.deleteModel = function (req, res) {
     model.findByIdAndRemove(req.params.id, function (err) {
       if(err) {
         console.log(err);
-        return res.json(400, {error : err });
+        return res.status(400).send(err);
       }
 
-      res.json({ success : true });
+      res.send(success);
     });
 
   } catch (err) {
-    res.json(400, { error : err });
+    res.status(400).send(err);
   }
 };
 
@@ -343,7 +343,7 @@ exports.deleteParse = function (req, res) {
       return req.json(400, err);
     }
 
-    res.json('Success');
+    res.send('Success');
   });
 };
 
