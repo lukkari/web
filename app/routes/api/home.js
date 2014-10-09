@@ -9,7 +9,7 @@ var
 
 
 /**
- * GET '/api/groups' [description]
+ * GET '/api/groups'
  */
 exports.getGroups = function (req, res) {
 
@@ -28,7 +28,7 @@ exports.getGroups = function (req, res) {
 
 
 /**
- * GET '/api/teachers' [description]
+ * GET '/api/teachers'
  */
 exports.getTeachers = function (req, res) {
 
@@ -47,7 +47,7 @@ exports.getTeachers = function (req, res) {
 
 
 /**
- * GET '/api/rooms' [description]
+ * GET '/api/rooms'
  */
 exports.getRooms = function (req, res) {
 
@@ -65,9 +65,9 @@ exports.getRooms = function (req, res) {
 
 
 /**
- * GET '/api/schedule/:q/now' [description]
+ * GET '/api/schedule/:q/now'
  */
-exports.getNow = function (req, res) {
+exports.getNowSchedule = function (req, res) {
 
   var search = req.params.q;
 
@@ -301,9 +301,12 @@ exports.baseurl = function (req, res) {
   res.send('http://lukkari.herokuapp.com/');
 };
 
+/**
+ * GET '/api/schedule/my' Return user's schedule
+ */
 exports.getMySchedule = function (req, res) {
 
-  if(!req.isAuthenticated()) return res.json(401, { error : 'Authentication is required' });
+  if(!req.isAuthenticated()) return res.status(401).send('Authentication is required');
 
   var w = req.param('w');
 
@@ -333,8 +336,58 @@ exports.getMySchedule = function (req, res) {
         typeid : req.user.group,
         usertable : usertable,
         cb : function (err, data) {
-          return res.json({ title : 'My schedule', week : w, weekdays : data });
+          return res.json({
+            title : 'My schedule',
+            week : w,
+            weekdays : data,
+            url : 'my'
+          });
         }
       });
     });
+};
+
+/**
+ * GET '/api/schedule/my/now' Return user's now schedule
+ */
+exports.getMyNowSchedule = function (req, res) {
+
+  if(!req.isAuthenticated()) return res.status(401).send('Authentication is required');
+
+  var w = req.param('w');
+
+  var today = new Date();
+
+  if(typeof w !== 'undefined') {
+    var i = 0;
+    if(today.getStudyWeek() > (w + 35)) i = 1;
+
+    today = today.getDateOfISOWeek(w, today.getFullYear() + i);
+  }
+  else w = new Date().getStudyWeek();
+
+  var UserTable = mongoose.model('UserTable');
+
+  UserTable
+    .findOne({ user : req.user._id }, {
+      added : 1,
+      removed : 1
+    })
+    .exec(function (err, usertable) {
+      if(err) console.log(err);
+
+      weekday.getSubjects({
+          date   : today,
+          type   : 'groups',
+          typeid : req.user.group,
+          usertable : usertable,
+          cb : function (err, data) {
+            var newdata = data;
+            data.title = 'My schedule';
+            data.url = 'my';
+            res.json(newdata);
+          }
+        });
+    });
+
 };

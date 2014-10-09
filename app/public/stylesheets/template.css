@@ -497,6 +497,11 @@ a:focus {
   min-height: 1.1em;
 }
 
+.schedule .title h2 a {
+  font-weight: normal;
+  padding-left: 0.2rem;
+}
+
 .schedule .weekblock {
   margin-top: 3px;
   float: none;
@@ -953,7 +958,7 @@ a:focus {
   clear: both;
   float: none;
   width: 100%;
-  max-width: 700px;
+  min-width: 740px;
   margin: 0 auto;
 }
 
@@ -1087,6 +1092,10 @@ a:focus {
     margin: 0;
     left: 0;
   }
+
+  .nowpage .bwrap {
+    min-width: 400px;
+  }
 }
 
 @media screen and (min-width: 480px) and (max-width: 550px) {
@@ -1099,6 +1108,10 @@ a:focus {
     width: 100%;
     margin: 0;
     left: 0;
+  }
+
+  .nowpage .bwrap {
+    min-width: 400px;
   }
 }
 
@@ -1115,6 +1128,10 @@ a:focus {
     width: 100%;
     margin: 0;
     left: 0;
+  }
+
+  .nowpage .bwrap {
+    min-width: 0px;
   }
 }
 

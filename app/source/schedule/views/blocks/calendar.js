@@ -34,11 +34,16 @@ module.exports = Backbone.View.extend({
       .find('tr.selected')
       .removeClass('selected');
 
-    // Set new selection
-    this
-      .$el
-      .find("tr[data-week='" + week + "']")
-      .addClass('selected');
+    // Set new selection and
+    // get its parent offset
+    var offset = this
+                  .$el
+                  .find("tr[data-week='" + week + "']")
+                  .addClass('selected')
+                  .closest('table')
+                  .offset();
+
+    this.scroll(offset);
 
     return this;
   },
@@ -50,14 +55,6 @@ module.exports = Backbone.View.extend({
       this.$el.append(this.renderItem(item).el);
     }.bind(this));
 
-    var offset = this
-                  .$el
-                  .find('tr.current')
-                  .closest('table')
-                  .offset();
-
-    if(offset && offset.left) this.$el.scrollLeft(offset.left - 50);
-
     return this;
   },
 
@@ -67,5 +64,13 @@ module.exports = Backbone.View.extend({
     });
 
     return monthView.render();
+  },
+
+  scroll : function (offset) {
+    offset = offset || {};
+
+    if(!offset.left) return;
+
+    this.$el.scrollLeft(offset.left - 50);
   }
 });

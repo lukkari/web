@@ -1,6 +1,11 @@
-article.schedule(class!='<%= data.extraClass %>')
-  div.title: h2#scheduleTitle <%= data.title %>
-  div.switcher: a(href!='/<%= data.switcher %>' data-local) Switch
+article.schedule(class!='<% if(data.isNow) { %>nowpage<% } %>')
+  div.title
+    h2#scheduleTitle <%= data.title %> -
+      <% if(data.isNow) { %>
+      a(href!='/<%= data.switcherUrl %>' data-local) Today schedule
+      <% } else { %>
+      a(href!='/<%= data.switcherUrl %>' data-local) Week schedule
+      <% } %>
   div#calendar.clearfix
   div#weekBar
   div#editBar.schedule-edit-bar

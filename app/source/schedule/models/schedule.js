@@ -14,28 +14,29 @@ module.exports = Backbone.Model.extend({
   isEditing : false,
 
   defaults : {
-    extraClass : '',
-    title : '',
-    switcher : ''
+    title       : '',
+    switcherUrl : '',
+    isNow       : false
   },
 
   initialize : function (data, options) {
     options = options || {};
     this.urlRoot += options.url;
-    this.set('extraClass', options.extraClass || '');
 
     this.on('sync', this.setWeek, this);
   },
 
   getDefaults : function (isNow) {
     var add = '/now';
-
     if(isNow) add = '';
 
+    var url = this.get('url');
+    if(!url || !url.length) url = this.get('title').toUrl();
+
     return {
-      extraClass : this.get('extraClass'),
-      title : this.get('title'),
-      switcher : this.get('title').toUrl() + add
+      title       : this.get('title'),
+      switcherUrl : url + add,
+      isNow       : !!isNow
     };
   },
 

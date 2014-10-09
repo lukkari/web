@@ -136,8 +136,7 @@ module.exports = Backbone.Router.extend({
     document.title = q.fromUrl().toUpperCase() + ' - Today\'s Schedule';
 
     var schedule = new Schedule([], {
-      url : q + '/now',
-      extraClass : 'nowpage'
+      url : q + '/now'
     });
 
     schedule.fetch({

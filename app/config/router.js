@@ -123,9 +123,10 @@ module.exports = function (app, passport) {
 
     .use(ensureXhr)
     .post(  '/message',         api.home.sendMsg)
-    .get(   '/schedule/:q/now', api.home.getNow)
 
     .get(   '/schedule/my',     api.home.getMySchedule)
+    .get(   '/schedule/my/now', api.home.getMyNowSchedule)
+    .get(   '/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
     .use(setCacheHeader)
     .get(   '/groups',          api.home.getGroups)
