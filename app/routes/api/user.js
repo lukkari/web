@@ -106,3 +106,46 @@ exports.findSubject = function (req, res) {
       res.json(subjects);
     });
 };
+
+/**
+ * GET '/api/user/usertable' Return UserTable
+ */
+exports.getUserTable = function (req, res) {
+
+  var UserTable = mongoose.model('UserTable');
+
+  UserTable
+    .findOne({ user : req.user._id }, { added : 1, removed : 1 })
+    .populate('added', 'name')
+    .populate('removed', 'name')
+    .lean()
+    .exec(function (err, usertable) {
+      if(err) console.log(err);
+
+      res.json(usertable);
+    });
+};
+
+/**
+ * DELETE '/api/user/usertable/:id'
+ * Remove subject from UserTable
+ */
+exports.removeFromUserTable = function (req, res) {
+
+  var id = req.params.id;
+
+  if(!id || !id.length) return res.status(400).send('Wrong request');
+
+  var UserTable = mongoose.model('UserTable');
+
+  UserTable.findOneAndUpdate(
+    { 'user' : req.user.id },
+    { $pull : { removed : id, added : id } },
+    function (err, usertable) {
+      if(err) console.log(err);
+
+      res.send('success');
+    }
+  );
+
+};

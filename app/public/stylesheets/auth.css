@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'icomoon';
+  src: url('/fonts/icomoon.eot?-1kcld8');
+  src: url('/fonts/icomoon.eot?#iefix-1kcld8') format('embedded-opentype'),
+       url('/fonts/icomoon.woff?-1kcld8') format('woff'),
+       url('/fonts/icomoon.ttf?-1kcld8') format('truetype'),
+       url('/fonts/icomoon.svg?-1kcld8#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   outline: none;
 }
@@ -53,6 +64,12 @@ select {
 .button:hover {
   cursor: pointer;
   background-color: #bdc3c7;
+}
+
+.button:active, button:active {
+  position: relative;
+  top: 1px;
+  left: 1px;
 }
 
 .footer {
@@ -288,6 +305,7 @@ select {
  */
 .loginpage .subjects > li {
   padding: 0.5rem 0.3rem;
+  position: relative;
 }
 
 .loginpage .subjects > li:hover {
@@ -300,4 +318,28 @@ select {
 
 .loginpage .subjects > li.removed {
   color: #e74c3c;
+}
+
+.loginpage .subjects > li > .remove-btn {
+  position: absolute;
+  top: 0.2rem;
+  right: 0;
+}
+
+.loginpage .subjects > li > .remove-btn button {
+  border: 0;
+  background: none;
+  font-family: 'icomoon';
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.loginpage .subjects > li > .remove-btn button:hover {
+  color: #444;
+}
+
+.loginpage .subjects > li > .remove-btn button:before {
+  content: '\e60e';
 }

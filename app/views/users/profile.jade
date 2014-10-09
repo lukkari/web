@@ -6,6 +6,7 @@ block customHead
 block content
   div.loginpage
     div.homelink: a(href='/') Home
+    div.tophelper: a(href='/logout') Log out
     div.container
       div.row: a(href='/my') My schedule
 
@@ -37,12 +38,9 @@ block content
     div.container
       h3 Subjects
 
-      ul.subjects
-        li.added Mathematics
-        li.removed Physics
+      ul.subjects#subjects
 
 
 block customFoot
-  script(src='/js/libs/jquery-1.10.2.min.js')
-  script(src='/js/profile.js')
+  script(src='/js/builds/userpage.js' async)
   script(src='/js/libs/analytics.js' async)

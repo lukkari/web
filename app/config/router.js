@@ -140,9 +140,11 @@ module.exports = function (app, passport) {
   var userApiRouter = express.Router();
   userApiRouter
     .use(ensureAuthenticatedAPI)
-    .delete('/subject/:id', api.user.removeSubject)
-    .post(  '/subject/:id', api.user.addSubject)
-    .get(   '/subject',     api.user.findSubject);
+    .delete('/subject/:id',   api.user.removeSubject)
+    .post(  '/subject/:id',   api.user.addSubject)
+    .get(   '/subject',       api.user.findSubject)
+    .get(   '/usertable',     api.user.getUserTable)
+    .delete('/usertable/:id', api.user.removeFromUserTable);
 
   /**
    * =====================================================

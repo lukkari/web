@@ -965,6 +965,10 @@ a:focus {
   background-color: #EDFCF4;
 }
 
+.nowpage #calendar {
+  display: none;
+}
+
 /**
  * User schedule page
  */

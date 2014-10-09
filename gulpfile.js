@@ -36,7 +36,7 @@ var paths = {
     dest : './app/public/stylesheets/min/'
   },
 
-  pages : ['schedule', 'manage']
+  pages : ['schedule', 'manage', 'user']
 };
 
 /**
