@@ -343,3 +343,37 @@ select {
 .loginpage .subjects > li > .remove-btn button:before {
   content: '\e60e';
 }
+
+.main-footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 0;
+  color: #888;
+}
+
+.main-footer a {
+  color: #777;
+  margin: 0 4px;
+}
+
+.main-footer > span {
+  padding: 0 0.7em;
+}
+
+.main-footer .reflinks a {
+  text-decoration: none;
+  color: #777;
+  transition: color 0.2s;
+}
+
+.main-footer .reflinks a:hover {
+  color: #222;
+}
+
+.main-footer .reflinks .github:before {
+  font-family: 'icomoon';
+  speak: none;
+  content: "\e607";
+  font-size: 1.5em;
+}

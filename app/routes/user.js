@@ -12,7 +12,7 @@ exports.login = function (req, res) {
 
   var error = (req.param('wrong') !== undefined) ? true : false;
 
-  res.render('users/login', {
+  res.render('user/login', {
       title  : 'Login',
       error  : error,
       mobile : device.isMobile(req),
@@ -22,11 +22,9 @@ exports.login = function (req, res) {
 
 exports.signup = function (req, res) {
 
-  if(req.isAuthenticated())
-    return res.redirect('/');
+  if(req.isAuthenticated()) return res.redirect('/');
 
-
-  res.render('users/signup', {
+  res.render('user/signup', {
     title     : 'Sign up',
     user      : new User(),
     error     : null,
@@ -42,16 +40,6 @@ exports.create = function (req, res) {
   User.count({}, function (err, count) {
 
     if(count === 0) user.roles.admin = true;
-    // Remove after adding users support
-    else {
-      return res.render('users/signup', {
-        title : 'Sign up',
-        user      : new User(),
-        error     : null,
-        mobile    : device.isMobile(req),
-        logged    : false
-      });
-    }
 
     user.save(function (err) {
       if(err) {
@@ -59,7 +47,7 @@ exports.create = function (req, res) {
         var error   = (err !== undefined) ? err.message : false,
             notfull = (err.errors) ? true : false;
 
-        return res.render('users/signup', {
+        return res.render('user/signup', {
           title     : 'Sign up',
           error     : error,
           notfull   : notfull,
@@ -84,7 +72,7 @@ exports.logout = function (req, res) {
 };
 
 exports.me = function (req, res) {
-  res.render('users/profile', {
+  res.render('user/profile', {
     title  : 'Profile',
     user   : req.user,
     error  : null,
@@ -97,13 +85,11 @@ exports.update = function (req, res) {
 
   if(req.user.authenticate(req.body.oldpassword)) {
 
-    if(req.body.username.length)
-      req.user.username = req.body.username;
+    if(req.body.username.length) req.user.username = req.body.username;
 
     req.user.password = req.body.oldpassword;
 
-    if(req.body.password.length)
-      req.user.password = req.body.password;
+    if(req.body.password.length) req.user.password = req.body.password;
 
     req.user.save(function (err) {
       if(err) {
@@ -111,7 +97,7 @@ exports.update = function (req, res) {
 
         var error   = (err.message !== undefined) ? err.message : false;
 
-        return res.render('users/profile', {
+        return res.render('user/profile', {
           title     : 'Profile',
           error     : error,
           user      : req.user,
@@ -122,16 +108,15 @@ exports.update = function (req, res) {
 
       req.logIn(req.user, function (err) {
         if(err) console.log(err);
-        return res.redirect('/');
+        return res.redirect('/my');
       });
 
     });
-  }
-  else {
-    return res.render('users/profile', {
+  } else {
+    return res.render('user/profile', {
       title  : 'Profile',
       user   : req.user,
-      error  : 'Wrong password',
+      error  : 'Wrong current password',
       mobile : device.isMobile(req),
       logged : true
     });
@@ -141,37 +126,37 @@ exports.update = function (req, res) {
 
 exports.selectGroup = function (req, res) {
 
-  if(!req.isAuthenticated())
-    return res.redirect('/');
+  if(!req.isAuthenticated()) return res.redirect('/');
 
-  var Group    = mongoose.model('Group'),
-      result   = {};
+  var
+    Group = mongoose.model('Group'),
+    result = {};
 
+  Group
+    .find({}, { name : 1 })
+    .exec(function (err, groups) {
+      if(err) console.log(err);
 
-  Group.find({}, { name : 1 })
-      .exec(function (err, groups) {
-            if(err)
-              console.log(err);
-
-            return res.render('users/groupselect', {
-              title      : 'Select your group',
-              grouplist  : groups,
-              curGroupId : '' + req.user.group,
-              mobile     : device.isMobile(req),
-              logged     : true
-            });
-          }
-       );
+      return res.render('user/groupselect', {
+        title      : 'Select your group',
+        grouplist  : groups,
+        curGroupId : '' + req.user.group,
+        mobile     : device.isMobile(req),
+        logged     : true
+      });
+    });
 };
 
 exports.addGroup = function (req, res) {
 
   var User = mongoose.model('User');
 
-  User.update({ _id : req.user._id }, { group : req.body.group }, function (err) {
-    if(err)
-      console.log(err);
-
-    return res.redirect('/my');
-  });
+  User.update(
+    { _id : req.user._id },
+    { group : req.body.group },
+    function (err) {
+      if(err) console.log(err);
+      return res.redirect('/my');
+    }
+  );
 };

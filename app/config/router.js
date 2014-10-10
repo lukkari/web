@@ -8,7 +8,7 @@ var
 
   // Load routes
   home = require('../routes/'),
-  users  = require('../routes/users'),
+  user  = require('../routes/user'),
   manage = require('../routes/manage'),
 
   api = {
@@ -174,12 +174,12 @@ module.exports = function (app, passport) {
   var userRouter = express.Router();
   userRouter
     .use(ensureAuthenticated)
-    .get( '/',       users.me)
-    .post('/',       users.update)
-    .get( '/group',  users.selectGroup)
-    .post('/group',  users.addGroup)
+    .get( '/',       user.me)
+    .post('/',       user.update)
+    .get( '/group',  user.selectGroup)
+    .post('/group',  user.addGroup)
 
-    .get('/logout',  users.logout);
+    .get('/logout',  user.logout);
 
   /**
    * Home page
@@ -187,7 +187,7 @@ module.exports = function (app, passport) {
   var homeRouter = express.Router();
   homeRouter
     // Log in
-    .get( '/login', users.login)
+    .get( '/login', user.login)
     .post('/login',
       passport.authenticate('local', {
         successRedirect: '/my',
@@ -196,8 +196,8 @@ module.exports = function (app, passport) {
     )
 
     // Sign up
-    .get( '/signup', users.signup)
-    .post('/signup', users.create)
+    .get( '/signup', user.signup)
+    .post('/signup', user.create)
 
     .use(setCacheHeader)
     // Main page
