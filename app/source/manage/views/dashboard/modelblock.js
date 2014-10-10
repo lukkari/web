@@ -28,13 +28,12 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    var data = this.model.toJSON();
+    var
+      data = this.model.toJSON(),
+      tmpl = _.template(this.template, { variable : 'data' });
 
     data.link = '/model/' + data.name;
-
-    this.$el.html(_.template(this.template,
-                             data,
-                             { variable : 'data' }));
+    this.$el.html(tmpl(data));
 
     return this;
   }

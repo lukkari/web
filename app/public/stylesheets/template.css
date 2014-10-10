@@ -212,9 +212,13 @@ a:focus {
   content: "\e604";
 }
 
-/*.mainnav li > .user:before {
-  content: "\e602";
-}*/
+.mainnav li > .user:before {
+  content: "\e608";
+}
+
+.mainnav li > .profile:before {
+  content: "\e60d";
+}
 
 @media screen and (max-width: 650px) {
   .top .searchbox {
@@ -252,7 +256,21 @@ a:focus {
 }
 
 .navwindow .back-content button {
+  font-family: 'icomoon';
+  font-size: 2rem;
+  color: #666;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
 
+.navwindow .back-content button:hover {
+  color: #444;
+}
+
+.navwindow .back-content button:before {
+  content: '\e60e';
 }
 
 .navwindow header {
@@ -479,6 +497,11 @@ a:focus {
   min-height: 1.1em;
 }
 
+.schedule .title h2 a {
+  font-weight: normal;
+  padding-left: 0.2rem;
+}
+
 .schedule .weekblock {
   margin-top: 3px;
   float: none;
@@ -491,61 +514,58 @@ a:focus {
 
 .schedule .weekselector {
   clear: both;
-  width: 100%;
+  width: 400px;
   overflow: hidden;
-  margin: 5px 0 0;
+  margin: 0.5em auto;
 }
 
 .schedule .weekcontent {
   float: left;
-  width: 80%;
+  width: 60%;
   display: block;
-  padding: 7px 0;
   text-align: center;
-  background-color: #fff;
-  text-shadow: 0 1px 5px #fff;
-  font-size: 1.4em;
+  font-size: 1.4rem;
   text-decoration: none;
-  transition: background-color 0.2s;
-}
-
-.schedule .weekcontent:hover {
-  background-color: #C1E4FB;
 }
 
 .schedule .weekcontent span {
-  padding-left: 0.2em;
+  padding-left: 0.2rem;
 }
 
 .schedule .neighbourweek {
+  box-sizing: border-box;
   float: left;
   display: block;
   overflow: hidden;
-  width: 10%;
-  padding: 7px 0;
-  background-color: #fafafa;
+  width: 20%;
+  padding: 0.2rem;
+  border-radius: 100%;
   text-align: center;
-  font-size: 1.4em;
+  font-size: 1.4rem;
   color: #777;
   text-decoration: none;
-  transition: background-color 0.2s;
+  font-family: 'icomoon';
+  transition: background-color 0.3s;
 }
 
-.schedule .neighbourweek:first-of-type {
-  box-shadow: inset -6px 0 0 -4px rgba(0,0,0,0.2);
+.schedule .neighbourweek:hover {
+  background-color: #B8CDDB;
 }
 
-.schedule .neighbourweek:last-of-type {
-  box-shadow: inset 6px 0 0 -4px rgba(0,0,0,0.2);
+.schedule .neighbourweek:first-of-type:before {
+  content: '\e60b';
+}
+
+.schedule .neighbourweek:last-of-type:before {
+  content: '\e60c';
 }
 
 .schedule .neighbourweek:hover {
   color: #666;
-  background-color: #C1E4FB;
 }
 
 .schedule #days {
-  margin-top: 10px;
+  padding-top: 0.5rem;
   clear: both;
   overflow: hidden;
 }
@@ -614,6 +634,7 @@ a:focus {
 
 .schedule .container {
   clear: left;
+  position: relative;
 }
 
 .schedule .container .restblock {
@@ -631,10 +652,43 @@ a:focus {
   clear: left;
   overflow: hidden;
   border-bottom: 2px dashed #ddd;
+  position: relative;
 }
 
 .schedule .subject:hover {
   background-color: #E2F4FF;
+}
+
+.schedule .subject .remove-block {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.schedule .subject .remove-block > button {
+  padding: 0.2em 0.2em;
+  text-align: center;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-family: 'icomoon';
+  color: #F51D1D;
+  background-color: #ecf0f1;
+  border-radius: 100%;
+  transition: background-color 0.2s;
+}
+
+.schedule .subject .remove-block > button:hover {
+  background-color: #ccc;
+}
+
+.schedule .subject .remove-block > button:before {
+  content: '\e60a';
+}
+
+.schedule .editing-mode .remove-block {
+  display: block;
 }
 
 .schedule .subject:last-child {
@@ -705,6 +759,7 @@ a:focus {
 
 .schedule .subject .inner {
   padding: 4px 10px 0;
+  overflow: hidden;
 }
 
 .schedule .subject .resttext {
@@ -744,14 +799,18 @@ a:focus {
   margin-right: 0.3em;
 }
 
-.schedule .subject .teachers li, .subjectpage .teachers li {
+.schedule .subject .teachers li {
   margin: 2px 0;
 }
 
-.schedule .subject .teachers li > a, .subjectpage .teachers li > a {
-  background: url('/design/teacher_icon.png') no-repeat left center;
-  padding-left: 20px;
+.schedule .subject .teachers li > a {
   color: #3A3D3F;
+}
+
+.schedule .subject .teachers li > a:before {
+  font-family: 'icomoon';
+  content: '\e601';
+  margin-right: 0.3em;
 }
 
 .schedule .subject .groups {
@@ -765,7 +824,7 @@ a:focus {
   margin: 6px 4px 6px 0;
 }
 
-.schedule .subject .groups li > a, .subjectpage .groups li > a {
+.schedule .subject .groups li > a {
   border: 2px solid #dadada;
   border-radius: 5px;
   font-size: 0.9em;
@@ -774,7 +833,7 @@ a:focus {
   color: #666;
 }
 
-.schedule .subject .groups li > a:hover, .subjectpage .groups li > a:hover {
+.schedule .subject .groups li > a:hover {
   text-decoration: none;
   border-color: #bbb;
   color: #444;
@@ -783,90 +842,6 @@ a:focus {
 .schedule .subject .infoklear {
   clear: left;
   height: 1px;
-}
-
-@media screen and (max-width: 480px) {
-  .schedule .bwrap {
-    width: 100%;
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 480px) and (max-width: 550px) {
-  .schedule .bwrap {
-    width: 100%;
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 550px) and (max-width: 740px) {
-  .schedule .bwrap {
-    width: 50%;
-  }
-
-  .schedule .bwrap:nth-of-type(3n) {
-    clear: left;
-  }
-
-  .schedule .weekcontent {
-    width: 70%;
-  }
-
-  .schedule .neighbourweek {
-    width: 15%;
-  }
-}
-
-@media screen and (min-width: 740px) and (max-width: 980px) {
-  .schedule .bwrap {
-    width: 33.3333333333%;
-  }
-
-  .schedule .bwrap:nth-of-type(4n) {
-    clear: left;
-  }
-}
-
-@media screen and (min-width: 980px) and (max-width: 1200px) {
-  .schedule .bwrap {
-    width: 25%;
-  }
-
-  .schedule .bwrap:nth-of-type(5n) {
-    clear: left;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .schedule .bwrap {
-    width: 20%;
-  }
-}
-
-@media screen and (min-width: 1980px) {
-  .schedule .bwrap {
-    width: 18%;
-  }
-
-  .schedule #days {
-    margin: 0 5%;
-  }
 }
 
 .unknown {
@@ -878,20 +853,62 @@ a:focus {
   margin: 20px auto;
 }
 
-.notfound {
-  font-size: 1.4em;
-  width: 300px;
-  margin: 20px auto;
+.unknownpage-content-links {
+  width: 100%;
+  max-width: 480px;
+  margin: 1.5rem auto 0;
+}
+
+.unknownpage-content-links a {
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 0.5rem 0;
+  font-size: 1.2rem;
+  box-sizing: border-box;
   text-align: center;
-  padding: 10px 0;
+  text-decoration: none;
+  color: #000;
+  transition: background-color 0.2s;
+}
+
+.unknownpage-content-links a:active {
+  position: relative;
+  top: 1px;
+  left: 1px;
+}
+
+.unknownpage-content-links a.login-link {
+  background-color: #2ecc71;
+}
+
+.unknownpage-content-links a.login-link:hover {
+  background-color: #27ae60;
+}
+
+.unknownpage-content-links a.signup-link {
+  background-color: #3498db;
+}
+
+.unknownpage-content-links a.signup-link:hover {
+  background-color: #2980b9;
 }
 
 /**
  * CALENDAR
  */
+#calendar {
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+  height: 205px;
+}
 
 #calendar table {
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
   border-spacing: 0;
   border: 0;
   margin: 10px;
@@ -941,7 +958,7 @@ a:focus {
   clear: both;
   float: none;
   width: 100%;
-  max-width: 700px;
+  min-width: 740px;
   margin: 0 auto;
 }
 
@@ -951,4 +968,205 @@ a:focus {
 
 .nowpage .bwrap .now {
   background-color: #EDFCF4;
+}
+
+.nowpage #calendar {
+  display: none;
+}
+
+/**
+ * User schedule page
+ */
+.schedule-edit-bar {
+  display: none;
+  margin: 0.5em 0 0 1em;
+}
+
+.schedule-edit-bar #editProgress {
+  display: none;
+}
+
+.schedule-edit-bar button {
+  border: 0;
+  border-radius: 100%;
+  font-size: 1.2rem;
+  margin: 0 0.5em;
+  padding: 0.7em;
+  cursor: pointer;
+  font-family: 'icomoon';
+}
+
+.schedule-edit-bar button#edit {
+  background: #f1c40f;
+}
+
+.schedule-edit-bar button#edit:before {
+  content: '\e603';
+}
+
+.schedule-edit-bar button#done {
+  background: #27ae60;
+}
+
+.schedule-edit-bar button#done:before {
+  content: '\e606';
+}
+
+.schedule-edit-bar button#add {
+  background: #95a5a6;
+}
+
+.schedule-edit-bar button#add:before {
+  content: '\e609';
+}
+
+.absolute-block {
+  position: fixed;
+  display: none;
+  top: 10%;
+  left: 50%;
+  width: 740px;
+  margin-left: -370px;
+  background: #fff;
+  box-shadow: 0 0 20px 10px #ccc;
+  box-sizing: border-box;
+}
+
+.absolute-block .block-close-btn button {
+  font-family: 'icomoon';
+  font-size: 2rem;
+  border: 0;
+  background: none;
+  transition: color 0.2s;
+  color: #666;
+  cursor: pointer;
+}
+
+.absolute-block .block-close-btn button:hover {
+  color: #444;
+}
+
+.absolute-block .block-close-btn button:before {
+  content: '\e60e';
+}
+
+.absolute-block .block-searchbar {
+  margin: 0.1rem 2rem;
+}
+
+.absolute-block .block-searchbar-text {
+  width: 100%;
+  padding: 0.2rem 0.2rem;
+  font-size: 1rem;
+}
+
+.absolute-block .block-subjects {
+  min-height: 50px;
+  margin: 1rem 2rem;
+}
+
+.absolute-block .block-subjects > li {
+  padding: 0.4rem 0.2rem;
+  cursor: pointer;
+}
+
+.absolute-block .block-subjects > li:hover {
+  background-color: #eee;
+}
+
+.unknownpage {
+  margin: 1rem 3rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+
+@media screen and (max-width: 480px) {
+  .schedule .bwrap {
+    width: 100%;
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+
+  .nowpage .bwrap {
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 550px) {
+  .schedule .bwrap {
+    width: 100%;
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+
+  .nowpage .bwrap {
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-width: 550px) and (max-width: 740px) {
+  .schedule .bwrap {
+    width: 50%;
+  }
+
+  .schedule .bwrap:nth-of-type(3n) {
+    clear: left;
+  }
+
+  .absolute-block {
+    width: 100%;
+    margin: 0;
+    left: 0;
+  }
+
+  .nowpage .bwrap {
+    min-width: 0px;
+  }
+}
+
+@media screen and (min-width: 740px) and (max-width: 980px) {
+  .schedule .bwrap {
+    width: 33.3333333333%;
+  }
+
+  .schedule .bwrap:nth-of-type(4n) {
+    clear: left;
+  }
+}
+
+@media screen and (min-width: 980px) and (max-width: 1200px) {
+  .schedule .bwrap {
+    width: 25%;
+  }
+
+  .schedule .bwrap:nth-of-type(5n) {
+    clear: left;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .schedule .bwrap {
+    width: 20%;
+  }
+}
+
+@media screen and (min-width: 1980px) {
+  .schedule .bwrap {
+    width: 18%;
+  }
+
+  .schedule #days {
+    margin: 0 5%;
+  }
 }

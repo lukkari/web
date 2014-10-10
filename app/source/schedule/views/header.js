@@ -12,8 +12,6 @@ module.exports = Backbone.View.extend({
 
   template : templates.header,
 
-  theme : '',
-
   events : {
     'focus #searchInput' : 'searchFocused',
     'keyup #searchInput' : 'searchFilter'
@@ -22,7 +20,7 @@ module.exports = Backbone.View.extend({
   initialize : function (options) {},
 
   render : function () {
-    this.$el.html(_.template(this.template, {}, { variable : 'data' }));
+    this.$el.html(_.template(this.template, { variable : 'data' }));
     return this;
   },
 
@@ -41,23 +39,6 @@ module.exports = Backbone.View.extend({
    */
   searchFilter : function (e) {
     this.trigger('filterSections', e);
-  },
-
-  /**
-   * Switch header theme/className
-   * @param  {String} type theme name
-   */
-  goTheme : function (type) {
-    if(type && type.length) {
-      this.$el.addClass(type);
-      this.theme = type;
-    }
-    else if(this.theme.length) {
-      this.$el.removeClass(this.theme);
-      this.theme = '';
-    }
-
-    return this;
   },
 
   /**

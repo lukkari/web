@@ -6,23 +6,19 @@ var
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist');
+var templates = require('../../dist');
 
 module.exports = Backbone.View.extend({
 
   tagName : 'table',
   template : templates.month,
 
-  initialize : function (data, options) {
-    options = options || {};
-  },
-
   events : {
     'click tbody tr' : 'goToWeek'
   },
 
   /**
-   * When needed week is click, go to that week
+   * Navigate to selected week
    * @param  {Object} e Event
    */
   goToWeek : function (e) {
@@ -31,12 +27,8 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    this
-      .$el
-      .html(_.template(this.template,
-                       this.model.toJSON(),
-                       { variable : 'data' }));
-
+    var tmpl = _.template(this.template, { variable : 'data' });
+    this.$el.html(tmpl(this.model.toJSON()));
     return this;
   }
 });

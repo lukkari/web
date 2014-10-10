@@ -9,7 +9,7 @@ block content
     div.tophelper: a(href='/login') Have an account?
     div.container
       h3: label(for='username')= title
-      div.attention Registration is closed. We will notify you, when it will be available
+      div.attention We are in Beta-testing period, therefore your account can be deleted.
       if notfull
         a#error All fields are required
       else if error
@@ -22,7 +22,7 @@ block content
         div.row
           input.button(type='submit' value='Sign up')
 
-    div.note Your password will be hashed immediatelly, so do not panic that your passwords are insecured or someone is watching them. You can check the algorythm in git repository in case you are interested.
+    div.note Hi! Did you know that this is an open source project. You can check all the source code in git repository. Link can be found in footer.
 
 block customFoot
   script(src='/js/libs/analytics.js' async)

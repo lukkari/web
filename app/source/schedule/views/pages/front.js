@@ -3,11 +3,10 @@
  */
 
 var
-  $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
-var templates = require('../dist/');
+var templates = require('../../dist');
 
 module.exports = Backbone.View.extend({
   className : 'mainpage',
@@ -67,7 +66,7 @@ module.exports = Backbone.View.extend({
   render : function () {
     this
       .$el
-      .html(_.template(this.template, {}, { variable : 'data' }))
+      .html(_.template(this.template, { variable : 'data' }))
       .fadeIn('fast');
 
     return this;

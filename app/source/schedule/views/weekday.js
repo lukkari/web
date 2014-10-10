@@ -15,80 +15,22 @@ module.exports = Backbone.View.extend({
   className : 'bwrap',
   template  : templates.weekday,
 
-  initialize : function (options) {},
+  events : {
+    'click #removeBtn' : 'removeSubject'
+  },
 
   render : function () {
-
-    var data = this.model.toJSON();
-
-    var prev    = null,
-        subjects = [],
-        date, pdate, dur;
-
-    _.each(data.subjects, function(el, index) {
-      if(index === 0) {
-        // Add block with starting time
-        date = new Date(el.date);
-
-        subjects.push({
-            timeBlock : true,
-            date : new Date(date.getFullYear(),
-                            date.getMonth(),
-                            date.getDate(),
-                            date.getHours(),
-                            15
-                           )
-          });
-      }
-
-      if(prev) {
-        date  = new Date(el.date),
-        pdate = new Date(prev.date),
-        dur   = date.getHours() - pdate.getHours() - prev.duration;
-
-        if(dur > 0) {
-          subjects.push({
-            rest     : true,
-            duration : dur,
-            date : new Date(date.getFullYear(),
-                            date.getMonth(),
-                            date.getDate(),
-                            pdate.getHours() + prev.duration,
-                            15
-                           )
-          });
-        }
-      }
-
-      subjects.push(el);
-      prev = el;
-    });
-
-    if(prev) {
-      // Add block with ending time
-      pdate = new Date(prev.date);
-      date = pdate;
-
-      subjects.push({
-        timeBlock : true,
-        duration  : 0,
-        date : new Date(date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate(),
-                        pdate.getHours() + prev.duration,
-                        0
-                       )
-      });
-    }
-
-    data.subjects = subjects;
+    var data = this.model.withBreaks();
+    var tmpl = _.template(this.template, { variable : 'data' });
 
     _.extend(data, viewHelper);
-
-    this.$el.html(_.template(this.template,
-                             data,
-                             { variable : 'data' }));
+    this.$el.html(tmpl(data));
 
     return this;
+  },
+
+  removeSubject : function (e) {
+    var subjectId = this.$el.find(e.target).attr('data-subject');
+    this.model.removeBySubjectId(subjectId);
   }
 });

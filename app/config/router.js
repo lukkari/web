@@ -8,12 +8,13 @@ var
 
   // Load routes
   home = require('../routes/'),
-  users  = require('../routes/users'),
+  user  = require('../routes/user'),
   manage = require('../routes/manage'),
 
   api = {
     home : require('../routes/api/home'),
-    manage : require('../routes/api/manage')
+    manage : require('../routes/api/manage'),
+    user : require('../routes/api/user')
   };
 
 function handleManage(req, res) {
@@ -33,6 +34,13 @@ function ensureAuthenticated(req, res, next) {
   res.set('X-Auth-Required', 'true');
   //res.redirect('/login/?returnTo=' + encodeURIComponent(req.originalUrl));
   res.redirect('/login');
+}
+
+function ensureAuthenticatedAPI(req, res, next) {
+  if (req.isAuthenticated()) return next();
+
+  res.set('X-Auth-Required', 'true');
+  res.status(401).send('Authentication is required');
 }
 
 function ensureAdmin(req, res, next) {
@@ -75,6 +83,7 @@ module.exports = function (app, passport) {
    * API setups
    *   1) Manage API
    *   2) Home API
+   *   3) User API
    */
 
   /**
@@ -110,12 +119,14 @@ module.exports = function (app, passport) {
   var apiRouter = express.Router();
   apiRouter
     .use('/wakeup', api.home.wakeup) // wake up app heroku hack
-    .use('/baseurl', api.home.baseurl) // return url to schedule server (for future use)
+    .get('/baseurl', api.home.baseurl) // return url to schedule server (for future use)
 
     .use(ensureXhr)
     .post(  '/message',         api.home.sendMsg)
-    .get(   '/schedule/:q/now', api.home.getNow)
 
+    .get(   '/schedule/my',     api.home.getMySchedule)
+    .get(   '/schedule/my/now', api.home.getMyNowSchedule)
+    .get(   '/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
     .use(setCacheHeader)
     .get(   '/groups',          api.home.getGroups)
@@ -124,6 +135,17 @@ module.exports = function (app, passport) {
     .get(   '/schedule/:q',     api.home.getSchedule)
     .get(   '*',                api.home.notFound);
 
+  /**
+   * User API
+   */
+  var userApiRouter = express.Router();
+  userApiRouter
+    .use(ensureAuthenticatedAPI)
+    .delete('/subject/:id',   api.user.removeSubject)
+    .post(  '/subject/:id',   api.user.addSubject)
+    .get(   '/subject',       api.user.findSubject)
+    .get(   '/usertable',     api.user.getUserTable)
+    .delete('/usertable/:id', api.user.removeFromUserTable);
 
   /**
    * =====================================================
@@ -152,12 +174,12 @@ module.exports = function (app, passport) {
   var userRouter = express.Router();
   userRouter
     .use(ensureAuthenticated)
-    .get( '/',       users.me)
-    .post('/',       users.update)
-    .get( '/group',  users.selectGroup)
-    .post('/group',  users.addGroup)
+    .get( '/',       user.me)
+    .post('/',       user.update)
+    .get( '/group',  user.selectGroup)
+    .post('/group',  user.addGroup)
 
-    .get('/logout',  users.logout);
+    .get('/logout',  user.logout);
 
   /**
    * Home page
@@ -165,7 +187,7 @@ module.exports = function (app, passport) {
   var homeRouter = express.Router();
   homeRouter
     // Log in
-    .get( '/login', users.login)
+    .get( '/login', user.login)
     .post('/login',
       passport.authenticate('local', {
         successRedirect: '/my',
@@ -174,8 +196,8 @@ module.exports = function (app, passport) {
     )
 
     // Sign up
-    .get( '/signup', users.signup)
-    .post('/signup', users.create)
+    .get( '/signup', user.signup)
+    .post('/signup', user.create)
 
     .use(setCacheHeader)
     // Main page
@@ -190,6 +212,7 @@ module.exports = function (app, passport) {
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)
     .use('/u',          userRouter)
+    .use('/api/user',   userApiRouter)
     .use('/api',        apiRouter)
     .use('/',           homeRouter);
 };

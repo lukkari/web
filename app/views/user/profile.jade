@@ -6,6 +6,7 @@ block customHead
 block content
   div.loginpage
     div.homelink: a(href='/') Home
+    div.tophelper: a(href='/u/logout') Log out
     div.container
       div.row: a(href='/my') My schedule
 
@@ -25,7 +26,7 @@ block content
             input.cancelbtn(type='button' value='Cancel')
             h3 Confirm yourself
             div.row
-              input.text(type='password' id='oldpassword' name='oldpassword' placeholder='Type your old password')
+              input.text(type='password' id='oldpassword' name='oldpassword' placeholder='Type your current password')
             div.row
               input.button(type='submit' value='Proceed')
 
@@ -34,7 +35,12 @@ block content
 
     div.note You can edit your username and password using this form, if you will leave field blank it will stay the same.
 
+    div.container
+      h3 Subjects
+
+      ul.subjects#subjects
+
+
 block customFoot
-  script(src='/js/libs/jquery-1.10.2.min.js')
-  script(src='/js/profile.js')
+  script(src='/js/builds/userpage.js' async)
   script(src='/js/libs/analytics.js' async)

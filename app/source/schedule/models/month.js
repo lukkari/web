@@ -66,5 +66,5 @@ module.exports = Backbone.Model.extend({
     });
 
     return this;
-  },
+  }
 });

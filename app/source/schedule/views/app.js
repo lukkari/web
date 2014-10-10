@@ -12,14 +12,13 @@ var templates = require('../dist/');
 var
   HeaderView = require('./header'),
   FooterView = require('./footer'),
-  ScheduleView = require('./schedule');
+  ScheduleView = require('./pages/schedule');
 
 module.exports = Backbone.View.extend({
 
   template : templates.app,
 
   subviews : {},
-
 
   initialize : function (options) {
     options = options || {};
@@ -35,7 +34,7 @@ module.exports = Backbone.View.extend({
   },
 
   render : function () {
-    this.$el.html(_.template(this.template, {}, { variable : 'data' }));
+    this.$el.html(_.template(this.template, { variable : 'data' }));
 
     this.assign(this.subviews.header, '#appHeader');
     this.assign(this.subviews.footer, '#appFooter');
@@ -51,6 +50,10 @@ module.exports = Backbone.View.extend({
   toContent : function (html) {
     this.$el.find('#content').html(html);
     return this;
+  },
+
+  assignContent : function (view, options) {
+    view.setElement(this.$('#content')).render(options);
   },
 
   assign : function (view, selector, options) {

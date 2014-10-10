@@ -9,12 +9,14 @@ var
 
 var
   Schedule = require('./models/schedule'),
+  ErrorModel = require('./models/error'),
 
   AppView = require('./views/app'),
-  FrontPageView = require('./views/frontpage'),
-  SearchView = require('./views/search'),
-  ScheduleView = require('./views/schedule'),
-  NowScheduleView = require('./views/nowschedule');
+  FrontPageView = require('./views/pages/front'),
+  SearchView = require('./views/pages/search'),
+  ScheduleView = require('./views/pages/schedule'),
+  NowScheduleView = require('./views/pages/nowschedule'),
+  ErrorPageView = require('./views/pages/error');
 
 require('./util');
 
@@ -25,7 +27,7 @@ module.exports = Backbone.Router.extend({
     'w:w/:q(/)'      : 'getScheduleViceVersa',
     ':q(/w:w)(/)'    : 'getSchedule',
     ':q/now(/)'      : 'getNowSchedule',
-    '*other'         : 'unknown'
+    '*other'         : 'errorpage'
   },
 
   initialize : function () {
@@ -100,19 +102,27 @@ module.exports = Backbone.Router.extend({
     options.week = w;
     options.query += '?w=' + w;
 
-    document.title = q.fromUrl().toUpperCase() + ' - Schedule';
+    var isMySchedule = (q == 'my');
+
+    options.isMySchedule = isMySchedule;
+
+    var title = isMySchedule ? 'My schedule' : q.fromUrl().toUpperCase() + ' - Schedule';
+    document.title = title;
 
     var schedule = new Schedule([], {
       url : options.query
     });
 
     schedule.fetch({
-      success : (function () {
-        this.view = this.app.subviews.schedule;
-        this.view.model = schedule;
-        this.app.assign(this.view, '#content', options);
+      error : (function (model, xhr) {
+        this.errorPage(xhr);
       }).bind(this)
     });
+
+    this.view = this.app.subviews.schedule;
+    this.view.setModel(schedule);
+    this.view.updateStatics(options);
+    this.app.assignContent(this.view);
   },
 
   /**
@@ -126,22 +136,38 @@ module.exports = Backbone.Router.extend({
     document.title = q.fromUrl().toUpperCase() + ' - Today\'s Schedule';
 
     var schedule = new Schedule([], {
-      url : q + '/now',
-      extraClass : 'nowpage'
+      url : q + '/now'
     });
 
     schedule.fetch({
-      success : (function () {
-        this.view = new NowScheduleView({
-          model : schedule
-        });
-        this.app.assign(this.view, '#content');
+      error : (function (model, xhr) {
+        this.errorPage(xhr);
       }).bind(this)
     });
+
+    this.view = new NowScheduleView({
+      model : schedule
+    });
+    this.app.assignContent(this.view);
   },
 
-  unknown : function () {
-    //app.pagesCtrl.toggle('unknown');
+  /**
+   * Error page (includes unknown page)
+   * @param  {[type]} xhr [description]
+   * @return {[type]}     [description]
+   */
+  errorPage : function (xhr) {
+    if(this.view) this.view.remove();
+
+    document.title = xhr.statusText || 'Unknown page';
+
+    var errorModel = new ErrorModel();
+    if(xhr) errorModel.fromXHR(xhr);
+
+    this.view = new ErrorPageView({
+      model : errorModel
+    });
+    this.app.toContent(this.view.render().el);
   },
 
   /**
@@ -149,7 +175,6 @@ module.exports = Backbone.Router.extend({
    * @param  {Integer} week Week number
    */
   goToWeek : function (week) {
-
     var url = window.location.pathname;
     url = url.replace(/\/w\d+/, '') + '/w' + week;
 
