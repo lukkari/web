@@ -66,7 +66,6 @@ require(path.join(appdir, '/config/passport'))(passport);
 // app settings
 app
   .disable('x-powered-by')
-  .set('port', port)
   .set('views', path.join(appdir, 'views'))
   .set('view engine', 'jade')
 
@@ -105,12 +104,7 @@ if('development' == app.get('env')) {
 // Register routes
 require(path.join(appdir, '/config/router'))(app, passport);
 
-// Start the server
-app.listen(port);
-console.log('Server is running on port ' + port);
-
-console.log('Node environment: ' + app.get('env'));
-
-
 //Set up jobs
 require(path.join(appdir, 'helpers/jobs'));
+
+module.exports = app;
