@@ -11,8 +11,8 @@ var config = {
   killTree : true, // Kills the entire child process tree on `exit`
   watch : false,   // Value indicating if we should watch files.
   env : {
-    PORT : 8000,
-    MONGODB_URI : '{mongodb uri}',
+    PORT : +process.env.PORT || 8000,
+    MONGODB_URI : process.env.MONGODB_URI || '{mongodb uri}',
     NODE_ENV : 'production'
   },
   pidFile : path.join(process.env.HOME, 'www/logs/pid.log'),      // Path to put pid information for the process(es) started

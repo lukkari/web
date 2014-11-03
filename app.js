@@ -40,9 +40,6 @@ var
   };
 */
 
-// Specify app's port
-var port = +process.env.PORT || 3000;
-
 // DB connection
 var connect = function () {
   mongoose.connect(config.db, { server : { auto_reconnect : true } });
