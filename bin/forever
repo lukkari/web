@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var forever = require('forever-monitor');
 var path = require('path');
+var fs = require('fs');
 
 var appdir = path.join(__dirname, './server');
 
@@ -11,7 +12,7 @@ var config = {
   watch : false,   // Value indicating if we should watch files.
   env : {
     PORT : 8000,
-    MONGODB_URI : 'mongodb://localhost/learnnode_dev',
+    MONGODB_URI : '{mongodb uri}',
     NODE_ENV : 'production'
   },
   pidFile : path.join(process.env.HOME, 'www/logs/pid.log'),      // Path to put pid information for the process(es) started
@@ -27,5 +28,10 @@ child.on('exit', function () {
 });
 
 child.start();
+
+// Forever monitor doesn't write to PID file
+fs.writeFile(config.pidFile, 'PID: ' + process.pid, function (err) {
+  if(err) console.log(err);
+});
 
 console.log('Process id: ' + process.pid)
