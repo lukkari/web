@@ -57,4 +57,4 @@ For production:
 
 ### Production
 
-* `bin/forever`
+* `nohup bin/forever > logs/server.log &`

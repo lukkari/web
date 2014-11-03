@@ -12,13 +12,13 @@ var config = {
   watch : false,   // Value indicating if we should watch files.
   env : {
     PORT : +process.env.PORT || 8000,
-    MONGODB_URI : process.env.MONGODB_URI || '{mongodb uri}',
+    MONGODB_URI : process.env.MONGODB_URI || 'MONGODB_URI',
     NODE_ENV : 'production'
   },
-  pidFile : path.join(process.env.HOME, 'www/logs/pid.log'),      // Path to put pid information for the process(es) started
-  logFile : path.join(process.env.HOME, 'www/logs/main.log'),     // Path to log output from forever process (when daemonized)
-  outFile : path.join(process.env.HOME, 'www/logs/child.log'),    // Path to log output from child stdout
-  errFile : path.join(process.env.HOME, 'www/logs/child_err.log') // Path to log output from child stderr
+  pidFile : path.join(__dirname, '../logs/pid.log'),      // Path to put pid information for the process(es) started
+  logFile : path.join(__dirname, '../logs/main.log'),     // Path to log output from forever process (when daemonized)
+  outFile : path.join(__dirname, '../logs/child.log'),    // Path to log output from child stdout
+  errFile : path.join(__dirname, '../logs/child_err.log') // Path to log output from child stderr
 };
 
 var child = new (forever.Monitor)(appdir, config);
