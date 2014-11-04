@@ -28,17 +28,7 @@ var appdir = path.join(__dirname, 'app');
 var app = express();
 
 // Get app files
-var
-  config = require(path.join(appdir, '/config/config'))[app.get('env')];
-
-/*
-  logPath    = path.join(appdir, config.log.path),
-  logfile    = fs.createWriteStream(logPath, { flags: 'a+' }),
-  loggingOptions = {
-    format : config.log.format,
-    stream : logfile
-  };
-*/
+var config = require(path.join(appdir, '/config/config'))[app.get('env')];
 
 // DB connection
 var connect = function () {
@@ -83,7 +73,6 @@ app
   }))
   .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.week }))
   .use(bodyParser())
-  //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
