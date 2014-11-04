@@ -40,9 +40,6 @@ var
   };
 */
 
-// Specify app's port
-var port = +process.env.PORT || 3000;
-
 // DB connection
 var connect = function () {
   mongoose.connect(config.db, { server : { auto_reconnect : true } });
@@ -70,7 +67,7 @@ app
   .set('view engine', 'jade')
 
   .use(function (req, res, next) {
-
+    // !! DOESN'T WORK
     if('production' == app.get('env')) {
       // In production return minified css
       if(/\/stylesheets\//.test(req.path)) {
@@ -84,7 +81,7 @@ app
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))
-  .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.statics }))
+  .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.week }))
   .use(bodyParser())
   //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())
