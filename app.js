@@ -28,7 +28,7 @@ var appdir = path.join(__dirname, 'app');
 var app = express();
 
 // Get app files
-var config = require(path.join(appdir, '/config/config'))[app.get('env')];
+var config = require(path.join(appdir, 'config/config'))[app.get('env')];
 
 // DB connection
 var connect = function () {
@@ -46,9 +46,9 @@ mongoose.connection.on('disconnected', function (err) {
 });
 
 // Add helpers files
-require(path.join(appdir, '/helpers'));
-require(path.join(appdir, '/helpers/models/db'));
-require(path.join(appdir, '/config/passport'))(passport);
+require(path.join(appdir, 'helpers'));
+require(path.join(appdir, 'helpers/models/db'));
+require(path.join(appdir, 'config/passport'))(passport);
 
 // app settings
 app
@@ -80,12 +80,6 @@ app
   }))
   .use(passport.initialize())
   .use(passport.session());
-
-
-// development only
-if('development' == app.get('env')) {
-  //app.use(express.errorHandler());
-}
 
 // Register routes
 require(path.join(appdir, 'config/router'))(app, passport);
