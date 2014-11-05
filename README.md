@@ -42,11 +42,19 @@ For production:
 
 ### Configure envrironments
 
-1. Setup `MONGODB_URI` *(url to mongo database)*
-2. Specify port number `PORT` *if needed (default: 3000)*
+1. Setup `MONGODB_URI` *(uri to mongo database)* **REQUIRED**
+2. Specify port number `PORT` *if needed (default: 8000)*
 3. For production: `NODE_ENV=production`
 
 
 ## Run
 
-`node app`
+### Development
+
+**NOTE:** Don't forget to set up `MONGODB_URI`
+
+* `bin/server`
+
+### Production
+
+* `nohup bin/forever > logs/server.log &`
