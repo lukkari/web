@@ -74,12 +74,12 @@ function setCache(res, val) {
 }
 
 function setShortCacheHeader(req, res, next) {
-  setCache(res, config[app.get('env')].cache.day);
+  setCache(res, config[req.app.get('env')].cache.day);
   next();
 }
 
 function setLongCacheHeader(req, res, next) {
-  setCache(res, config[app.get('env')].cache.day);
+  setCache(res, config[req.app.get('env')].cache.day);
   next();
 }
 
