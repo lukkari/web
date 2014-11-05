@@ -70,7 +70,7 @@ function ensureXhr(req, res, next) {
 
 function setCache(res, val) {
   if(!val) return res.set('Cache-Control', 'no-cache');
-  res.set('Cache-Control', 'public, max-age=' + config.production.cache.apis.day)
+  res.set('Cache-Control', 'public, max-age=' + val)
 }
 
 function setShortCacheHeader(req, res, next) {
@@ -79,7 +79,7 @@ function setShortCacheHeader(req, res, next) {
 }
 
 function setLongCacheHeader(req, res, next) {
-  setCache(res, config[req.app.get('env')].cache.day);
+  setCache(res, config[req.app.get('env')].cache.month);
   next();
 }
 

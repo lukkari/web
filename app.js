@@ -55,7 +55,7 @@ app
   .disable('x-powered-by')
   .set('views', path.join(appdir, 'views'))
   .set('view engine', 'jade')
-
+  /*
   .use(function (req, res, next) {
     // !! DOESN'T WORK
     if('production' == app.get('env')) {
@@ -67,11 +67,11 @@ app
     }
 
     return next();
-  })
+  })*/
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))
-  .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.week }))
+  .use(express.static(path.join(appdir, 'public'), { maxAge : (config.cache.week * 1000) }))
   .use(bodyParser())
   .use(cookieParser())
   .use(session({
@@ -88,7 +88,7 @@ if('development' == app.get('env')) {
 }
 
 // Register routes
-require(path.join(appdir, '/config/router'))(app, passport);
+require(path.join(appdir, 'config/router'))(app, passport);
 
 //Set up jobs
 require(path.join(appdir, 'helpers/jobs'));
