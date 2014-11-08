@@ -6,6 +6,10 @@ School schedule representer. Currently aimed to ICT-building of TUAS.
 
 Complete description and installation instuctions could be found in [project wiki](https://github.com/zaynetro/lukkari/wiki).
 
+Mobile application can be accessed here [DenisAnchugov/Schedule](https://github.com/DenisAnchugov/Schedule).
+
+----
+
 Brief description is provided below.
 
 ## Requirements
