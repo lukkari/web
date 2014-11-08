@@ -4,13 +4,10 @@ module.exports = {
     app : {
       name : 'Lukkari'
     },
-    log : {
-      path   : '/logs/main.log',
-      format : 'default'
-    },
     cache : {
-      statics : 0,
-      apis    : 0
+      day : 0,
+      week : 0,
+      month : 0
     }
   },
 
@@ -19,13 +16,10 @@ module.exports = {
     app : {
       name : 'Lukkari'
     },
-    log : {
-      path   : '/logs/main.log',
-      format : 'default'
-    },
     cache : {
-      statics : (1000*60*60*24*7), // One week
-      apis    : (1000*60*60*24)    // One day
+      day : (60*60*24),
+      week : (60*60*24*7),
+      month : (60*60*24*30)
     }
   }
 };

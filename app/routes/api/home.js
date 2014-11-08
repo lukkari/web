@@ -284,23 +284,6 @@ exports.notFound = function (req, res) {
   res.send();
 };
 
-
-/**
- * GET '/api/wakeup'
- */
-exports.wakeup = function (req, res) {
-  var d = new Date();
-  console.log('Wake up triggered: ' + d);
-  res.send(d);
-};
-
-/**
- * GET '/api/baseurl'
- */
-exports.baseurl = function (req, res) {
-  res.send('http://lukkari.herokuapp.com/');
-};
-
 /**
  * GET '/api/schedule/my' Return user's schedule
  */

@@ -68,10 +68,18 @@ function ensureXhr(req, res, next) {
   next();
 }
 
-function setCacheHeader(req, res, next) {
-  // Set cache header for one day
-  res.set('Cache-Control', 'public, max-age=' + config[req.app.get('env')].cache.apis);
+function setCache(res, val) {
+  if(!val) return res.set('Cache-Control', 'no-cache');
+  res.set('Cache-Control', 'public, max-age=' + val)
+}
 
+function setShortCacheHeader(req, res, next) {
+  setCache(res, config[req.app.get('env')].cache.day);
+  next();
+}
+
+function setLongCacheHeader(req, res, next) {
+  setCache(res, config[req.app.get('env')].cache.month);
   next();
 }
 
@@ -118,9 +126,6 @@ module.exports = function (app, passport) {
    */
   var apiRouter = express.Router();
   apiRouter
-    .use('/wakeup', api.home.wakeup) // wake up app heroku hack
-    .get('/baseurl', api.home.baseurl) // return url to schedule server (for future use)
-
     .use(ensureXhr)
     .post(  '/message',         api.home.sendMsg)
 
@@ -128,11 +133,14 @@ module.exports = function (app, passport) {
     .get(   '/schedule/my/now', api.home.getMyNowSchedule)
     .get(   '/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
-    .use(setCacheHeader)
+    // Schedule pages use short
+    .use(setShortCacheHeader)
+    .get(   '/schedule/:q',     api.home.getSchedule)
+    //
+    .use(setLongCacheHeader)
     .get(   '/groups',          api.home.getGroups)
     .get(   '/teachers',        api.home.getTeachers)
     .get(   '/rooms',           api.home.getRooms)
-    .get(   '/schedule/:q',     api.home.getSchedule)
     .get(   '*',                api.home.notFound);
 
   /**
@@ -199,7 +207,7 @@ module.exports = function (app, passport) {
     .get( '/signup', user.signup)
     .post('/signup', user.create)
 
-    .use(setCacheHeader)
+    .use(setLongCacheHeader)
     // Main page
     .get('/*',      home.index);
 

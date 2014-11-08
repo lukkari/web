@@ -28,17 +28,7 @@ var appdir = path.join(__dirname, 'app');
 var app = express();
 
 // Get app files
-var
-  config = require(path.join(appdir, '/config/config'))[app.get('env')];
-
-/*
-  logPath    = path.join(appdir, config.log.path),
-  logfile    = fs.createWriteStream(logPath, { flags: 'a+' }),
-  loggingOptions = {
-    format : config.log.format,
-    stream : logfile
-  };
-*/
+var config = require(path.join(appdir, 'config/config'))[app.get('env')];
 
 // DB connection
 var connect = function () {
@@ -56,18 +46,18 @@ mongoose.connection.on('disconnected', function (err) {
 });
 
 // Add helpers files
-require(path.join(appdir, '/helpers'));
-require(path.join(appdir, '/helpers/models/db'));
-require(path.join(appdir, '/config/passport'))(passport);
+require(path.join(appdir, 'helpers'));
+require(path.join(appdir, 'helpers/models/db'));
+require(path.join(appdir, 'config/passport'))(passport);
 
 // app settings
 app
   .disable('x-powered-by')
   .set('views', path.join(appdir, 'views'))
   .set('view engine', 'jade')
-
+  /*
   .use(function (req, res, next) {
-
+    // !! DOESN'T WORK
     if('production' == app.get('env')) {
       // In production return minified css
       if(/\/stylesheets\//.test(req.path)) {
@@ -77,13 +67,12 @@ app
     }
 
     return next();
-  })
+  })*/
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))
-  .use(express.static(path.join(appdir, 'public'), { maxAge : config.cache.statics }))
+  .use(express.static(path.join(appdir, 'public'), { maxAge : (config.cache.week * 1000) }))
   .use(bodyParser())
-  //.use(morgan(loggingOptions)) don't use logs for a while
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
@@ -92,14 +81,8 @@ app
   .use(passport.initialize())
   .use(passport.session());
 
-
-// development only
-if('development' == app.get('env')) {
-  //app.use(express.errorHandler());
-}
-
 // Register routes
-require(path.join(appdir, '/config/router'))(app, passport);
+require(path.join(appdir, 'config/router'))(app, passport);
 
 //Set up jobs
 require(path.join(appdir, 'helpers/jobs'));

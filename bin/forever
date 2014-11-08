@@ -12,7 +12,7 @@ var config = {
   watch : false,   // Value indicating if we should watch files.
   env : {
     PORT : +process.env.PORT || 8000,
-    MONGODB_URI : process.env.MONGODB_URI || 'MONGODB_URI',
+    MONGODB_URI : process.env.MONGODB_URI || 'mongodb://localhost/lukkari',
     NODE_ENV : 'production'
   },
   pidFile : path.join(__dirname, '../logs/pid.log'),      // Path to put pid information for the process(es) started
