@@ -39,8 +39,9 @@ module.exports = Backbone.Model.extend({
       prev = el;
 
       if(i === data.subjects.length - 1) {
-        // Add ending day block
-        subjects.push(this.timeBlock(el.date, false));
+        // Ending day block: add last class duration to it
+        date = (new Date(el.date)).getTime() + (el.duration * 60 * 60 * 1000);
+        subjects.push(this.timeBlock(date, false));
       }
     }, this);
 
