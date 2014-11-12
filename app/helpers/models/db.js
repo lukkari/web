@@ -241,7 +241,8 @@ mongoose.model('Parse', parseSchema);
 
 var messageSchema = new Schema({
   message   : { type : String, default : '' },
-  from      : { type : String, default : '' },
+  screen    : { type : String, default : '' },
+  device    : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
   createdAt : { type : Date,   default : Date.now }
 });

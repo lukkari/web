@@ -258,13 +258,13 @@ exports.getSchedule = function (req, res) {
  */
 exports.sendMsg = function (req, res) {
 
-  var text = encodeURI(req.param('message'));
+  var mess = req.body;
 
-  if(text.length < 4) return res.json('success');
+  if(mess.message.length < 4) return res.send('success');
 
   var
     Message = mongoose.model('Message'),
-    message = new Message({ message : text });
+    message = new Message(mess);
 
   message.save(function (err) {
     if(err) {

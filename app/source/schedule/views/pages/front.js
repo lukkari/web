@@ -3,6 +3,7 @@
  */
 
 var
+  $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
@@ -32,11 +33,13 @@ module.exports = Backbone.View.extend({
 
     sendBtn.attr('disabled', 'disabled');
 
-    Backbone.$.ajax({
+    $.ajax({
       url : '/api/message',
       method : 'POST',
       data : {
-        message : message
+        message : message,
+        screen : $(window).width() + 'x' + $(window).height(),
+        device : window.navigator.userAgent
       },
       success : (function () {
         textarea.val('');
