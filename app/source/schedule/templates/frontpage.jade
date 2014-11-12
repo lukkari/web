@@ -1,6 +1,6 @@
 div.wrapper
   div.container
-    h2 Schedule finder
+    h2 Schedule
     div.block Custom schedule of ICT-building [Beta]
 
     div.block.quicklinks
@@ -8,21 +8,35 @@ div.wrapper
 
 div.wrapper
   div.container
-    h2 How to use
+    h2 Description
     div.block
-      h4 Search
-      div.info You can search schedule by group, teacher and room.
+      ul.sections.clearfix
+        li
+          a(href='/' data-local)
+            h3 Home
+            div.icon-wrap: div.icon-home
+            div.description You are currently looking at this page. Please, submit your feedback in the form below.
 
-      h4 Choose week
-      div.info On the schedule page you can easily check other weeks timetables by using next and prev links or by using calendar, just simply click on the week you are looking for.
-
-      h4 Mistakes
-      div.info This schedule is in beta testing, therefore possible mistakes can happen
+        li
+          a(href='/search' data-local)
+            h3 Search
+            div.icon-wrap: div.icon-menu
+            div.description Search for groups, teachers and rooms. You can always just start typing in the search field.
+        li
+          a(href='/my' data-local)
+            h3 User schedule
+            div.icon-wrap: div.icon-user
+            div.description When you registered on the site, you can manage your schedule by adding and removing courses. [Only for students]
+        li
+          a(href='/u')
+            h3 Profile
+            div.icon-wrap: div.icon-profile
+            div.description User profile. Edit your information and see the list of edited courses.
 
 div.wrapper
   div.container
-    h2 Support
-    div.block You found a bug? You want to support us? Help us by submiting the issue:
+    h2 Support us
+    div.block Found something not working? Have a suggestion? Support us by sending a message!
 
     div.feedback
       textarea#message(placeholder='Type your message here...')
