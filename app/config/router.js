@@ -116,10 +116,7 @@ module.exports = function (app, passport) {
     .delete('/parse/:id',     api.manage.deleteParse)
 
     .get('/message', api.manage.getMessages)
-    .get('/serverdata', api.manage.getServerData)
-
-    // TO DO: remove
-    .get('/parse/test', api.manage.testParse);
+    .get('/serverdata', api.manage.getServerData);
 
   /**
    * Home API

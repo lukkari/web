@@ -277,58 +277,6 @@ exports.runParse = function (req, res) {
   });
 };
 
-
-/**
- * GET '/manage/api/parse/test' [description]
- */
-exports.testParse = function (req, res) {
-  var link = ['http://lukkari.turkuamk.fi/ict/1436/x3010ninfos14313.htm'];
-
-  var
-    Group = mongoose.model('Group'),
-    Teacher = mongoose.model('Teacher'),
-    Room = mongoose.model('Room');
-
-  async.series([
-      function (cb) {
-        Group.find({}, { name : 1 }, cb);
-      },
-
-      function (cb) {
-         Teacher.find({}, { name : 1 }, cb);
-      },
-
-      function (cb) {
-         Room.find({}, { name : 1 }, cb);
-      }
-    ],
-    function (err, results) {
-      if(err) console.log(err);
-
-      console.log('Start schedule parsing');
-
-      // Parse timetables from the given array of links
-      parser(link, {
-        info : results,
-        parser : schedule,
-        done : function (err, result) {
-          if(err) {
-            console.log(err);
-            return res.json(err);
-          }
-          console.log(result);
-
-          res.json(result);
-
-          // Find dublicates and remove them
-
-        }
-      });
-    }
-  );
-};
-
-
 /**
  * DELETE '/manage/api/parse/:id' [description]
  */
