@@ -73,6 +73,17 @@ app
   }))
   .use(express.static(path.join(appdir, 'public'), { maxAge : (config.cache.week * 1000) }))
   .use(bodyParser())
+  .use(function (req, res, next) {
+    // Escape all fields except password
+    if(req.body && typeof req.body == 'object') {
+      for(var key in req.body) {
+        if(req.body.hasOwnProperty(key) && key != 'password') {
+          req.body[key] = req.body[key].replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+        }
+      }
+    }
+    next();
+  })
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
