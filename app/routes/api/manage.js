@@ -340,7 +340,7 @@ exports.deleteParse = function (req, res) {
   Parse.findByIdAndRemove(id, function (err) {
     if(err) {
       console.log(err);
-      return req.json(400, err);
+      return req.status(400).json(err);
     }
 
     res.send('Success');
@@ -361,7 +361,7 @@ exports.getMessages = function (req, res) {
     .exec(function (err, messages) {
       if(err) {
         console.log(err);
-        return res.json(400, err);
+        return res.status(400).json(err);
       }
 
       res.json(messages);

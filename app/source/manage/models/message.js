@@ -12,8 +12,6 @@ module.exports = Backbone.Model.extend({
    */
   parse : function (response) {
     response.date = new Date(response.createdAt).toGMTString();
-    response.message = decodeURIComponent(response.message);
-
     return response;
   }
 });

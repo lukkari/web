@@ -231,9 +231,13 @@ a, button, input, textarea {
   border: 0;
 }
 
-.manage .container .message-time {
+.manage .container .message-extra {
   font-size: 0.8em;
   color: #777;
+}
+
+.manage .container .message-extra > span {
+  margin: 0 1rem 0 0;
 }
 
 .manage .container .server-data i {
