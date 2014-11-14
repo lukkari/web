@@ -365,7 +365,20 @@ a:focus {
 }
 
 .mainpage .block {
-  padding: 10px;
+  padding: 0.4rem;
+}
+
+.mainpage .mobile-apps {
+  margin-top: 0.4rem;
+}
+
+.mainpage .mobile-apps li {
+  width: 100%;
+  text-align: center;
+}
+
+.mainpage .mobile-apps a {
+  font-size: 1.2rem;
 }
 
 .mainpage .sections li {
