@@ -260,6 +260,7 @@ exports.sendMsg = function (req, res) {
 
   var mess = req.body;
 
+  if(!mess.message) return res.send('success');
   if(mess.message.length < 4) return res.send('success');
 
   var
