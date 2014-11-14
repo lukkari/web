@@ -1,6 +1,6 @@
 module.exports = {
   isMobile : function (req) {
-    if(!req) return;
+    if(!req || !req.headers['user-agent']) return false;
 
     // detectmobilebrowsers.com
     var ua = req.headers['user-agent'].toLowerCase();
