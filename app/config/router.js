@@ -17,6 +17,14 @@ var
     user : require('../routes/api/user')
   };
 
+
+function securityHeaders(req, res, next) {
+  // https://www.owasp.org/index.php/REST_Security_Cheat_Sheet#Send_security_headers
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'deny');
+  next();
+}
+
 function handleManage(req, res) {
   if(req.originalUrl.indexOf('manage') !== -1) {
     home.index(req, res);
@@ -214,6 +222,7 @@ module.exports = function (app, passport) {
    * Add all routers to the app
    */
   app
+    .use(securityHeaders)
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)
     .use('/u',          userRouter)
