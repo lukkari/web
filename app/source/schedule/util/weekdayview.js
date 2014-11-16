@@ -72,7 +72,6 @@ module.exports = {
    * @return {String}          Status
    */
   getStatus : function (date, duration) {
-
     var
       nowHour     = new Date().getHours(),
       subjectHour = new Date(date).getHours();
@@ -81,5 +80,15 @@ module.exports = {
     if((nowHour >= subjectHour) && (nowHour < (subjectHour + duration))) return 'now';
 
     return '';
+  },
+
+  /**
+   * Get week day name
+   * @param  {Date} date
+   * @return {String}
+   */
+  getWeekDay : function (date) {
+    var d = new Date(date);
+    return weekdays.full[d.getDay()];
   }
 };

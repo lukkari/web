@@ -1,5 +1,5 @@
 div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
-  div.weekday <%= data.weekday.name %>
+  div.weekday <%= data.getWeekDay(data.date) %>
     span.date <%= data.getDate(data.date) %> <%= data.getMonth(data.date) %>
 
   div.container

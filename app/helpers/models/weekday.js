@@ -1,9 +1,7 @@
 var mongoose = require('mongoose');
 
 var weekDay = function () {
-  var
-    Entry = mongoose.model('Entry'),
-    days  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var Entry = mongoose.model('Entry');
 
   return {
     getSubjects : function (options) {
@@ -12,10 +10,6 @@ var weekDay = function () {
       var date    = new Date(options.date);
 
       var data = {
-        weekday  : {
-          name : days[date.getDay()],
-          num  : date.getDay()
-        },
         date : date,
         subjects : []
       };

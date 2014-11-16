@@ -20,9 +20,9 @@ var week = function () {
             count += 1;
 
             if(err || (count > 4)) {
-              // Sort by weekday num
+              // Sort by day
               data.sort(function (a, b) {
-                return a.weekday.num - b.weekday.num;
+                return Date.parse(a.date) - Date.parse(b.date);
               });
 
               options.cb(err, data);
@@ -31,7 +31,7 @@ var week = function () {
 
       for(var i = 0; i < 5; i += 1) {
         weekDay.getSubjects({
-          date   : new Date(date.getFullYear(), date.getMonth(), date.getDate() + i),
+          date   : new Date(date.getFullYear(), date.getMonth(), date.getDate() + i, 0, 0, 0),
           type   : options.type,
           typeid : options.typeid,
           usertable : options.usertable,
