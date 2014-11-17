@@ -506,11 +506,11 @@ a:focus {
   background-color: #2980b9;
 }
 
-.mainpage .success-block {
+.mainpage .success-block,
+.mainpage .error-block {
   padding: 0.4em 0;
   text-align: center;
   font-size: 1em;
-  background-color: #2ecc71;
   text-decoration: none;
   color: #000;
   position: absolute;
@@ -519,6 +519,9 @@ a:focus {
   width: 100%;
   transition: top 0.4s;
 }
+
+.mainpage .success-block { background-color: #2ecc71; }
+.mainpage .error-block { background-color: #e74c3c; }
 
 .mainpage .feedback-btn .down {
   top: 0;

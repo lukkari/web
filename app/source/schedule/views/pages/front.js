@@ -40,29 +40,34 @@ module.exports = Backbone.View.extend({
         message : message,
         screen : $(window).width() + 'x' + $(window).height(),
         device : window.navigator.userAgent
-      },
-      success : (function () {
+      }
+    })
+      .done(function () {
         textarea.val('');
         this.animateSwitch();
+      }.bind(this))
+
+      .fail(function () {
+        this.animateSwitch(true);
+      }.bind(this))
+
+      .always(function () {
         sendBtn.removeAttr('disabled');
-      }).bind(this),
-      error : (function () {
-        // Error
-        sendBtn.removeAttr('disabled');
-      }).bind(this)
-    });
+      });
+
   },
 
   /**
-   * Adds and removes class name from successBlock
+   * Adds and removes class name from success and error blocks
    */
-  animateSwitch : function () {
-    var successBlock = this.$el.find('#successBlock');
+  animateSwitch : function (fail) {
+    var id = fail ? 'errorBlock' : 'successBlock';
+    var $block = this.$el.find('#' + id);
 
-    successBlock.addClass('down');
+    $block.addClass('down');
 
     setTimeout(function () {
-      successBlock.removeClass('down');
+      $block.removeClass('down');
     }, 3000);
   },
 
