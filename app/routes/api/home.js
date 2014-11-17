@@ -34,13 +34,13 @@ exports.getTeachers = function (req, res) {
 
   var Teacher = mongoose.model('Teacher');
 
-  Teacher.getAll(function (err, teacher) {
+  Teacher.getAll(function (err, teachers) {
     if(err) {
       console.log(err);
       return res.status(400).send('Unknown mistake');
     }
 
-    return res.json(teacher);
+    return res.json(teachers);
   });
 
 };
@@ -53,13 +53,13 @@ exports.getRooms = function (req, res) {
 
   var Room = mongoose.model('Room');
 
-  Room.getAll(function (err, room) {
+  Room.getAll(function (err, rooms) {
     if(err) {
       console.log(err);
       return res.status(400).send('Unknown mistake');
     }
 
-    return res.json(room);
+    return res.json(rooms);
   });
 };
 
@@ -183,8 +183,7 @@ exports.getSchedule = function (req, res) {
   var
     Group   = mongoose.model('Group'),
     Teacher = mongoose.model('Teacher'),
-    Room    = mongoose.model('Room'),
-    Entry   = mongoose.model('Entry');
+    Room    = mongoose.model('Room');
 
   Group
     .findOne({ name : new RegExp(search, "i") })

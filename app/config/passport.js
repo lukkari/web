@@ -1,6 +1,7 @@
-var mongoose      = require('mongoose'),
-    LocalStrategy = require('passport-local').Strategy,
-    User          = mongoose.model('User');
+var
+  mongoose      = require('mongoose'),
+  LocalStrategy = require('passport-local').Strategy,
+  User          = mongoose.model('User');
 
 module.exports = function (passport) {
 
@@ -18,10 +19,10 @@ module.exports = function (passport) {
     function (username, password, done) {
       User.findOne({ username : username }, function (err, user) {
         if(err) return done(err);
-        if(!user)
-          return done(null, false, { message : 'Unknown user' });
-        if(!user.authenticate(password))
+        if(!user) return done(null, false, { message : 'Unknown user' });
+        if(!user.authenticate(password)) {
           return done(null, false, { message : 'Invalid password' });
+        }
 
         return done(null, user);
       });

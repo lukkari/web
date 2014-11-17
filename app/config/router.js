@@ -177,8 +177,6 @@ module.exports = function (app, passport) {
     .use(ensureAdmin)
 
     .get('/parser', manage.index)
-    .get('/log',    manage.showLog)
-
     .get('/*', manage.index);
 
   /**
@@ -191,7 +189,6 @@ module.exports = function (app, passport) {
     .post('/',       user.update)
     .get( '/group',  user.selectGroup)
     .post('/group',  user.addGroup)
-
     .get('/logout',  user.logout);
 
   /**

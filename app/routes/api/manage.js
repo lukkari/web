@@ -61,8 +61,7 @@ exports.model = function (req, res) {
       .limit(limit)
       .sort({ 'createdAt' : -1 })
       .lean()
-      .exec(
-        function (err, docs) {
+      .exec(function (err, docs) {
         if(err) {
           console.log(err);
           return res.json(400, err);
@@ -215,7 +214,6 @@ exports.getParses = function (req, res) {
 exports.addParse = function (req, res) {
 
   var Parse = mongoose.model('Parse');
-
   var parse = new Parse(req.body);
 
   parse.save(function (err, doc) {

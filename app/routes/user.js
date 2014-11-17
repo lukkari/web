@@ -25,11 +25,11 @@ exports.signup = function (req, res) {
   if(req.isAuthenticated()) return res.redirect('/');
 
   res.render('user/signup', {
-    title     : 'Sign up',
-    user      : new User(),
-    error     : null,
-    mobile    : device.isMobile(req),
-    logged    : false
+    title  : 'Sign up',
+    user   : new User(),
+    error  : null,
+    mobile : device.isMobile(req),
+    logged : false
   });
 
 };
@@ -48,12 +48,12 @@ exports.create = function (req, res) {
             notfull = (err.errors) ? true : false;
 
         return res.render('user/signup', {
-          title     : 'Sign up',
-          error     : error,
-          notfull   : notfull,
-          user      : user,
-          mobile    : device.isMobile(req),
-          logged    : false
+          title   : 'Sign up',
+          error   : error,
+          notfull : notfull,
+          user    : user,
+          mobile  : device.isMobile(req),
+          logged  : false
         });
       }
 
@@ -85,24 +85,28 @@ exports.update = function (req, res) {
 
   if(req.user.authenticate(req.body.oldpassword)) {
 
-    if(req.body.username.length) req.user.username = req.body.username;
+    if(req.body.username.length) {
+      req.user.username = req.body.username;
+    }
 
     req.user.password = req.body.oldpassword;
 
-    if(req.body.password.length) req.user.password = req.body.password;
+    if(req.body.password.length) {
+      req.user.password = req.body.password;
+    }
 
     req.user.save(function (err) {
       if(err) {
         console.log(err);
 
-        var error   = (err.message !== undefined) ? err.message : false;
+        var error = (err.message !== undefined) ? err.message : false;
 
         return res.render('user/profile', {
-          title     : 'Profile',
-          error     : error,
-          user      : req.user,
-          mobile    : device.isMobile(req),
-          logged    : true
+          title  : 'Profile',
+          error  : error,
+          user   : req.user,
+          mobile : device.isMobile(req),
+          logged : true
         });
       }
 

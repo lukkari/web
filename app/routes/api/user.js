@@ -93,9 +93,8 @@ exports.findSubject = function (req, res) {
   var Subject = mongoose.model('Subject');
 
   Subject
-    .find({
-        name : new RegExp(key, 'i')
-      },
+    .find(
+      { name : new RegExp(key, 'i') },
       { name : 1 })
     .lean()
     .limit(10)
