@@ -58,6 +58,29 @@ exports.getRooms = function (req, res) {
  */
 exports.getNowSchedule = function (req, res) {
 
+  /**
+   * Future implementation:
+   *
+   * searchCategories(search)
+   *   .fail(function (errNum) {
+   *     var msg = errNum == 404 ? 'Not found' : 'Unknown mistake';
+   *     res.status(errNum).send(msg);
+   *   })
+   *   .success(function (model, modelname) {
+   *     weekday.getSubjects({
+   *      date   : today,
+   *      type   : modelname,
+   *      typeid : model._id,
+   *      cb : function (err, data) {
+   *        data.title = group.name;
+   *        res.json(data);
+   *      }
+   *    });
+   *  });
+   *
+   *
+   */
+
   var search = req.params.q;
   var today = new Date();
 
@@ -80,9 +103,8 @@ exports.getNowSchedule = function (req, res) {
           type   : 'groups',
           typeid : group._id,
           cb : function (err, data) {
-            var newdata = data;
             data.title = group.name;
-            res.json(newdata);
+            res.json(data);
           }
         });
       } else {
@@ -101,9 +123,8 @@ exports.getNowSchedule = function (req, res) {
                 type   : 'teachers',
                 typeid : teacher._id,
                 cb : function (err, data) {
-                  var newdata = data;
                   data.title = teacher.name;
-                  res.json(newdata);
+                  res.json(data);
                 }
               });
             } else {
@@ -122,9 +143,8 @@ exports.getNowSchedule = function (req, res) {
                       type   : 'rooms',
                       typeid : room._id,
                       cb : function (err, data) {
-                        var newdata = data;
                         data.title = room.name;
-                        res.json(newdata);
+                        res.json(data);
                       }
                     });
                   } else return res.status(404).send('Not found');
@@ -143,6 +163,28 @@ exports.getNowSchedule = function (req, res) {
  * GET '/api/schedule/:q' [description]
  */
 exports.getSchedule = function (req, res) {
+
+  /**
+   * Future implementation:
+   *
+   * searchCategories(search)
+   *   .fail(function (errNum) {
+   *     var msg = errNum == 404 ? 'Not found' : 'Unknown mistake';
+   *     res.status(errNum).send(msg);
+   *   })
+   *   .success(function (model, modelname) {
+   *     week.getSubjects({
+   *      date   : today,
+   *      type   : modelname,
+   *      typeid : model._id,
+   *      cb : function (err, data) {
+   *        res.json({ title : model.name, week : w, weekdays : data });
+   *      }
+   *    });
+   *  });
+   *
+   *
+   */
 
   var search = req.params.q;
   var w = req.param('w');
