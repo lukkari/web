@@ -13,20 +13,27 @@ var Room = mongoose.model('Room');
 var Message = mongoose.model('Message');
 var UserTable = mongoose.model('UserTable');
 
-/**
- * GET '/api/groups'
- */
-exports.getGroups = function (req, res) {
+// Helpers
 
-  Group.getAll(function (err, groups) {
+/**
+ * Return category (groups, teachers, rooms)
+ */
+var getCategory = function (Model, res) {
+  Model.getAll(function (err, results) {
     if(err) {
       console.log(err);
       return res.status(400).send('Unknown mistake');
     }
 
-    return res.json(groups);
+    return res.json(results);
   });
+}
 
+/**
+ * GET '/api/groups'
+ */
+exports.getGroups = function (req, res) {
+  return getCategory(Group, res);
 };
 
 
@@ -34,16 +41,7 @@ exports.getGroups = function (req, res) {
  * GET '/api/teachers'
  */
 exports.getTeachers = function (req, res) {
-
-  Teacher.getAll(function (err, teachers) {
-    if(err) {
-      console.log(err);
-      return res.status(400).send('Unknown mistake');
-    }
-
-    return res.json(teachers);
-  });
-
+  return getCategory(Teacher, res);
 };
 
 
@@ -51,16 +49,7 @@ exports.getTeachers = function (req, res) {
  * GET '/api/rooms'
  */
 exports.getRooms = function (req, res) {
-
-  Room.getAll(function (err, rooms) {
-    if(err) {
-      console.log(err);
-      return res.status(400).send('Unknown mistake');
-    }
-
-    return res.json(rooms);
-  });
-
+  return getCategory(Room, res);
 };
 
 
