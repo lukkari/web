@@ -2,15 +2,18 @@
  * User page routes
  */
 
-var mongoose = require('mongoose'),
-    User     = mongoose.model('User'),
-    device   = require('../helpers/device');
+var mongoose = require('mongoose');
+var device = require('../helpers/device');
+
+// DB models
+var User = mongoose.model('User');
+var Group = mongoose.model('Group');
 
 exports.login = function (req, res) {
 
-  if(req.isAuthenticated()) return res.redirect('/');
-
   var error = (req.param('wrong') !== undefined) ? true : false;
+
+  if(req.isAuthenticated()) return res.redirect('/');
 
   res.render('user/login', {
       title  : 'Login',
@@ -35,6 +38,7 @@ exports.signup = function (req, res) {
 };
 
 exports.create = function (req, res) {
+
   var user = new User(req.body);
 
   User.count({}, function (err, count) {
@@ -132,10 +136,6 @@ exports.selectGroup = function (req, res) {
 
   if(!req.isAuthenticated()) return res.redirect('/');
 
-  var
-    Group = mongoose.model('Group'),
-    result = {};
-
   Group
     .find({}, { name : 1 })
     .exec(function (err, groups) {
@@ -152,8 +152,6 @@ exports.selectGroup = function (req, res) {
 };
 
 exports.addGroup = function (req, res) {
-
-  var User = mongoose.model('User');
 
   User.update(
     { _id : req.user._id },

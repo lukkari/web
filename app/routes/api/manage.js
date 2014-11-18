@@ -2,22 +2,19 @@
  * Manage API routes
  */
 
-var
-  mongoose = require('mongoose'),
-  async    = require('async');
+var mongoose = require('mongoose');
+var async    = require('async');
 
 // Load parsers
-var
-  parser    = require('../../helpers/parsers'),
-  mainLink  = require('../../helpers/parsers/mainLink'),
-  staff     = require('../../helpers/parsers/staff'),
-  schedule  = require('../../helpers/parsers/schedule'),
-  runParser = require('../../helpers/functions/runParser');
+var parser    = require('../../helpers/parsers');
+var mainLink  = require('../../helpers/parsers/mainLink');
+var staff     = require('../../helpers/parsers/staff');
+var schedule  = require('../../helpers/parsers/schedule');
+var runParser = require('../../helpers/functions/runParser');
 
-
-/**
- * Helpers
- */
+// DB models
+var Parse = mongoose.model('Parse');
+var Message = mongoose.model('Message');
 
 /**
  * Counts documents in any collection by model
@@ -106,9 +103,8 @@ exports.editModel = function (req, res) {
 
   try {
 
-    var
-      model = mongoose.model(req.params.model),
-      doc   = req.body;
+    var model = mongoose.model(req.params.model);
+    var doc   = req.body;
 
     delete doc._id;
 
@@ -157,11 +153,10 @@ exports.deleteModel = function (req, res) {
  */
 exports.getModels = function (req, res) {
 
-  var
-    models   = [],
-    modelslist = Object.keys(mongoose.connection.base.models),
-    l = modelslist.length,
-    i = 0;
+  var models = [];
+  var modelslist = Object.keys(mongoose.connection.base.models);
+  var l = modelslist.length;
+  var i = 0;
 
   modelslist.forEach(function (el) {
     countCollection(el, function (err, num) {
@@ -191,8 +186,6 @@ exports.getModels = function (req, res) {
  */
 exports.getParses = function (req, res) {
 
-  var Parse = mongoose.model('Parse');
-
   Parse
     .find({})
     .sort({ createdAt : '1' })
@@ -205,6 +198,7 @@ exports.getParses = function (req, res) {
 
       res.json(parses);
     });
+
 };
 
 
@@ -213,7 +207,6 @@ exports.getParses = function (req, res) {
  */
 exports.addParse = function (req, res) {
 
-  var Parse = mongoose.model('Parse');
   var parse = new Parse(req.body);
 
   parse.save(function (err, doc) {
@@ -253,9 +246,8 @@ exports.addParse = function (req, res) {
  * GET '/manage/api/parse/:id/run' [description]
  */
 exports.runParse = function (req, res) {
-  var
-    id = req.params.id,
-    Parse = mongoose.model('Parse');
+
+  var id = req.params.id;
 
   Parse.findById(id, function (err, parse) {
     if(err) {
@@ -279,9 +271,8 @@ exports.runParse = function (req, res) {
  * DELETE '/manage/api/parse/:id' [description]
  */
 exports.deleteParse = function (req, res) {
-  var
-    id = req.params.id,
-    Parse = mongoose.model('Parse');
+
+  var id = req.params.id;
 
   Parse.findByIdAndRemove(id, function (err) {
     if(err) {
@@ -297,8 +288,6 @@ exports.deleteParse = function (req, res) {
  * GET '/manage/api/messages' Returns list of messages
  */
 exports.getMessages = function (req, res) {
-
-  var Message = mongoose.model('Message');
 
   Message
     .find({})
@@ -319,9 +308,8 @@ exports.getMessages = function (req, res) {
  * GET '/manage/api/serverdata' Returns server data: server time and server study week
  */
 exports.getServerData = function (req, res) {
-  var
-    date = new Date(),
-    week = date.getStudyWeek();
+  var date = new Date();
+  var week = date.getStudyWeek();
 
   res.json([
     {

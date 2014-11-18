@@ -2,18 +2,20 @@
  * User(logged) API routes
  */
 
-var
-  mongoose = require('mongoose');
+var mongoose = require('mongoose');
+
+// DB models
+var UserTable = mongoose.model('UserTable');
+var Subject = mongoose.model('Subject');
 
 /**
  * DELETE '/api/user/subject/:id' Remove subject from user schedule
  */
 exports.removeSubject = function (req, res) {
+
   var id = decodeURIComponent(req.params.id);
 
   if(!id || !id.length) return res.status(500).send('Wrong request');
-
-  var UserTable = mongoose.model('UserTable');
 
   UserTable.findOneAndUpdate(
     { user : req.user._id },
@@ -26,19 +28,21 @@ exports.removeSubject = function (req, res) {
     function (err, doc) {
       if(err) console.log(err);
 
-      if(!doc) {
-        var userTable = new UserTable({
-          user : req.user._id,
-          removed : id
-        });
-        userTable.save(function (err) {
-          if(err) {
-            console.log(err);
-            return res.status(500).send("Changes hasn't been saved");
-          }
-          return res.send('success');
-        });
-      } else return res.send('success');
+      if(doc) return res.send('success');
+
+      // If nothing found, create new userTable
+      var userTable = new UserTable({
+        user : req.user._id,
+        removed : id
+      });
+
+      userTable.save(function (err) {
+        if(err) {
+          console.log(err);
+          return res.status(500).send("Changes hasn't been saved");
+        }
+        return res.send('success');
+      });
     }
   );
 };
@@ -47,11 +51,10 @@ exports.removeSubject = function (req, res) {
  * POST '/api/user/subject/:id' Add subject to user schedule
  */
 exports.addSubject = function (req, res) {
+
   var id = decodeURIComponent(req.params.id);
 
   if(!id || !id.length) return res.status(500).send('Wrong request');
-
-  var UserTable = mongoose.model('UserTable');
 
   UserTable.findOneAndUpdate(
     { user : req.user._id },
@@ -64,19 +67,21 @@ exports.addSubject = function (req, res) {
     function (err, doc) {
       if(err) console.log(err);
 
-      if(!doc) {
-        var userTable = new UserTable({
-          user : req.user._id,
-          added : id
-        });
-        userTable.save(function (err) {
-          if(err) {
-            console.log(err);
-            return res.status(500).send("Changes hasn't been saved");
-          }
-          return res.send('success');
-        });
-      } else return res.send('success');
+      if(doc) return res.send('success');
+
+      // If nothing found, create new userTable
+      var userTable = new UserTable({
+        user : req.user._id,
+        added : id
+      });
+
+      userTable.save(function (err) {
+        if(err) {
+          console.log(err);
+          return res.status(500).send("Changes hasn't been saved");
+        }
+        return res.send('success');
+      });
     }
   );
 };
@@ -88,9 +93,7 @@ exports.findSubject = function (req, res) {
 
   var key = decodeURIComponent(req.query.key);
 
-  if(!key.length) return res.status(500).send('Wrong request');
-
-  var Subject = mongoose.model('Subject');
+  if(!key.length) return res.status(400).send('Wrong request');
 
   Subject
     .find(
@@ -101,7 +104,6 @@ exports.findSubject = function (req, res) {
     .sort('name')
     .exec(function (err, subjects) {
       if(err) console.log(err);
-
       res.json(subjects);
     });
 };
@@ -111,8 +113,6 @@ exports.findSubject = function (req, res) {
  */
 exports.getUserTable = function (req, res) {
 
-  var UserTable = mongoose.model('UserTable');
-
   UserTable
     .findOne({ user : req.user._id }, { added : 1, removed : 1 })
     .populate('added', 'name')
@@ -120,14 +120,12 @@ exports.getUserTable = function (req, res) {
     .lean()
     .exec(function (err, usertable) {
       if(err) console.log(err);
-
       res.json(usertable);
     });
 };
 
 /**
- * DELETE '/api/user/usertable/:id'
- * Remove subject from UserTable
+ * DELETE '/api/user/usertable/:id' Remove subject from UserTable
  */
 exports.removeFromUserTable = function (req, res) {
 
@@ -135,14 +133,11 @@ exports.removeFromUserTable = function (req, res) {
 
   if(!id || !id.length) return res.status(400).send('Wrong request');
 
-  var UserTable = mongoose.model('UserTable');
-
   UserTable.findOneAndUpdate(
     { 'user' : req.user.id },
     { $pull : { removed : id, added : id } },
     function (err, usertable) {
       if(err) console.log(err);
-
       res.send('success');
     }
   );
