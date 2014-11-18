@@ -2,20 +2,19 @@
  * Router configuration
  */
 
-var
-  express = require('express'),
-  config  = require('./config'),
+var express = require('express');
+var config  = require('./config');
 
-  // Load routes
-  home = require('../routes/'),
-  user  = require('../routes/user'),
-  manage = require('../routes/manage'),
+// Load routes
+var home = require('../routes/');
+var user  = require('../routes/user');
+var manage = require('../routes/manage');
 
-  api = {
-    home : require('../routes/api/home'),
-    manage : require('../routes/api/manage'),
-    user : require('../routes/api/user')
-  };
+var api = {
+  home : require('../routes/api/home'),
+  manage : require('../routes/api/manage'),
+  user : require('../routes/api/user')
+};
 
 
 function securityHeaders(req, res, next) {

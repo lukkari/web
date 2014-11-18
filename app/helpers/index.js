@@ -3,8 +3,8 @@
  * @return {number}
  */
 Date.prototype.getWeek = function () {
-  var onejan = new Date(this.getFullYear(), 0, 1),
-      time   = this.getMilliseconds() +
+  var onejan = new Date(this.getFullYear(), 0, 1);
+  var time   = this.getMilliseconds() +
                this.getSeconds() * 1000 +
                this.getMinutes() * 60 * 1000 +
                this.getHours() * 60 * 60 * 1000;
@@ -27,9 +27,10 @@ Date.prototype.getStudyWeek = function () {
  * @return {date}
  */
 Date.prototype.getDateOfISOWeek = function (w, y) {
-  var simple       = new Date(y, 0, 1 + (w - 1) * 7),
-      dow          = simple.getDay(),
-      ISOweekStart = simple;
+  var simple = new Date(y, 0, 1 + (w - 1) * 7);
+  var dow = simple.getDay();
+  var ISOweekStart = simple;
+
   if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
   else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
   return ISOweekStart;

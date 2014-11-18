@@ -8,16 +8,15 @@ try {
 } catch (e) {}
 
 // Get required modules
-var
-  express      = require('express'),
-  passport     = require('passport'),
-  path         = require('path'),
-  mongoose     = require('mongoose'),
-  compression  = require('compression'),
-  bodyParser   = require('body-parser'),
-  cookieParser = require('cookie-parser'),
-  session      = require('express-session'),
-  MongoStore   = require('connect-mongo')({ session : session });
+var express      = require('express');
+var passport     = require('passport');
+var path         = require('path');
+var mongoose     = require('mongoose');
+var compression  = require('compression');
+var bodyParser   = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session      = require('express-session');
+var MongoStore   = require('connect-mongo')({ session : session });
 
 // Application directory
 var appdir = path.join(__dirname, 'app');
