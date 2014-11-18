@@ -70,15 +70,15 @@ exports.getRooms = function (req, res) {
 exports.getNowSchedule = function (req, res) {
 
   var search = req.params.q;
+  var today = new Date();
+  var
+    Group   = mongoose.model('Group'),
+    Teacher = mongoose.model('Teacher'),
+    Room    = mongoose.model('Room');
 
   if(!search || !search.length) return res.status(400).send('Wrong request');
 
-  var today = new Date();
   search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
-
-  var Group   = mongoose.model('Group'),
-      Teacher = mongoose.model('Teacher'),
-      Room    = mongoose.model('Room');
 
   Group
     .findOne({ name : new RegExp(search, "i") })
@@ -159,8 +159,9 @@ exports.getNowSchedule = function (req, res) {
  */
 exports.getSchedule = function (req, res) {
 
-  var search = req.params.q,
-      w      = req.param('w');
+  var
+    search = req.params.q,
+    w      = req.param('w');
 
 
   if(!search || !search.length) return res.status(400).send('Wrong request');
@@ -258,13 +259,12 @@ exports.getSchedule = function (req, res) {
 exports.sendMsg = function (req, res) {
 
   var mess = req.body;
+  var Message = mongoose.model('Message');
+  var message = new Message(mess);
 
-  if(!mess.message) return res.send('success');
-  if(mess.message.length < 4) return res.send('success');
-
-  var
-    Message = mongoose.model('Message'),
-    message = new Message(mess);
+  if(!mess.message || mess.message.length < 4) {
+    return res.status(400).send('Message is too short');
+  }
 
   message.save(function (err) {
     if(err) {
@@ -292,18 +292,15 @@ exports.getMySchedule = function (req, res) {
   if(!req.isAuthenticated()) return res.status(401).send('Authentication is required');
 
   var w = req.param('w');
-
   var today = new Date();
+  var UserTable = mongoose.model('UserTable');
 
   if(typeof w !== 'undefined') {
     var i = 0;
     if(today.getStudyWeek() > (w + 35)) i = 1;
 
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
-  }
-  else w = new Date().getStudyWeek();
-
-  var UserTable = mongoose.model('UserTable');
+  } else w = new Date().getStudyWeek();
 
   UserTable
     .findOne({ user : req.user._id }, {
@@ -338,18 +335,15 @@ exports.getMyNowSchedule = function (req, res) {
   if(!req.isAuthenticated()) return res.status(401).send('Authentication is required');
 
   var w = req.param('w');
-
   var today = new Date();
+  var UserTable = mongoose.model('UserTable');
 
   if(typeof w !== 'undefined') {
     var i = 0;
     if(today.getStudyWeek() > (w + 35)) i = 1;
 
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
-  }
-  else w = new Date().getStudyWeek();
-
-  var UserTable = mongoose.model('UserTable');
+  } else w = new Date().getStudyWeek();
 
   UserTable
     .findOne({ user : req.user._id }, {
