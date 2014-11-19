@@ -44,7 +44,7 @@ mongoose.connection.on('disconnected', function (err) {
 
 // Add helpers files
 require(path.join(appdir, 'helpers'));
-require(path.join(appdir, 'helpers/models/db'));
+require(path.join(appdir, 'config/db'));
 require(path.join(appdir, 'config/passport'))(passport);
 
 // app settings
