@@ -52,110 +52,57 @@ exports.getRooms = function (req, res) {
   return getCategory(Room, res);
 };
 
+var tasker = require('../../libs/tasker');
+
+/**
+ * Create tasker for all categories
+ */
+var searchCategories = function (search) {
+
+  var categories = ['Group', 'Teacher', 'Room'];
+  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
+  search = { name : new RegExp(search, "i") };
+
+  return tasker(categories, function (category, next, done) {
+    mongoose.model(category)
+      .findOne(search)
+      .lean()
+      .exec(function (err, model) {
+        if(err) return done(err);
+        if(model) {
+          model.type = category.toLowerCase() + 's';
+          return done(null, model);
+        } else next(null);
+      });
+  });
+};
 
 /**
  * GET '/api/schedule/:q/now'
  */
 exports.getNowSchedule = function (req, res) {
 
-  /**
-   * Future implementation:
-   *
-   * searchCategories(search)
-   *   .fail(function (errNum) {
-   *     var msg = errNum == 404 ? 'Not found' : 'Unknown mistake';
-   *     res.status(errNum).send(msg);
-   *   })
-   *   .success(function (model, modelname) {
-   *     weekday.getSubjects({
-   *      date   : today,
-   *      type   : modelname,
-   *      typeid : model._id,
-   *      cb : function (err, data) {
-   *        data.title = group.name;
-   *        res.json(data);
-   *      }
-   *    });
-   *  });
-   *
-   *
-   */
-
   var search = req.params.q;
   var today = new Date();
 
   if(!search || !search.length) return res.status(400).send('Wrong request');
 
-  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
+  searchCategories(search)
+    .fail(function (err) { res.status(400).send('Unknown mistake'); })
+    .done(function (model) {
+      model = model[0];
+      weekday.getSubjects({
+        date   : today,
+        type   : model.type,
+        typeid : model._id,
+        cb : function (err, data) {
+          data.title = model.name;
+          res.json(data);
+        }
+      });
+    })
+    .run();
 
-  Group
-    .findOne({ name : new RegExp(search, "i") })
-    .lean()
-    .exec(function (err, group) {
-      if(err) {
-        console.log(err);
-        return res.status(400).send('Unknown mistake');
-      }
-
-      if(group) {
-        weekday.getSubjects({
-          date   : today,
-          type   : 'groups',
-          typeid : group._id,
-          cb : function (err, data) {
-            data.title = group.name;
-            res.json(data);
-          }
-        });
-      } else {
-        Teacher
-          .findOne({ name : new RegExp(search, "i") })
-          .lean()
-          .exec(function (err, teacher) {
-            if(err) {
-              console.log(err);
-              return res.status(400).send('Unknown mistake');
-            }
-
-            if(teacher) {
-              weekday.getSubjects({
-                date   : today,
-                type   : 'teachers',
-                typeid : teacher._id,
-                cb : function (err, data) {
-                  data.title = teacher.name;
-                  res.json(data);
-                }
-              });
-            } else {
-              Room
-                .findOne({ name : new RegExp(search, "i") })
-                .lean()
-                .exec(function (err, room) {
-                  if(err) {
-                    console.log(err);
-                    return res.status(400).send('Unknown mistake');
-                  }
-
-                  if(room) {
-                    weekday.getSubjects({
-                      date   : today,
-                      type   : 'rooms',
-                      typeid : room._id,
-                      cb : function (err, data) {
-                        data.title = room.name;
-                        res.json(data);
-                      }
-                    });
-                  } else return res.status(404).send('Not found');
-
-                });
-            }
-
-          });
-      }
-
-    });
 };
 
 
@@ -163,28 +110,6 @@ exports.getNowSchedule = function (req, res) {
  * GET '/api/schedule/:q' [description]
  */
 exports.getSchedule = function (req, res) {
-
-  /**
-   * Future implementation:
-   *
-   * searchCategories(search)
-   *   .fail(function (errNum) {
-   *     var msg = errNum == 404 ? 'Not found' : 'Unknown mistake';
-   *     res.status(errNum).send(msg);
-   *   })
-   *   .success(function (model, modelname) {
-   *     week.getSubjects({
-   *      date   : today,
-   *      type   : modelname,
-   *      typeid : model._id,
-   *      cb : function (err, data) {
-   *        res.json({ title : model.name, week : w, weekdays : data });
-   *      }
-   *    });
-   *  });
-   *
-   *
-   */
 
   var search = req.params.q;
   var w = req.param('w');
@@ -194,80 +119,25 @@ exports.getSchedule = function (req, res) {
 
   if(!search || !search.length) return res.status(400).send('Wrong request');
 
-  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
-
   if(typeof w !== 'undefined') {
     //if(today.getStudyWeek() > (w + 35)) i = 1;
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
   } else w = today.getStudyWeek();
 
-  start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  end   = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
-
-  Group
-    .findOne({ name : new RegExp(search, "i") })
-    .lean()
-    .exec(function (err, group) {
-      if(err) {
-        console.log(err);
-        return res.status(400).send('Unknown mistake');
-      }
-
-      if(group) {
-        week.getSchedule({
-          date : today,
-          type : 'groups',
-          typeid : group._id,
-          cb : function (err, data) {
-            res.json({ title : group.name, week : w, weekdays : data });
-          }
-        });
-      } else {
-        Teacher
-          .findOne({ name : new RegExp(search, "i") })
-          .lean()
-          .exec(function (err, teacher) {
-            if(err) {
-              console.log(err);
-              return res.status(400).send('Unknown mistake');
-            }
-
-            if(teacher) {
-              week.getSchedule({
-                date   : today,
-                type   : 'teachers',
-                typeid : teacher._id,
-                cb : function (err, data) {
-                  res.json({ title : teacher.name, week : w, weekdays : data });
-                }
-              });
-            } else {
-              Room
-                .findOne({ name : new RegExp(search, "i") })
-                .lean()
-                .exec(function (err, room) {
-                  if(err) {
-                    console.log(err);
-                    return res.status(400).send('Unknown mistake');
-                  }
-
-                  if(room) {
-                    week.getSchedule({
-                      date   : today,
-                      type   : 'rooms',
-                      typeid : room._id,
-                      cb : function (err, data) {
-                        res.json({ title : room.name, week : w, weekdays : data });
-                      }
-                    });
-                  } else return res.status(404).send('Not found');
-                });
-            }
-
-          });
-      }
-    });
-
+  searchCategories(search)
+    .fail(function (err) { res.status(400).send('Unknown mistake'); })
+    .done(function (model) {
+      model = model[0];
+      week.getSchedule({
+        date : today,
+        type : model.type,
+        typeid : model._id,
+        cb : function (err, data) {
+          res.json({ title : model.name, week : w, weekdays : data });
+        }
+      });
+    })
+    .run();
 };
 
 
