@@ -106,7 +106,7 @@ module.exports = function (app, passport) {
    */
   var manageApiRouter = express.Router();
   manageApiRouter
-    .use(ensureAuthenticated)
+    .use(ensureAuthenticatedAPI)
     .use(ensureAdmin)
     .use(ensureXhr)
 
@@ -122,7 +122,7 @@ module.exports = function (app, passport) {
     .get(   '/parse/:id/run', api.manage.runParse)
     .delete('/parse/:id',     api.manage.deleteParse)
 
-    .get('/message', api.manage.getMessages)
+    .get('/message',    api.manage.getMessages)
     .get('/serverdata', api.manage.getServerData);
 
   /**
@@ -131,21 +131,19 @@ module.exports = function (app, passport) {
   var apiRouter = express.Router();
   apiRouter
     .use(ensureXhr)
-    .post(  '/message',         api.home.sendMsg)
+    .post('/message', api.home.sendMsg)
 
-    .get(   '/schedule/my',     api.home.getMySchedule)
-    .get(   '/schedule/my/now', api.home.getMyNowSchedule)
-    .get(   '/schedule/:q/now', api.home.getNowSchedule)
+    .get('/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
     // Schedule pages use short
     .use(setShortCacheHeader)
-    .get(   '/schedule/:q',     api.home.getSchedule)
-    //
+    .get(  '/schedule/:q', api.home.getSchedule)
+    // Categories use long
     .use(setLongCacheHeader)
-    .get(   '/groups',          api.home.getGroups)
-    .get(   '/teachers',        api.home.getTeachers)
-    .get(   '/rooms',           api.home.getRooms)
-    .get(   '*',                api.home.notFound);
+    .get('/groups',   api.home.getGroups)
+    .get('/teachers', api.home.getTeachers)
+    .get('/rooms',    api.home.getRooms)
+    .get('*',         api.home.notFound)
 
   /**
    * User API
@@ -153,6 +151,8 @@ module.exports = function (app, passport) {
   var userApiRouter = express.Router();
   userApiRouter
     .use(ensureAuthenticatedAPI)
+    .get(   '/schedule',      api.user.getSchedule)
+    .get(   '/schedule/now',  api.user.getNowSchedule)
     .delete('/subject/:id',   api.user.removeSubject)
     .post(  '/subject/:id',   api.user.addSubject)
     .get(   '/subject',       api.user.findSubject)

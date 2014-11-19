@@ -3,10 +3,82 @@
  */
 
 var mongoose = require('mongoose');
+var week = require('../../helpers/models/week');
+var weekday = require('../../helpers/models/weekday');
 
 // DB models
 var UserTable = mongoose.model('UserTable');
 var Subject = mongoose.model('Subject');
+
+/**
+ * GET '/api/user/schedule' Return user's schedule
+ */
+exports.getSchedule = function (req, res) {
+
+  var w = req.param('w');
+  var today = new Date();
+  var i = 0;
+
+  if(typeof w !== 'undefined') {
+    //if(today.getStudyWeek() > (w + 35)) i = 1;
+    today = today.getDateOfISOWeek(w, today.getFullYear() + i);
+  } else w = today.getStudyWeek();
+
+  UserTable
+    .findOne({ user : req.user._id }, {
+      added : 1,
+      removed : 1
+    })
+    .exec(function (err, usertable) {
+      if(err) console.log(err);
+
+      week.getSchedule({
+        date   : today,
+        type   : 'groups',
+        typeid : req.user.group,
+        usertable : usertable,
+        cb : function (err, data) {
+          return res.json({
+            title : 'My schedule',
+            week : w,
+            weekdays : data,
+            url : 'my'
+          });
+        }
+      });
+    });
+};
+
+/**
+ * GET '/api/user/schedule/now' Return user's now schedule
+ */
+exports.getNowSchedule = function (req, res) {
+
+  var today = new Date();
+
+  UserTable
+    .findOne({ user : req.user._id }, {
+      added : 1,
+      removed : 1
+    })
+    .exec(function (err, usertable) {
+      if(err) console.log(err);
+
+      weekday.getSubjects({
+          date   : today,
+          type   : 'groups',
+          typeid : req.user.group,
+          usertable : usertable,
+          cb : function (err, data) {
+            var newdata = data;
+            data.title = 'My schedule';
+            data.url = 'my';
+            res.json(newdata);
+          }
+        });
+    });
+
+};
 
 /**
  * DELETE '/api/user/subject/:id' Remove subject from user schedule

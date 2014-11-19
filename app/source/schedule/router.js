@@ -110,7 +110,8 @@ module.exports = Backbone.Router.extend({
     document.title = title;
 
     var schedule = new Schedule([], {
-      url : options.query
+      url  : options.query,
+      isMy : isMySchedule
     });
 
     schedule.fetch({
@@ -135,8 +136,12 @@ module.exports = Backbone.Router.extend({
 
     document.title = q.fromUrl().toUpperCase() + ' - Today\'s Schedule';
 
+    var isMy = (q == 'my');
+
     var schedule = new Schedule([], {
-      url : q + '/now'
+      url : q + '/',
+      isMy : isMy,
+      isNow : true
     });
 
     schedule.fetch({

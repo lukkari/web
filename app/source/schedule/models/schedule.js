@@ -13,6 +13,8 @@ module.exports = Backbone.Model.extend({
   week : null,
   isEditing : false,
 
+  userUrl : '/api/user/schedule/',
+
   defaults : {
     title       : '',
     switcherUrl : '',
@@ -21,7 +23,10 @@ module.exports = Backbone.Model.extend({
 
   initialize : function (data, options) {
     options = options || {};
-    this.urlRoot += options.url;
+    if(options.isMy) this.urlRoot = this.userUrl;
+    else this.urlRoot += options.url;
+
+    if(options.isNow) this.urlRoot += 'now';
 
     this.on('sync', this.setWeek, this);
   },
