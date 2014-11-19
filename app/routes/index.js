@@ -2,7 +2,7 @@
  * Home page routes
  */
 
-var device = require('../helpers/device');
+var device = require('../libs/device');
 
 /**
  * GET '/*' Homepage

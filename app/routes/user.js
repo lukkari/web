@@ -3,7 +3,7 @@
  */
 
 var mongoose = require('mongoose');
-var device = require('../helpers/device');
+var device = require('../libs/device');
 
 // DB models
 var User = mongoose.model('User');

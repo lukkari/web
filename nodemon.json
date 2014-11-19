@@ -4,7 +4,8 @@
     "app/source",
     "node_modules",
     "app/public",
-    "*.log"
+    "*.log",
+    ".git/"
   ],
   "env" : {
     "PORT" : 3000,
