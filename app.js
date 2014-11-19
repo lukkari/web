@@ -52,19 +52,18 @@ app
   .disable('x-powered-by')
   .set('views', path.join(appdir, 'views'))
   .set('view engine', 'jade')
-  /*
   .use(function (req, res, next) {
-    // !! DOESN'T WORK
-    if('production' == app.get('env')) {
+    var file;
+    if('production' === app.get('env')) {
       // In production return minified css
-      if(/\/stylesheets\//.test(req.path)) {
-        // When css is asked add min folder to the request
-        req.path = req.path.replace('/stylesheets/', '/stylesheets/min/');
+      if(/\/stylesheets\//.test(req.url)) {
+        // When css is asked add min to the name
+        file = path.basename(req.path, '.css');
+        req.url = path.dirname(req.url) + '/' + file + '.min.css';
       }
     }
-
-    return next();
-  })*/
+    next();
+  })
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))
@@ -91,9 +90,6 @@ app
 
 // Register routes
 require(path.join(appdir, 'config/router'))(app, passport);
-
-//Set up jobs
-require(path.join(appdir, 'helpers/jobs'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -123,5 +119,8 @@ app.use(function(err, req, res, next) {
     error   : {}
   });
 });
+
+//Set up jobs
+require(path.join(appdir, 'helpers/jobs'));
 
 module.exports = app;

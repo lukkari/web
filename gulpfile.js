@@ -8,6 +8,7 @@ var
   uglify     = require('gulp-uglify'),
   jade       = require('gulp-jade'),
   minifyCSS  = require('gulp-minify-css'),
+  rename     = require('gulp-rename'),
   fs         = require('fs'),
   path       = require('path');
 
@@ -33,7 +34,7 @@ var paths = {
 
   css : {
     src  : './app/public/stylesheets/*.css',
-    dest : './app/public/stylesheets/min/'
+    dest : './app/public/stylesheets/'
   },
 
   pages : ['schedule', 'manage', 'user']
@@ -156,5 +157,6 @@ gulp.task('default', ['scripts', 'watch']);
 gulp.task('min-css', function () {
   gulp.src(paths.css.src)
     .pipe(minifyCSS())
+    .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.css.dest));
 });

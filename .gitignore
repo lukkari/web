@@ -12,6 +12,9 @@ app/cache/*
 # Builds
 app/public/js/builds/*
 
+# Minified files
+app/public/**/*.min.*
+
 # Analytics
 app/public/js/libs/analytics.js
 
