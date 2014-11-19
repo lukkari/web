@@ -2,8 +2,6 @@
  * Manage page routes
  */
 
-var fs = require('fs');
-
 /**
  * GET '/manage/*' [description]
  */
