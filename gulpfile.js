@@ -2,15 +2,14 @@
  * Gulp tasks
  */
 
-var
-  gulp       = require('gulp'),
-  browserify = require('gulp-browserify'),
-  uglify     = require('gulp-uglify'),
-  jade       = require('gulp-jade'),
-  minifyCSS  = require('gulp-minify-css'),
-  rename     = require('gulp-rename'),
-  fs         = require('fs'),
-  path       = require('path');
+var gulp       = require('gulp');
+var browserify = require('gulp-browserify');
+var uglify     = require('gulp-uglify');
+var jade       = require('gulp-jade');
+var minifyCSS  = require('gulp-minify-css');
+var rename     = require('gulp-rename');
+var fs         = require('fs');
+var path       = require('path');
 
 var paths = {
   watch : './app/source/**/*.js',
