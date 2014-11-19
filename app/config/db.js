@@ -1,11 +1,10 @@
 /**
  * DB Models
- *
  */
 
-var mongoose = require('mongoose'),
-    crypto   = require('crypto'),
-    Schema   = mongoose.Schema;
+var mongoose = require('mongoose');
+var crypto   = require('crypto');
+var Schema   = mongoose.Schema;
 
 
 /**
