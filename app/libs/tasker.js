@@ -36,11 +36,13 @@ var Task = function (elements, handler) {
 };
 
 Task.prototype.fail = function (func) {
+  if(typeof func !== 'function') throw new Error('Propery is not a function');
   this._fail = func;
   return this;
 };
 
 Task.prototype.done = function (func) {
+  if(typeof func !== 'function') throw new Error('Propery is not a function');
   this._done = func;
   return this;
 };
