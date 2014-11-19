@@ -3,8 +3,8 @@
  */
 
 var mongoose = require('mongoose');
-var week = require('../../helpers/models/week');
-var weekday = require('../../helpers/models/weekday');
+var week = require('../../libs/week');
+var weekday = require('../../libs/weekday');
 var tasker = require('../../libs/tasker');
 
 // DB models
