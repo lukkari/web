@@ -3,8 +3,9 @@
  */
 
 var mongoose = require('mongoose');
-var week     = require('../../helpers/models/week');
-var weekday  = require('../../helpers/models/weekday');
+var week = require('../../helpers/models/week');
+var weekday = require('../../helpers/models/weekday');
+var tasker = require('../../libs/tasker');
 
 // DB models
 var Group = mongoose.model('Group');
@@ -27,7 +28,32 @@ var getCategory = function (Model, res) {
 
     return res.json(results);
   });
-}
+};
+
+/**
+ * Create tasker for all categories
+ */
+var searchCategories = function (search) {
+
+  var categories = ['Group', 'Teacher', 'Room'];
+  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
+  search = { name : new RegExp(search, "i") };
+
+  return tasker(categories, function (category, next, done) {
+    mongoose.model(category)
+      .findOne(search)
+      .lean()
+      .exec(function (err, model) {
+        if(err) return done(err);
+        if(model) {
+          model.type = category.toLowerCase() + 's';
+          return done(null, model);
+        } else next(null);
+      });
+  });
+};
+
+
 
 /**
  * GET '/api/groups'
@@ -52,30 +78,6 @@ exports.getRooms = function (req, res) {
   return getCategory(Room, res);
 };
 
-var tasker = require('../../libs/tasker');
-
-/**
- * Create tasker for all categories
- */
-var searchCategories = function (search) {
-
-  var categories = ['Group', 'Teacher', 'Room'];
-  search = search.replace(/_/g, ' ').replace(/ *\([^)]*\) */g, '').trim();
-  search = { name : new RegExp(search, "i") };
-
-  return tasker(categories, function (category, next, done) {
-    mongoose.model(category)
-      .findOne(search)
-      .lean()
-      .exec(function (err, model) {
-        if(err) return done(err);
-        if(model) {
-          model.type = category.toLowerCase() + 's';
-          return done(null, model);
-        } else next(null);
-      });
-  });
-};
 
 /**
  * GET '/api/schedule/:q/now'
