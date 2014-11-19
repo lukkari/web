@@ -1,5 +1,27 @@
 /**
  * Tasker lib
+ *
+ * Usage:
+ *
+ * var tasker = require('tasker');
+ *
+ * tasker(elements, [handler])
+ *   .fail(errCb)
+ *   .done(doneCb)
+ *   .run()
+ *
+ * Parameters:
+ *   - elements Array which items to process
+ *   - handler  Function processes each element
+ *     passes three parameters
+ *     (element, next, done)
+ *
+ * Chain methods:
+ *   - fail pass function to execute on fail
+ *     (err)
+ *   - done function to execute on done
+ *     (data)
+ *
  */
 
 var Task = function (elements, handler) {
