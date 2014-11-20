@@ -10,7 +10,7 @@ node_modules
 app/cache/*
 
 # Builds
-app/public/js/builds/*
+app/public/js/builds/*.js
 
 # Minified files
 app/public/**/*.min.*
