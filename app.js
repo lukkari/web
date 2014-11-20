@@ -51,19 +51,22 @@ require(path.join(appdir, 'config/passport'))(passport);
 app
   .disable('x-powered-by')
   .set('views', path.join(appdir, 'views'))
-  .set('view engine', 'jade')
-  .use(function (req, res, next) {
-    var file;
-    if('production' === app.get('env')) {
-      // In production return minified css
-      if(/\/stylesheets\//.test(req.url)) {
-        // When css is asked add min to the name
-        file = path.basename(req.path, '.css');
-        req.url = path.dirname(req.url) + '/' + file + '.min.css';
-      }
+  .set('view engine', 'jade');
+
+// In production return minified css and js
+if('production' === app.get('env')) {
+  app.use(function (req, res, next) {
+    var file, extname;
+    if(/\.css|\.js$/.test(req.url)) {
+      extname = path.extname(req.url);
+      file = path.basename(req.url, extname);
+      req.url = path.dirname(req.url) + '/' + file + '.min' + extname;
     }
     next();
-  })
+  });
+}
+
+app
   .use(compression({
     threshold : 0 // set file size limit to 0
   }))

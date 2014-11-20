@@ -73,6 +73,7 @@ gulp.task('min-js', function () {
     .src(tWay(page, paths.builds.src))
     .pipe(browserify({ debug : false }))
     .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.builds.dest));
   });
 });
