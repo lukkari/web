@@ -24,9 +24,10 @@ module.exports = Backbone.Model.extend({
   initialize : function (data, options) {
     options = options || {};
     if(options.isMy) this.urlRoot = this.userUrl;
-    else this.urlRoot += options.url;
+    else this.urlRoot += options.query + '/';
 
     if(options.isNow) this.urlRoot += 'now';
+    else this.urlRoot += '?w=' + options.week;
 
     this.on('sync', this.setWeek, this);
   },
