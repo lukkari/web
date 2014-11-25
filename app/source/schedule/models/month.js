@@ -33,9 +33,6 @@ module.exports = Backbone.Model.extend({
       weeks = [],
       i, j, dur, week;
 
-    var day = d.getDay();
-
-    if(d.getMonth() == 2) debugger;
     if(d.getDay() == 6) {
       d.setDate(d.getDate() + 1);
     } else {
