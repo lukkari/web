@@ -205,8 +205,8 @@ module.exports = function (app, passport) {
     .get('/auth/google', passport.authenticate('google'))
     .get('/auth/google/callback',
       passport.authenticate('google', {
-        successRedirect : '/',
-        failureRedirect : '/'
+        successRedirect : '/u',
+        failureRedirect : '/u'
       })
     );
 

@@ -39,14 +39,18 @@ module.exports = function (app, passport) {
   passport.use(new GoogleStrategy({
       clientID : config.API.google.CLIENT_ID,
       clientSecret : config.API.google.CLIENT_SECRET,
-      callbackURL : config.app.url + "/u/auth/google/callback"
+      callbackURL : config.app.url + "/u/auth/google/callback",
+      passReqToCallback : true,
+      scope : ['https://www.googleapis.com/auth/calendar']
     },
-    function (accessToken, refreshToken, profile, done) {
-      /*
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
-      */
+    function (req, accessToken, refreshToken, profile, done) {
+
+      var user = req.user;
+      if(!user) {
+        return done(new Error('User is not authorized'));
+      }
+
+      done(null, user);
     }
   ));
 
