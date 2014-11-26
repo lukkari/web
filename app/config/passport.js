@@ -1,9 +1,16 @@
-var
-  mongoose      = require('mongoose'),
-  LocalStrategy = require('passport-local').Strategy,
-  User          = mongoose.model('User');
+/**
+ * Authorization config
+ */
 
-module.exports = function (passport) {
+var mongoose = require('mongoose');
+var LocalStrategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var User = mongoose.model('User');
+var config = require('./config');
+
+module.exports = function (app, passport) {
+
+  config = config[app.get('env')];
 
   passport.serializeUser(function (user, done) {
     done(null, user.id);
@@ -26,6 +33,20 @@ module.exports = function (passport) {
 
         return done(null, user);
       });
+    }
+  ));
+
+  passport.use(new GoogleStrategy({
+      clientID : config.API.google.CLIENT_ID,
+      clientSecret : config.API.google.CLIENT_SECRET,
+      callbackURL : config.app.url + "/u/auth/google/callback"
+    },
+    function (accessToken, refreshToken, profile, done) {
+      /*
+      User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
+      */
     }
   ));
 

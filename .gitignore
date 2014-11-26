@@ -28,3 +28,5 @@ app/public/stylesheets/min
 
 # New Relic configuration
 newrelic.js
+
+nodemon.json
