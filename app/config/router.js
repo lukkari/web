@@ -191,18 +191,24 @@ module.exports = function (app, passport) {
         failureRedirect: '/u/login?wrong'
       })
     )
-
     // Sign up
     .get( '/signup', user.signup)
     .post('/signup', user.create)
-
     // When user logged
     .use(ensureAuthenticated)
     .get( '/',       user.me)
     .post('/',       user.update)
     .get( '/group',  user.selectGroup)
     .post('/group',  user.addGroup)
-    .get('/logout',  user.logout);
+    .get('/logout',  user.logout)
+    // API
+    .get('/auth/google', passport.authenticate('google'))
+    .get('/auth/google/callback',
+      passport.authenticate('google', {
+        successRedirect : '/',
+        failureRedirect : '/'
+      })
+    );
 
   /**
    * Home page
