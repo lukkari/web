@@ -1,11 +1,7 @@
-doctype html
-html
-  head
-    title= title
-    meta(charset='utf-8')
-    meta(http-equiv="X-UA-Compatible" content="chrome=1")
-  body
-    h1 Error occured
-    div.message= message
+extends ./layouts/main
 
-    pre.err= error
+block content
+  h1 Error occured
+  div.message= message
+
+  pre.err= error

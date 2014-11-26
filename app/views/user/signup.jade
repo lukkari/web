@@ -1,7 +1,4 @@
-extends ../layouts/main
-
-block customHead
-  link(rel='stylesheet', href='/stylesheets/auth.css')
+extends ../layouts/user
 
 block content
   div.loginpage
@@ -23,6 +20,3 @@ block content
           input.button(type='submit' value='Sign up')
 
     div.note Hi! Did you know that this is an open source project. You can check all the source code in git repository. Link can be found in footer.
-
-block customFoot
-  script(src='/js/libs/analytics.js' async)

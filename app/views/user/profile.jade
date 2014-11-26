@@ -1,7 +1,4 @@
-extends ../layouts/main
-
-block customHead
-  link(rel='stylesheet', href='/stylesheets/auth.css')
+extends ../layouts/user
 
 block content
   div.loginpage
@@ -40,7 +37,5 @@ block content
 
       ul.subjects#subjects
 
-
-block customFoot
+block foot
   script(src='/js/builds/userpage.js' async)
-  script(src='/js/libs/analytics.js' async)
