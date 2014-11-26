@@ -40,7 +40,7 @@ function ensureAuthenticated(req, res, next) {
 
   res.set('X-Auth-Required', 'true');
   //res.redirect('/login/?returnTo=' + encodeURIComponent(req.originalUrl));
-  res.redirect('/login');
+  res.redirect('/u/login');
 }
 
 function ensureAuthenticatedAPI(req, res, next) {
@@ -183,6 +183,20 @@ module.exports = function (app, passport) {
    */
   var userRouter = express.Router();
   userRouter
+    // Log in
+    .get( '/login', user.login)
+    .post('/login',
+      passport.authenticate('local', {
+        successRedirect: '/my',
+        failureRedirect: '/u/login?wrong'
+      })
+    )
+
+    // Sign up
+    .get( '/signup', user.signup)
+    .post('/signup', user.create)
+
+    // When user logged
     .use(ensureAuthenticated)
     .get( '/',       user.me)
     .post('/',       user.update)
@@ -195,19 +209,6 @@ module.exports = function (app, passport) {
    */
   var homeRouter = express.Router();
   homeRouter
-    // Log in
-    .get( '/login', user.login)
-    .post('/login',
-      passport.authenticate('local', {
-        successRedirect: '/my',
-        failureRedirect: '/login?wrong'
-      })
-    )
-
-    // Sign up
-    .get( '/signup', user.signup)
-    .post('/signup', user.create)
-
     .use(setLongCacheHeader)
     // Main page
     .get('/*',      home.index);
