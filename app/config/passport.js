@@ -41,7 +41,7 @@ module.exports = function (app, passport) {
       clientSecret : config.API.google.CLIENT_SECRET,
       callbackURL : config.app.url + "/u/auth/google/callback",
       passReqToCallback : true,
-      scope : ['https://www.googleapis.com/auth/calendar']
+      scope : ['email', 'https://www.googleapis.com/auth/calendar']
     },
     function (req, accessToken, refreshToken, profile, done) {
 
@@ -50,7 +50,9 @@ module.exports = function (app, passport) {
         return done(new Error('User is not authorized'));
       }
 
-      done(null, user);
+      user.save(function (err) {
+        return done(err, user);
+      });
     }
   ));
 

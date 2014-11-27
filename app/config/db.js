@@ -267,6 +267,13 @@ var userSchema = new Schema({
   roles     : {
     admin : { type : Boolean, default : false }
   },
+  oauth : [{
+    provider : { type : String, default : '' },
+    uid : { type : String, default : '' },
+    token : { type : String, default : '' },
+    name : { type : String, default : '' },
+    data : { type : Schema.Types.Mixed }
+  }],
   createdAt : { type : Date,   default : Date.now }
 });
 
