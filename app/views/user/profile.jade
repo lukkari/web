@@ -34,8 +34,18 @@ block content
 
     div.container
       h3 Subjects
-
       ul.subjects#subjects
+
+
+    div.container
+      h3 Apps
+
+      ul.subjects
+        each app in user.oauth
+          li= app.provider
+            div.remove-btn: button
+
+
 
 block foot
   script(src='/js/builds/userpage.js' async)

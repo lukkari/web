@@ -306,6 +306,7 @@ select {
 .loginpage .subjects > li {
   padding: 0.5rem 0.3rem;
   position: relative;
+  text-transform: capitalize;
 }
 
 .loginpage .subjects > li:hover {

@@ -16,10 +16,10 @@ exports.login = function (req, res) {
   if(req.isAuthenticated()) return res.redirect('/');
 
   res.render('user/login', {
-      title  : 'Login',
-      error  : error,
-      mobile : device.isMobile(req),
-      logged : false
+    title  : 'Login',
+    error  : error,
+    mobile : device.isMobile(req),
+    logged : false
   });
 };
 
