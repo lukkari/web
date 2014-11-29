@@ -22,6 +22,9 @@ module.exports = function (app, passport) {
     });
   });
 
+  /**
+   * Local authorization
+   */
   passport.use(new LocalStrategy(
     function (username, password, done) {
       User.findOne({ username : username }, function (err, user) {
@@ -36,6 +39,9 @@ module.exports = function (app, passport) {
     }
   ));
 
+  /**
+   * Google authorization
+   */
   passport.use(new GoogleStrategy({
       clientID : config.API.google.CLIENT_ID,
       clientSecret : config.API.google.CLIENT_SECRET,
