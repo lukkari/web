@@ -267,10 +267,13 @@ var userSchema = new Schema({
   roles     : {
     admin : { type : Boolean, default : false }
   },
-  oauth : [{
+  apps : [{
     provider : { type : String, default : '' },
     uid : { type : String, default : '' },
-    token : { type : String, default : '' },
+    tokens : {
+      access : { type : String, default : '' },
+      refresh : { type : String, default : '' }
+    },
     name : { type : String, default : '' },
     data : { type : Schema.Types.Mixed }
   }],
@@ -307,6 +310,15 @@ userSchema.methods = {
     catch (err) {
       return '';
     }
+  },
+
+  getApp : function (provider) {
+    var found = this.apps.filter(function (app) {
+      return app.provider == provider;
+    });
+
+    if(Array.isArray(found) && found.length) return found.shift();
+    return null;
   }
 };
 
