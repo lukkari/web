@@ -47,6 +47,7 @@ module.exports = function (app, passport) {
       clientSecret : config.API.google.CLIENT_SECRET,
       callbackURL : config.app.url + "/u/auth/google/callback",
       passReqToCallback : true,
+      accessType : 'offline',
       scope : ['email', 'https://www.googleapis.com/auth/calendar']
     },
     function (req, accessToken, refreshToken, profile, done) {
@@ -55,6 +56,22 @@ module.exports = function (app, passport) {
       if(!user) {
         return done(new Error('User is not authorized'));
       }
+
+      if(user.getApp('google')) {
+        // TODO: Update access token and refresh token
+        return done(null, user);
+      }
+
+      user.apps.push({
+        provider : 'google',
+        uid : profile.id,
+        tokens : {
+          access : accessToken,
+          refresh : refreshToken
+        },
+        data : profile._json,
+        name : profile.displayName
+      });
 
       user.save(function (err) {
         return done(err, user);
