@@ -47,7 +47,7 @@ require(path.join(appdir, 'helpers'));
 require(path.join(appdir, 'config/db'));
 require(path.join(appdir, 'config/passport'))(passport);
 
-// app settings
+// App settings
 app
   .disable('x-powered-by')
   .set('views', path.join(appdir, 'views'))
@@ -92,18 +92,19 @@ app
   .use(passport.session());
 
 // Register routes
-require(path.join(appdir, 'config/router'))(app, passport);
+var router = require(path.join(appdir, 'config/router'))(passport);
+app.use(router);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// error handlers
+// Error handlers
 
-// development error handler
+// Development error handler
 if(app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -114,7 +115,7 @@ if(app.get('env') === 'development') {
   });
 }
 
-// production error handler
+// Production error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {

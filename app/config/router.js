@@ -91,11 +91,11 @@ function setLongCacheHeader(req, res, next) {
 }
 
 // Set up router
-module.exports = function (app, passport) {
+module.exports = function (passport) {
 
   /**
    * ===========================================================
-   * API setups
+   * API set up
    *   1) Manage API
    *   2) Home API
    *   3) User API
@@ -161,7 +161,7 @@ module.exports = function (app, passport) {
 
   /**
    * =====================================================
-   * Page setups
+   * Page set up
    *   1) Manage page
    *   2) User page
    *   3) Home page
@@ -216,9 +216,12 @@ module.exports = function (app, passport) {
 
   /**
    * ==================================================
-   * Add all routers to the app
+   * Add all routers to the main router
    */
-  app
+
+  var router = express.Router();
+
+  router
     .use(securityHeaders)
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)
@@ -226,4 +229,6 @@ module.exports = function (app, passport) {
     .use('/api/user',   userApiRouter)
     .use('/api',        apiRouter)
     .use('/',           homeRouter);
+
+  return router;
 };
