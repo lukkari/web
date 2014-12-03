@@ -32,10 +32,7 @@ Brief description is provided below.
 
 1. `gulp jade`
 2. `gulp templates`
-
-For development:
-
-1. `gulp scripts`
+3. `gulp scripts`
 
 For production:
 
