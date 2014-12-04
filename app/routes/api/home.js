@@ -125,7 +125,9 @@ exports.getSchedule = function (req, res) {
   if(!search || !search.length) return res.status(400).send('Wrong request');
 
   if(typeof w !== 'undefined') {
-    //if(today.getStudyWeek() > (w + 35)) i = 1;
+    // Return next year schedule for january,
+    // when we are in August
+    if(today.getStudyWeek() > 31 && w < 30) i = 1;
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
   } else w = today.getStudyWeek();
 
