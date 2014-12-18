@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var crypto   = require('crypto');
 var Schema   = mongoose.Schema;
+var uuid = require('node-uuid');
 
 
 /**
@@ -300,6 +301,16 @@ userSchema.methods = {
     catch (err) {
       return '';
     }
+  },
+
+  shortForm : function () {
+    var user = {
+      _id : this._id,
+      username : this.username,
+      createdAt : this.createdAt
+    };
+
+    return user;
   }
 };
 
@@ -333,3 +344,28 @@ var FilterSchema = new Schema({
 });
 
 mongoose.model('Filter', FilterSchema);
+
+
+/**
+ * Tokens
+ */
+
+var TokenSchema = new Schema({
+  access    : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
+  createdAt : { type : Date,   default : Date.now }
+});
+
+TokenSchema.pre('save', function (next, done) {
+  this.access = uuid.v4();
+  next();
+});
+
+/*
+TokenSchema.index(
+  { "access" : 1 },
+  { expireAfterSeconds : (60*60*24*30) } // 30 days
+);
+*/
+
+mongoose.model('Token', TokenSchema);

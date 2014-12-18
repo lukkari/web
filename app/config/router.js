@@ -150,6 +150,11 @@ module.exports = function (passport) {
    */
   var userApiRouter = express.Router();
   userApiRouter
+    .get('/login',
+      passport.authenticate('basic', { session: true }),
+      api.user.login
+    )
+
     .use(ensureAuthenticatedAPI)
     .get(   '/schedule',      api.user.getSchedule)
     .get(   '/schedule/now',  api.user.getNowSchedule)
