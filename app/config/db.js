@@ -288,19 +288,12 @@ userSchema.methods = {
   },
 
   makeSalt : function () {
-    return Math.round((new Date().valueOf() * Math.random())) + '';
+    return '' + Math.round((new Date().valueOf() * Math.random()));
   },
 
   encryptPassword : function (password) {
     if (!password) return '';
-    var encrypred;
-    try {
-      encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex');
-      return encrypred;
-    }
-    catch (err) {
-      return '';
-    }
+    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
   },
 
   shortForm : function () {
