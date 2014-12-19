@@ -14,7 +14,7 @@ module.exports = Backbone.Collection.extend({
    */
   populate : function () {
     var
-      d = new Date(2015, 1, 1),   // current date
+      d = new Date(),   // current date
       m = d.getMonth(), // current month
       prec = 3,         // number of preceding months to show
       follow = 4,       // number of following months to show
