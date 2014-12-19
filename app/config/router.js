@@ -34,7 +34,7 @@ function handleManage(req, res) {
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) return next();
+  if(req.isAuthenticated()) return next();
 
   if(handleManage(req, res)) return;
 
@@ -44,7 +44,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function ensureAuthenticatedAPI(req, res, next) {
-  if (req.isAuthenticated()) return next();
+  if(req.isAuthenticated()) return next();
 
   res.set('X-Auth-Required', 'true');
   res.status(401).send('Authentication is required');
