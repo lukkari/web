@@ -116,6 +116,7 @@ var entrySchema = new Schema({
   groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
   teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
   parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  version   : { type : Number, default : 0 },
   createdAt : { type : Date, default : Date.now }
 });
 
@@ -362,3 +363,20 @@ TokenSchema.index(
 */
 
 mongoose.model('Token', TokenSchema);
+
+
+/**
+ * Settings
+ */
+
+var SettingSchema = new Schema({
+  version : { type : String, default : 0 },
+  updatedAt : { type : Date }
+});
+
+SettingSchema.pre('save', function (next, done) {
+  this.updatedAt = new Date();
+  next();
+});
+
+mongoose.model('Setting', SettingSchema);

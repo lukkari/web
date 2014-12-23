@@ -2,6 +2,10 @@
  * Configure web-sockets events
  */
 
+var handlers = {
+  manage : require('../routes/socket/manage')
+};
+
 module.exports = function (io) {
 
   var manage = io
@@ -13,11 +17,8 @@ module.exports = function (io) {
       next();
     })
     .on('connection', function (socket) {
-      socket.on('hello', function () {
-        console.log('trigger hello');
-      });
-
-      socket.emit('news', { test : 'Roman' });
+      socket.on('new_version', handlers.manage.newVersion.bind(socket));
+      socket.on('add_entry', handlers.manage.addEntry.bind(socket));
     });
 
 };
