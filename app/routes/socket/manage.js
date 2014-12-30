@@ -20,8 +20,7 @@ var Setting = mongoose.model('Setting');
  *  - Update current schedule version number
  *  - Return new number to sync app
  */
-exports.newVersion = function () {
-  var socket = this;
+exports.newVersion = function (_, socket) {
 
   Setting
     .findOneAndUpdate({}, { $inc : { version : 1 } })
@@ -36,8 +35,7 @@ exports.newVersion = function () {
  * Process all items in the queue and
  * add them to db
  */
-exports.addEntry = function (entry) {
-  var socket = this;
+exports.addEntry = function (entry, socket) {
 
   queue.pushAndRun({
     item : entry,
@@ -65,33 +63,33 @@ exports.addEntry = function (entry) {
   });
 };
 
-function saveCategory(category, Model) {
+function saveCategory(category, Model, manage) {
   var cat = new Model(category);
 
   cat.save(function (err, doc) {
     if(err) console.log(err);
 
-    res.json(doc);
+    manage.sockets.emit('category_added', doc);
   });
 }
 
 /**
  * Add group
  */
-exports.addGroup = function (group) {
-  saveCategory(group, Group);
+exports.addGroup = function (group, socket, manage) {
+  saveCategory(group, Group, manage);
 };
 
 /**
 * Add teacher
 */
 exports.addTeacher = function (teacher) {
-  saveCategory(group, Teacher);
+  saveCategory(group, Teacher, manage);
 };
 
 /**
 * Add room
 */
 exports.addRoom = function (room) {
-  saveCategory(group, Room);
+  saveCategory(group, Room, manage);
 };

@@ -17,12 +17,20 @@ module.exports = function (io) {
       next();
     })
     .on('connection', function (socket) {
-      socket.on('new_version', handlers.manage.newVersion.bind(socket));
-      socket.on('add_entry', handlers.manage.addEntry.bind(socket));
+      function withParams(f) {
+        return function () {
+          var args = [].slice.apply(arguments);
+          args.push(socket, manage);
+          f.apply(null, args);
+        };
+      }
 
-      socket.on('add_group', handlers.manage.addRoom.bind(socket));
-      socket.on('add_teacher', handlers.manage.addTeacher.bind(socket));
-      socket.on('add_room', handlers.manage.addRoom.bind(socket));
+      socket.on('new_version', withParams(handlers.manage.newVersion));
+      socket.on('add_entry', withParams(handlers.manage.addEntry));
+
+      socket.on('add_group', withParams(handlers.manage.addRoom));
+      socket.on('add_teacher', withParams(handlers.manage.addTeacher));
+      socket.on('add_room', withParams(handlers.manage.addRoom));
     });
 
 };
