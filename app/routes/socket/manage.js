@@ -42,16 +42,56 @@ exports.addEntry = function (entry) {
   queue.pushAndRun({
     item : entry,
     handler : function (item, next) {
-      var entry = {
-        date : {
-          start : item.date.start,
-          end : item.date.end
+      var subject = item.subject;
+      delete item.subject;
+
+      Subject.findOneAndUpdate(
+        { name : new RegEx(subject, 'i') },
+        { name : subject },
+        { upsert : true },
+        function (err, doc) {
+          if(err) console.log(err);
+
+          item.subject = doc._id;
+          var entry = new Entry(item);
+
+          entry.save(function (err) {
+            if(err) console.log(err);
+            next();
+          });
         }
-      };
-
-      // TO DO: process item
-
-      next();
+      );
     }
   });
+};
+
+function saveCategory(category, Model) {
+  var cat = new Model(category);
+
+  cat.save(function (err, doc) {
+    if(err) console.log(err);
+
+    res.json(doc);
+  });
+}
+
+/**
+ * Add group
+ */
+exports.addGroup = function (group) {
+  saveCategory(group, Group);
+};
+
+/**
+* Add teacher
+*/
+exports.addTeacher = function (teacher) {
+  saveCategory(group, Teacher);
+};
+
+/**
+* Add room
+*/
+exports.addRoom = function (room) {
+  saveCategory(group, Room);
 };
