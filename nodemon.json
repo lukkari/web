@@ -10,6 +10,6 @@
   ],
   "env" : {
     "PORT" : 3000,
-    "MONGODB_URI" : "mongodb://localhost/learnnode_dev"
+    "MONGODB_URI" : "mongodb://localhost/lukkari_dev"
   }
 }

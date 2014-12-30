@@ -5,12 +5,6 @@
 var mongoose = require('mongoose');
 var async    = require('async');
 
-// Load parsers
-var parser    = require('../../helpers/parsers');
-var mainLink  = require('../../helpers/parsers/mainLink');
-var staff     = require('../../helpers/parsers/staff');
-var schedule  = require('../../helpers/parsers/schedule');
-var runParser = require('../../helpers/functions/runParser');
 
 // DB models
 var Parse = mongoose.model('Parse');
@@ -182,107 +176,12 @@ exports.getModels = function (req, res) {
 
 
 /**
- * GET '/manage/api/parse' [description]
+ * Use for depreated routes
  */
-exports.getParses = function (req, res) {
-
-  Parse
-    .find({})
-    .sort({ createdAt : '1' })
-    .lean()
-    .exec(function (err, parses) {
-      if(err) {
-        console.log(err);
-        return res.json(400, err);
-      }
-
-      res.json(parses);
-    });
-
+exports.deprecated = function (req, res) {
+  res.send('Deprecated');
 };
 
-
-/**
- * POST '/manage/api/parse' [description]
- */
-exports.addParse = function (req, res) {
-
-  var parse = new Parse(req.body);
-
-  parse.save(function (err, doc) {
-    if(err) {
-      console.log(err);
-      return res.json(400, err);
-    }
-
-    // parse current doc and add children
-    parser([doc.url], {
-      parser : mainLink,
-      done : function (err, result) {
-        if(err) {
-          console.log(err);
-          return res.json(400, err);
-        }
-
-        if(!Array.isArray(result[0])) return res.json('Nothing to add');
-
-        doc.children = result[0];
-
-        doc.save(function (err, newdoc) {
-          if(err) {
-            console.log(err);
-            res.json(400, err);
-          }
-
-          res.json(newdoc);
-        });
-      }
-    });
-  });
-};
-
-
-/**
- * GET '/manage/api/parse/:id/run' [description]
- */
-exports.runParse = function (req, res) {
-
-  var id = req.params.id;
-
-  Parse.findById(id, function (err, parse) {
-    if(err) {
-      console.log(err);
-      return res.json(400, err);
-    }
-
-    runParser(parse, function (err, result) {
-      // Err is not passed, then result is in err
-      if(err) {
-        console.log(err);
-        return res.json(400, err);
-      }
-
-      res.json(result);
-    });
-  });
-};
-
-/**
- * DELETE '/manage/api/parse/:id' [description]
- */
-exports.deleteParse = function (req, res) {
-
-  var id = req.params.id;
-
-  Parse.findByIdAndRemove(id, function (err) {
-    if(err) {
-      console.log(err);
-      return req.status(400).json(err);
-    }
-
-    res.send('Success');
-  });
-};
 
 /**
  * GET '/manage/api/messages' Returns list of messages

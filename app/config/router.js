@@ -117,10 +117,10 @@ module.exports = function (passport) {
 
     .get('/model', api.manage.getModels)
 
-    .get(   '/parse',         api.manage.getParses)
-    .post(  '/parse',         api.manage.addParse)
-    .get(   '/parse/:id/run', api.manage.runParse)
-    .delete('/parse/:id',     api.manage.deleteParse)
+    .get(   '/parse',         api.manage.deprecated)
+    .post(  '/parse',         api.manage.deprecated)
+    .get(   '/parse/:id/run', api.manage.deprecated)
+    .delete('/parse/:id',     api.manage.deprecated)
 
     .get('/message',    api.manage.getMessages)
     .get('/serverdata', api.manage.getServerData);
