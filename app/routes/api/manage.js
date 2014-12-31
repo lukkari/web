@@ -133,7 +133,7 @@ exports.deleteModel = function (req, res) {
         return res.status(400).send(err);
       }
 
-      res.send(success);
+      res.send('success');
     });
 
   } catch (err) {
