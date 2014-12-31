@@ -133,6 +133,7 @@ var roomSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   capacity  : { type : Number, default : 0 },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -163,6 +164,7 @@ mongoose.model('Room', roomSchema);
 var teacherSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -193,6 +195,7 @@ mongoose.model('Teacher', teacherSchema);
 var groupSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
