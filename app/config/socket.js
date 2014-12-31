@@ -28,7 +28,7 @@ module.exports = function (io) {
       socket.on('new_version', withParams(handlers.manage.newVersion));
       socket.on('add_entry', withParams(handlers.manage.addEntry));
 
-      socket.on('add_group', withParams(handlers.manage.addRoom));
+      socket.on('add_group', withParams(handlers.manage.addGroup));
       socket.on('add_teacher', withParams(handlers.manage.addTeacher));
       socket.on('add_room', withParams(handlers.manage.addRoom));
     });

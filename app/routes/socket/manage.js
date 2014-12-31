@@ -63,13 +63,21 @@ exports.addEntry = function (entry, socket) {
   });
 };
 
-function saveCategory(category, Model, manage) {
-  var cat = new Model(category);
+function saveCategory(category, model, manage) {
+  var Cats = {
+    group : Group,
+    teacher : Teacher,
+    room : Room
+  };
 
-  cat.save(function (err, doc) {
-    if(err) console.log(err);
+  var entry = new Cats[category](model);
 
-    manage.sockets.emit('category_added', doc);
+  entry.save(function (err, doc) {
+    var action = category + '_added';
+    // Ignore dublicate erorrs
+    if(err && err.code != 11000) return console.log(err);
+
+    if(doc) manage.emit(action, doc);
   });
 }
 
@@ -77,19 +85,19 @@ function saveCategory(category, Model, manage) {
  * Add group
  */
 exports.addGroup = function (group, socket, manage) {
-  saveCategory(group, Group, manage);
+  saveCategory('group', group, manage);
 };
 
 /**
 * Add teacher
 */
-exports.addTeacher = function (teacher) {
-  saveCategory(group, Teacher, manage);
+exports.addTeacher = function (teacher, socket, manage) {
+  saveCategory('teacher', teacher, manage);
 };
 
 /**
 * Add room
 */
-exports.addRoom = function (room) {
-  saveCategory(group, Room, manage);
+exports.addRoom = function (room, socket, manage) {
+  saveCategory('room', room, manage);
 };
