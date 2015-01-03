@@ -67,7 +67,7 @@ exports.getSubjects = function (options) {
   }
 
   Entry
-    .find(query, { 'parse' : 0 })
+    .find(query)
     .populate('groups', 'name')
     .populate('teachers', 'name')
     .populate('rooms', 'name')

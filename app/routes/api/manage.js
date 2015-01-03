@@ -7,7 +7,6 @@ var async    = require('async');
 
 
 // DB models
-var Parse = mongoose.model('Parse');
 var Message = mongoose.model('Message');
 
 /**

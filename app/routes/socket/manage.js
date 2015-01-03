@@ -53,10 +53,7 @@ exports.addEntry = function (entry, socket) {
         function (err, doc) {
           if(err) console.log(err);
 
-          item.subject = doc._id;
-          var entry = new Entry(item);
-
-          entry.save(function (err) {
+          doc.addEntry(item, function (err) {
             if(err) console.log(err);
             next();
           });

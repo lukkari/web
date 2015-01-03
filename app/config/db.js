@@ -16,7 +16,6 @@ var subjectSchema = new Schema({
   name      : { type : String, default : '' },
   coursenum : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
   createdAt : { type : Date, default : Date.now }
 });
 
@@ -30,73 +29,31 @@ subjectSchema.methods = {
     var subject = this;
 
     // Check for dublicate entry
-    Entry.findOne({
-        date      : entry.date,
-        duration  : entry.duration,
-        groups    : entry.groups
-      }, function (err, dublicate) {
-        if(err) console.log(err);
+    Entry
+      .find({
+        version : entry.version,
+        'date.start' : entry.date.start,
+        'date.end' : entry.date.end,
+        groups : entry.groups,
+        teachers : entry.teachers
+      })
+      .limit(1)
+      .exec(function (err, dublicate) {
+        if(err) return cb(err, dublicate);
 
-        if(!dublicate) {
+        if(!dublicate.length) {
           // If no dublicate found add current entry
           entry.subject = subject._id;
 
           var e = new Entry(entry);
-          e.save(function (err, entry) {
-            cb(err, entry);
-          });
+          e.save(cb);
         } else {
           // Otherwise return dublicate (just in case)
-          cb(err, dublicate);
-        }
-      }
-    );
-  },
-
-  /**
-   * Transfer entries from dublicate subjects
-   * @param  {Array}   dublicates Array of dublicate subjects ids
-   * @param  {Function} cb        Callback
-   */
-  transferFrom : function (dublicates, cb) {
-    var
-      subject = this,
-      Entry   = mongoose.model('Entry'),
-      Subject = mongoose.model('Subject');
-
-    if(typeof cb != 'function') {
-      cb = function (err) {
-        if(err) console.log(err);
-      };
-    }
-
-    Entry.find({
-      subject : {
-        $in : dublicates
-      }
-    }, function (err, entries) {
-      if(err) return cb(err);
-
-      if(!entries || !Array.isArray(entries)) return cb();
-
-      console.log('Start changing subject id from entry');
-      // Change subject id to Original document for every entry
-      entries.forEach(function (entry) {
-        entry.subject = subject._id;
-        entry.save();
-      });
-
-      console.log('Start removing dublicates');
-      // Remove dublicate subjects
-      Subject.remove({
-        $id : {
-          $in : dublicates
+          cb(null, dublicate);
         }
       });
-
-      return cb();
-    });
   }
+
 };
 
 subjectSchema.index({ name : 'text' });
@@ -117,7 +74,6 @@ var entrySchema = new Schema({
   rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
   groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
   teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
   version   : { type : Number, default : 0 },
   createdAt : { type : Date, default : Date.now }
 });
@@ -219,26 +175,6 @@ groupSchema.statics = {
 groupSchema.index({ name : 1 }, { unique : true });
 
 mongoose.model('Group', groupSchema);
-
-
-/**
- * Parse
- */
-
-var parseSchema = new Schema({
-  url         : { type : String,  default : '' },
-  description : { type : String,  default : '' },
-  parsed      : { type : Date,    default : 0 },
-  children    : [{
-    url   : { type : String, default : '' },
-    title : { type : String, default : '' },
-    week  : { type : Number, default : 0 }
-  }],
-  filter      : { type : Schema.Types.ObjectId, ref : 'Filter' },
-  createdAt   : { type : Date,    default : Date.now }
-});
-
-mongoose.model('Parse', parseSchema);
 
 
 /**
