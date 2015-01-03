@@ -45,13 +45,13 @@ exports.getSubjects = function (options) {
   query[options.type] = options.typeid;
 
   if(!usertable) {
-    query.date = {
+    query['date.start'] = {
       $gte : start,
       $lt  : end
     };
   } else {
     query.$and = [{
-      'date' : {
+      'date.start' : {
         $gte : start,
         $lt  : end
       }
