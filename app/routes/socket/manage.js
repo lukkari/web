@@ -47,8 +47,8 @@ exports.addEntry = function (entry, socket) {
       item.date.end = new Date(item.date.end);
 
       Subject.findOneAndUpdate(
-        { name : new RegExp(subject, 'i') },
-        { name : subject },
+        { name : new RegExp(subject.name, 'i') },
+        subject,
         { upsert : true },
         function (err, doc) {
           if(err) console.log(err);

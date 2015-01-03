@@ -14,7 +14,7 @@ var uuid = require('node-uuid');
 
 var subjectSchema = new Schema({
   name      : { type : String, default : '' },
-  coursenum : { type : String, default : '' },
+  code      : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
   createdAt : { type : Date, default : Date.now }
 });
