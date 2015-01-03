@@ -110,8 +110,10 @@ mongoose.model('Subject', subjectSchema);
 
 var entrySchema = new Schema({
   subject   : { type : Schema.Types.ObjectId, ref : 'Subject' },
-  date      : { type : Date,   default : 0 },
-  duration  : { type : Number, default : 0 },
+  date      : {
+    start : { type : Date, default : 0 },
+    end   : { type : Date, default : 0 }
+  },
   rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
   groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
   teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],

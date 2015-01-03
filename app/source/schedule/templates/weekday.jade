@@ -4,9 +4,9 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
 
   div.container
     <% if(data.subjects.length > 0) { %><% _.each(data.subjects, function (subject) { %>
-    div.subject(class!='<%= (subject.rest) ? "restblock " : "" %><%= data.getStatus(subject.date, subject.duration) %>')
+    div.subject(class!='<%= (subject.rest) ? "restblock " : "" %><%= data.getStatus(subject.date) %>')
       <% if(subject.timeBlock) { %>
-      div.endtime <%= data.getTime(subject.date) %>
+      div.endtime <%= data.getTime(subject.date.start) %>
       <% } else { %>
       <% if(!subject.rest) { %>
       div.remove-block
@@ -14,11 +14,11 @@ div.block(class!='<%= (data.isToday(data.date)) ? "today" : "" %>')
       <% } %>
 
       div.time
-        div.hour <%= data.getTime(subject.date) %>
+        div.hour <%= data.getTime(subject.date.start) %>
         div.duration
-          span(class!='dur-<%= subject.duration %>')
-            i#duration <%= subject.duration %>
-            u hour<% if(subject.duration > 1) { %>s<% } %>
+          span(class!='dur-<%= data.getDuration(subject.date) %>')
+            i#duration <%= data.getDuration(subject.date) %>
+            u hour<% if(data.getDuration(subject.date) > 1) { %>s<% } %>
 
       div.info
         div.inner
