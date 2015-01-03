@@ -143,6 +143,7 @@ module.exports = function (passport) {
     .get('/groups',   api.home.getGroups)
     .get('/teachers', api.home.getTeachers)
     .get('/rooms',    api.home.getRooms)
+    .get('/filters',  api.home.getFilters)
     .get('*',         api.home.notFound)
 
   /**

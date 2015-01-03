@@ -11,6 +11,7 @@ var tasker = require('../../libs/tasker');
 var Group = mongoose.model('Group');
 var Teacher = mongoose.model('Teacher');
 var Room = mongoose.model('Room');
+var Filter = mongoose.model('Filter');
 var Message = mongoose.model('Message');
 var UserTable = mongoose.model('UserTable');
 
@@ -76,6 +77,13 @@ exports.getTeachers = function (req, res) {
  */
 exports.getRooms = function (req, res) {
   return getCategory(Room, res);
+};
+
+/**
+ * GET '/api/filters'
+ */
+exports.getFilters = function (req, res) {
+  return getCategory(Filter, res);
 };
 
 

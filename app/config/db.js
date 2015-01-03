@@ -336,6 +336,21 @@ var FilterSchema = new Schema({
   createdAt   : { type : Date,   default : Date.now }
 });
 
+FilterSchema.statics = {
+
+  /**
+  * Return all filter in ascendant order
+  */
+  getAll : function (cb) {
+    this
+    .find({})
+    .sort({ 'name' : 1 })
+    .lean()
+    .exec(cb);
+  }
+
+};
+
 mongoose.model('Filter', FilterSchema);
 
 
