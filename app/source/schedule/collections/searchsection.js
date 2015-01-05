@@ -21,16 +21,17 @@ module.exports = Backbone.Collection.extend({
   },
 
   /**
-   * Search models in collection by string
-   * @param  {String} letters filter string
-   * @return {Array}          found models
+   * Filter collection by filters array and search string
    */
-  search : function (letters) {
-    if(!letters.length) return this.models;
+  byFiltersAndSearch : function (filters, search) {
+    if(!filters.length) return [];
 
-    var pattern = new RegExp(letters, "gi");
-    return this.filter(function(data) {
-      return data.get("name").match(pattern);
+    var pattern = new RegExp(search, "gi");
+    return this.filter(function (model) {
+      return (
+        filters.indexOf(model.get('filter')) !== -1 &&
+        model.get("name").match(pattern)
+      );
     });
   }
 });

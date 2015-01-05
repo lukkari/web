@@ -53,11 +53,9 @@ module.exports = Backbone.View.extend({
 
   /**
    * Filter section
-   * @param  {String} s filter string
    */
-  filter : function (s) {
-    s = s || '';
-    this.render(this.collection.search(s));
+  filter : function (filters, search) {
+    this.render(this.collection.byFiltersAndSearch(filters, search));
     return this;
   }
 });
