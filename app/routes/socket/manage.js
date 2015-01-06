@@ -36,7 +36,17 @@ exports.newVersion = function (cb) {
  * add them to db
  */
 exports.addEntry = function (entry) {
+  addSingleEntry(entry);
+};
 
+/**
+ * Process multiple entries at once
+ */
+exports.addEntries = function (entries) {
+  entries.forEach(addSingleEntry);
+};
+
+function addSingleEntry(entry) {
   console.log('Add entry', entry);
 
   queue.pushAndRun({
@@ -63,7 +73,7 @@ exports.addEntry = function (entry) {
       );
     }
   });
-};
+}
 
 function saveCategory(category, model, manage) {
   var Cats = {
