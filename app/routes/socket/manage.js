@@ -20,14 +20,14 @@ var Setting = mongoose.model('Setting');
  *  - Update current schedule version number
  *  - Return new number to sync app
  */
-exports.newVersion = function (_, socket) {
+exports.newVersion = function (cb) {
 
   Setting
     .findOneAndUpdate({}, { $inc : { version : 1 } })
     .exec(function (err, setting) {
       if(err) console.log(err);
       if(!setting) return;
-      socket.emit('start_update', { version : setting.version });
+      cb({ version : setting.version });
     });
 };
 
@@ -35,7 +35,9 @@ exports.newVersion = function (_, socket) {
  * Process all items in the queue and
  * add them to db
  */
-exports.addEntry = function (entry, socket) {
+exports.addEntry = function (entry) {
+
+  console.log('Add entry', entry);
 
   queue.pushAndRun({
     item : entry,
