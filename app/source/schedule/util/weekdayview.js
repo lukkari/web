@@ -67,17 +67,16 @@ module.exports = {
 
   /**
    * Get status of current class from date
-   * @param  {Date}   date     Date of current class
-   * @param {Integer} duration Duration of current class
-   * @return {String}          Status
+   * @param  {Object} date Date with start and end fields
+   * @return {String}
    */
-  getStatus : function (date, duration) {
-    var
-      nowHour     = new Date().getHours(),
-      subjectHour = new Date(date).getHours();
+  getStatus : function (date) {
+    var now = new Date().getTime();
+    var start = new Date(date.start).getTime();
+    var end = new Date(date.end).getTime();
 
-    if(nowHour >= (subjectHour + duration)) return 'ended';
-    if((nowHour >= subjectHour) && (nowHour < (subjectHour + duration))) return 'now';
+    if(now > end) return 'ended';
+    if(now > start && now < end) return 'now';
 
     return '';
   },
@@ -90,5 +89,16 @@ module.exports = {
   getWeekDay : function (date) {
     var d = new Date(date);
     return weekdays.full[d.getDay()];
+  },
+
+  /**
+   * Get entry duration
+   * @param {Object} date Date with start and end fields
+   * @return {Number}     Hour
+   */
+  getDuration : function (date) {
+    var start = new Date(date.start);
+    var end = new Date(date.end);
+    return Math.ceil((end.getTime() - start.getTime()) / (1000*60*60));
   }
 };

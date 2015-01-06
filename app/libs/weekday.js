@@ -45,13 +45,13 @@ exports.getSubjects = function (options) {
   query[options.type] = options.typeid;
 
   if(!usertable) {
-    query.date = {
+    query['date.start'] = {
       $gte : start,
       $lt  : end
     };
   } else {
     query.$and = [{
-      'date' : {
+      'date.start' : {
         $gte : start,
         $lt  : end
       }
@@ -67,7 +67,7 @@ exports.getSubjects = function (options) {
   }
 
   Entry
-    .find(query, { 'parse' : 0 })
+    .find(query)
     .populate('groups', 'name')
     .populate('teachers', 'name')
     .populate('rooms', 'name')

@@ -23,25 +23,24 @@ module.exports = Backbone.Model.extend({
     _.each(data.subjects, function (el, i) {
       if(i === 0) {
         // Add starting day block
-        subjects.push(this.timeBlock(el.date, true));
+        subjects.push(this.timeBlock(el.date.start, true));
       }
 
       if(prev) {
         // Try to fit rest block between subjects
-        date = new Date(el.date);
-        pdate = new Date(prev.date);
-        dur = date.getHours() - pdate.getHours() - prev.duration;
-
-        if(dur > 0) subjects.push(this.restBlock(date, pdate, dur, prev.duration));
+        // date = new Date(el.date);
+        // pdate = new Date(prev.date);
+        // dur = date.getHours() - pdate.getHours() - prev.duration;
+        //
+        // if(dur > 0) subjects.push(this.restBlock(date, pdate, dur, prev.duration));
       }
 
       subjects.push(el);
       prev = el;
 
       if(i === data.subjects.length - 1) {
-        // Ending day block: add last class duration to it
-        date = (new Date(el.date)).getTime() + (el.duration * 60 * 60 * 1000);
-        subjects.push(this.timeBlock(date, false));
+        // Ending day block
+        subjects.push(this.timeBlock(el.date.end, false));
       }
     }, this);
 
@@ -60,12 +59,14 @@ module.exports = Backbone.Model.extend({
     date = new Date(date);
     return {
       timeBlock : true,
-      date : new Date(date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate(),
-                      date.getHours(),
-                      isMorning ? 15 : 0
-                     )
+      date : {
+        start : new Date(date.getFullYear(),
+                         date.getMonth(),
+                         date.getDate(),
+                         date.getHours(),
+                         isMorning ? 15 : 0
+                        )
+      }
     };
   },
 
@@ -83,12 +84,14 @@ module.exports = Backbone.Model.extend({
     return {
       rest : true,
       duration : dur,
-      date : new Date(date.getFullYear(),
-                      date.getMonth(),
-                      date.getDate(),
-                      pdate.getHours() + pdur,
-                      15
-                     )
+      date : {
+        start : new Date(date.getFullYear(),
+                         date.getMonth(),
+                         date.getDate(),
+                         pdate.getHours() + pdur,
+                         15
+                       )
+      }
     };
   },
 
