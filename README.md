@@ -24,7 +24,7 @@ Brief description is provided below.
 
 1. `git clone https://github.com/zaynetro/lukkari.git`
 2. `cd lukkari`
-3. `npm istall`
+3. `npm install`
 
 ### Build project
 
