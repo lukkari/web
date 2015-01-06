@@ -7,6 +7,8 @@ var crypto   = require('crypto');
 var Schema   = mongoose.Schema;
 var uuid = require('node-uuid');
 
+var helpers = require('../helpers/');
+
 
 /**
  * Subject
@@ -189,6 +191,11 @@ var messageSchema = new Schema({
   createdAt : { type : Date,   default : Date.now }
 });
 
+messageSchema.pre('save', function (next) {
+  this.message = helpers.htmlChars(this.message);
+  next();
+});
+
 messageSchema.index(
   { "createdAt" : 1 },
   { expireAfterSeconds : (60*60*24*60) } // 60 days
@@ -219,6 +226,9 @@ userSchema.pre('save', function (next, done) {
 
   this.salt = this.makeSalt();
   this.password = this.encryptPassword(this.password);
+
+  this.username = helpers.htmlChars(this.username);
+  this.email = helpers.htmlChars(this.email);
   next();
 });
 

@@ -62,16 +62,20 @@ RegExp.exactWord = function (text) {
   return '^' + text + '$';
 };
 
-/**
- * Escape html tags
- */
-String.htmlChars = function () {
-  return (
-    this
+module.exports = {
+
+  /**
+   * Escape html tags
+   */
+  htmlChars : function (str) {
+    return (
+      str
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;")
-  );
+    );
+  }
+
 };
