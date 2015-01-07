@@ -13,22 +13,20 @@ var Teacher = mongoose.model('Teacher');
 var Room = mongoose.model('Room');
 var Subject = mongoose.model('Subject');
 var Entry = mongoose.model('Entry');
-var Setting = mongoose.model('Setting');
 
 /**
  * Prepare for getting new schedule:
- *  - Update current schedule version number
- *  - Return new number to sync app
+ *  - Remove old schedule entries by filter
+ *  - Execute callback
  */
-exports.newVersion = function (cb) {
+exports.newVersion = function (filter, cb) {
 
-  Setting
-    .findOneAndUpdate({}, { $inc : { version : 1 } })
-    .exec(function (err, setting) {
-      if(err) console.log(err);
-      if(!setting) return;
-      cb({ version : setting.version });
-    });
+  Entry.remove({ filter : filter }, function (err) {
+    if(err) console.log(err);
+
+    cb();
+  });
+
 };
 
 /**
@@ -58,19 +56,55 @@ function addSingleEntry(entry) {
       item.date.start = new Date(item.date.start);
       item.date.end = new Date(item.date.end);
 
-      Subject.findOneAndUpdate(
-        { name : new RegExp(subject.name, 'i') },
-        subject,
-        { upsert : true },
-        function (err, doc) {
+      subject.name = RegExp.escape(subject.name);
+      var search = new RegExp(subject.name, 'i');
+
+      Subject
+        .find({ name : search })
+        .limit(1)
+        .exec(function (err, founds) {
           if(err) console.log(err);
 
-          doc.addEntry(item, function (err) {
+          // Append to existing
+          if(founds.length) return addEntry(founds[0]);
+
+          // Or create new subject
+          var newSubject = new Subject(subject);
+          newSubject.save(addEntry);
+
+          function addEntry() {
+            var to, err;
+            if(arguments.length === 2) {
+              to = arguments[1];
+              err = arguments[0];
+            } else {
+              to = arguments[0];
+            }
+
             if(err) console.log(err);
-            next();
-          });
-        }
-      );
+
+            to.addEntry(item, function (err) {
+              if(err) console.log(err);
+              next();
+            });
+          }
+        });
+
+      // DOESN'T WORK (new subjects are added each time)
+      //
+      // Subject.findOneAndUpdate(
+      //   { name : search },
+      //   subject,
+      //   { upsert : true },
+      //   function (err, doc) {
+      //     if(err) console.log(err);
+      //
+      //     doc.addEntry(item, function (err) {
+      //       if(err) console.log(err);
+      //       next();
+      //     });
+      //   }
+      // );
     }
   });
 }
@@ -86,7 +120,7 @@ function saveCategory(category, model, manage) {
 
   entry.save(function (err, doc) {
     var action = category + '_added';
-    // Ignore dublicate erorrs
+    // Ignore dublicate errors
     if(err && err.code != 11000) return console.log(err);
 
     if(doc) manage.emit(action, doc);

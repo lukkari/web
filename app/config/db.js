@@ -33,26 +33,24 @@ subjectSchema.methods = {
     // Check for dublicate entry
     Entry
       .find({
-        version : entry.version,
         'date.start' : entry.date.start,
         'date.end' : entry.date.end,
         groups : entry.groups,
         teachers : entry.teachers
       })
       .limit(1)
-      .exec(function (err, dublicate) {
-        if(err) return cb(err, dublicate);
+      .exec(function (err, dublicates) {
+        if(err) return cb(err, dublicates);
 
-        if(!dublicate.length) {
+        if(!dublicates.length) {
           // If no dublicate found add current entry
           entry.subject = subject._id;
 
           var e = new Entry(entry);
-          e.save(cb);
-        } else {
-          // Otherwise return dublicate (just in case)
-          cb(null, dublicate);
+          return e.save(cb);
         }
+        // Otherwise return dublicate (just in case)
+        return cb(null, dublicates[0]);
       });
   }
 
@@ -76,7 +74,7 @@ var entrySchema = new Schema({
   rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
   groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
   teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
-  version   : { type : Number, default : 0 },
+  filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   createdAt : { type : Date, default : Date.now }
 });
 
@@ -329,20 +327,3 @@ TokenSchema.index(
 */
 
 mongoose.model('Token', TokenSchema);
-
-
-/**
- * Settings
- */
-
-var SettingSchema = new Schema({
-  version : { type : String, default : 0 },
-  updatedAt : { type : Date }
-});
-
-SettingSchema.pre('save', function (next, done) {
-  this.updatedAt = new Date();
-  next();
-});
-
-mongoose.model('Setting', SettingSchema);
