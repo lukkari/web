@@ -56,8 +56,7 @@ function addSingleEntry(entry) {
       item.date.start = new Date(item.date.start);
       item.date.end = new Date(item.date.end);
 
-      subject.name = RegExp.escape(subject.name);
-      var search = new RegExp(subject.name, 'i');
+      var search = subject.name;
 
       Subject
         .find({ name : search })
@@ -66,21 +65,13 @@ function addSingleEntry(entry) {
           if(err) console.log(err);
 
           // Append to existing
-          if(founds.length) return addEntry(founds[0]);
+          if(founds.length) return addEntry(null, founds[0]);
 
           // Or create new subject
           var newSubject = new Subject(subject);
           newSubject.save(addEntry);
 
-          function addEntry() {
-            var to, err;
-            if(arguments.length === 2) {
-              to = arguments[1];
-              err = arguments[0];
-            } else {
-              to = arguments[0];
-            }
-
+          function addEntry(err, to) {
             if(err) console.log(err);
 
             to.addEntry(item, function (err) {
