@@ -132,6 +132,7 @@ module.exports = function (passport) {
   apiRouter
     .use(ensureXhr)
     .post('/message', api.home.sendMsg)
+    .post('/entry',   api.home.addEntry)
 
     .get('/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
@@ -144,7 +145,7 @@ module.exports = function (passport) {
     .get('/teachers', api.home.getTeachers)
     .get('/rooms',    api.home.getRooms)
     .get('/filters',  api.home.getFilters)
-    .get('*',         api.home.notFound)
+    .get('*',         api.home.notFound);
 
   /**
    * User API
