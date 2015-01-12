@@ -71,7 +71,8 @@ app
     threshold : 0 // set file size limit to 0
   }))
   .use(express.static(path.join(appdir, 'public'), { maxAge : (config.cache.week * 1000) }))
-  .use(bodyParser())
+  .use(bodyParser.json({ limit : '5mb' }))
+  .use(bodyParser.urlencoded({ limit : '5mb', extended : true }))
   .use(cookieParser())
   .use(session({
     secret : config.app.name,
