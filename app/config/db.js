@@ -189,7 +189,8 @@ var messageSchema = new Schema({
   createdAt : { type : Date,   default : Date.now }
 });
 
-messageSchema.pre('save', function (next) {
+messageSchema.pre('save', function (next, done) {
+  if(this.message.length < 4) return done(new Error('Message is too short'));
   this.message = helpers.htmlChars(this.message);
   next();
 });
