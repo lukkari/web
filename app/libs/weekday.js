@@ -42,14 +42,17 @@ exports.getSubjects = function (options) {
   var query = {};
   var qtype = {};
 
-  query[options.type] = options.typeid;
-
   if(!usertable) {
     query['date.start'] = {
       $gte : start,
       $lt  : end
     };
+
+    query[options.type] = options.typeid;
+    
   } else {
+    qtype[options.type] = options.typeid;
+
     query.$and = [{
       'date.start' : {
         $gte : start,
