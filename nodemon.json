@@ -2,13 +2,13 @@
   "verbose" : "true",
   "ignore" : [
     "app/source",
-    "node_modules",
+    "node_modules/*",
     "app/public",
     "*.log",
     ".git/"
   ],
   "env" : {
     "PORT" : 3000,
-    "MONGODB_URI" : "mongodb://localhost/learnnode_dev"
+    "MONGODB_URI" : "mongodb://localhost/lukkari_dev"
   }
 }
