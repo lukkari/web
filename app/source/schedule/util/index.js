@@ -44,4 +44,24 @@ Date.prototype.getStudyWeek = function () {
   return this.getWeek() + inc;
 };
 
-module.exports = {};
+module.exports = {
+
+  supportsStorage : function () {
+    try {
+      return 'localStorage' in window && window.localStorage !== null;
+    } catch (e) {
+      return false;
+    }
+  },
+
+  localSave : function (key, val) {
+    if(!this.supportsStorage()) return;
+    localStorage[key] = val;
+  },
+
+  localGet : function (key) {
+    if(!this.supportsStorage()) return;
+    return localStorage[key];
+  }
+
+};

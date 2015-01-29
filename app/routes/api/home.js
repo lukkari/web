@@ -11,10 +11,15 @@ var tasker = require('../../libs/tasker');
 var Group = mongoose.model('Group');
 var Teacher = mongoose.model('Teacher');
 var Room = mongoose.model('Room');
+var Filter = mongoose.model('Filter');
 var Message = mongoose.model('Message');
 var UserTable = mongoose.model('UserTable');
+var Subject = mongoose.model('Subject');
+var Entry = mongoose.model('Entry');
 
 // Helpers
+var Queue = require('../../libs/queue');
+var queue = new Queue();
 
 /**
  * Return category (groups, teachers, rooms)
@@ -78,6 +83,13 @@ exports.getRooms = function (req, res) {
   return getCategory(Room, res);
 };
 
+/**
+ * GET '/api/filters'
+ */
+exports.getFilters = function (req, res) {
+  return getCategory(Filter, res);
+};
+
 
 /**
  * GET '/api/schedule/:q/now'
@@ -125,7 +137,9 @@ exports.getSchedule = function (req, res) {
   if(!search || !search.length) return res.status(400).send('Wrong request');
 
   if(typeof w !== 'undefined') {
-    //if(today.getStudyWeek() > (w + 35)) i = 1;
+    // Return next year schedule for january,
+    // when we are in August
+    if(today.getStudyWeek() > 31 && w < 30) i = 1;
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
   } else w = today.getStudyWeek();
 
@@ -150,7 +164,7 @@ exports.getSchedule = function (req, res) {
 
 
 /**
- * POST '/api/message' [description]
+ * POST '/api/message' Add message
  */
 exports.sendMsg = function (req, res) {
 
@@ -173,8 +187,65 @@ exports.sendMsg = function (req, res) {
 };
 
 /**
- * GET '/api/*' [description]
+ * GET '/api/*' Default route
  */
 exports.notFound = function (req, res) {
   res.send();
 };
+
+/**
+ * GET '/api/entry' Add entry/entries
+ */
+exports.addEntry = function (req, res) {
+  var data = req.body;
+
+  if(!data || typeof data !== 'object') return res.status(400).send('Wrong request');
+
+  if(Array.isArray(data)) {
+    data.forEach(addSingleEntry);
+    return res.send('Entries are saving');
+  }
+
+  addSingleEntry(data);
+  return res.send('Entry is saving');
+};
+
+function addSingleEntry(entry) {
+  // console.log('Add entry', entry);
+
+  queue.pushAndRun({
+    item : entry,
+    handler : function (item, next) {
+      var subject = item.subject;
+      delete item.subject;
+
+      item.date.start = new Date(item.date.start);
+      item.date.end = new Date(item.date.end);
+
+      var search = subject.name;
+
+      Subject
+      .find({ name : search })
+      .limit(1)
+      .exec(function (err, founds) {
+        if(err) console.log(err);
+
+        // Append to existing
+        if(founds.length) return addEntry(null, founds[0]);
+
+        // Or create new subject
+        var newSubject = new Subject(subject);
+        newSubject.save(addEntry);
+
+        function addEntry(err, to) {
+          if(err) console.log(err);
+
+          to.addEntry(item, function (err) {
+            if(err) console.log(err);
+            next();
+          });
+        }
+      });
+    }
+  });
+}

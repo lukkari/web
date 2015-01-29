@@ -1,26 +1,18 @@
 doctype html
-html
+html(prefix='og: http://ogp.me/ns#')
   head
     title= title
     meta(charset='utf-8')
     meta(http-equiv="X-UA-Compatible" content="chrome=1")
-    if mobile
-      meta(name="viewport" content="width=device-width, user-scalable=no")
-      link(rel='stylesheet', href='/stylesheets/mobile.css')
-    block customHead
+    meta(property='og:url' content='http://lukkari.dc.turkuamk.fi')
+    meta(property='og:site_name' content='TUAS lukkari')
+    meta(property='og:title' content='Turku University of Applied Sciences schedule')
+    meta(property='og:image' content='http://lukkari.dc.turkuamk.fi/images/lukkari_image.png')
+    meta(property='og:image:type' content='image/png')
+    meta(property='og:image:width' content='358')
+    meta(property='og:image:height' content='358')
+
+    block head
   body
     block content
-
-    footer.main-footer
-      span.footlinks
-        a(href='/') Home
-
-      span.reflinks
-        a.github(href='//github.com/zaynetro/lukkari' target='_blank')
-
-      span by
-        a(href='//zaynetro.github.io' target='_blank') zaynetro
-        | 2014
-
-
-    block customFoot
+    block foot

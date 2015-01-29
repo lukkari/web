@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(http-equiv="X-UA-Compatible" content="chrome=1")
+    if mobile
+      meta(name="viewport" content="width=device-width, user-scalable=no")
+      link(rel='stylesheet', href='/stylesheets/mobile.css')
+    link(rel='stylesheet', href='/stylesheets/auth.css')
+    block head
+  body
+    block content
+
+    footer.main-footer
+      span.footlinks
+        a(href='/') Home
+
+      span.reflinks
+        a.github(href='//github.com/zaynetro/lukkari' target='_blank')
+
+      span by
+        a(href='//zaynetro.github.io' target='_blank') zaynetro
+        | 2014
+
+    block foot
+    script(src='/js/libs/analytics.js' async)

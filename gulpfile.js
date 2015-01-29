@@ -36,6 +36,11 @@ var paths = {
     dest : './app/public/stylesheets/'
   },
 
+  minjs : {
+    src : './app/public/js/**/*.js',
+    dest : './app/public/js/'
+  },
+
   pages : ['schedule', 'manage', 'user']
 };
 
@@ -68,14 +73,11 @@ gulp.task('scripts', function () {
  * Same as `scripts`, but minified versions
  */
 gulp.task('min-js', function () {
-  paths.pages.forEach(function (page) {
-    gulp
-    .src(tWay(page, paths.builds.src))
-    .pipe(browserify({ debug : false }))
+  gulp
+    .src(paths.minjs.src)
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(paths.builds.dest));
-  });
+    .pipe(gulp.dest(paths.minjs.dest));
 });
 
 

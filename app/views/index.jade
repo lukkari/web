@@ -1,16 +1,14 @@
-doctype html
-html
-  head
-    title= title
-    meta(charset='utf-8')
-    meta(http-equiv="X-UA-Compatible" content="chrome=1")
-    if mobile
-      meta(name="viewport" content="width=device-width, user-scalable=no")
-      link(rel='stylesheet', href='/stylesheets/mobile.css')
-    link(rel='stylesheet', href='/stylesheets/template.css')
-  body
+extends ./layouts/main
 
-    div#app.globalouter
+block head
+  if mobile
+    meta(name="viewport" content="width=device-width, user-scalable=no")
+    link(rel='stylesheet', href='/stylesheets/mobile.css')
+  link(rel='stylesheet', href='/stylesheets/template.css')
 
-    script(src='/js/builds/schedulepage.js' async)
-    script(src='/js/libs/analytics.js' async)
+block content
+  div#app.globalouter
+
+block foot
+  script(src='/js/builds/schedulepage.js' async)
+  script(src='/js/libs/analytics.js' async)

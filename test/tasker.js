@@ -31,7 +31,7 @@ describe('tasker lib', function () {
         done();
       })
       .run();
-  })
+  });
 
    it('should go trough only one element', function (done) {
     tasker(['one', 'two'], function (el, next, done) {
@@ -42,6 +42,6 @@ describe('tasker lib', function () {
         done();
       })
       .run();
-  })
+  });
 
 });

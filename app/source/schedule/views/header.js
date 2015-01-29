@@ -38,7 +38,7 @@ module.exports = Backbone.View.extend({
    * @param  {Event} e event
    */
   searchFilter : function (e) {
-    this.trigger('filterSections', e);
+    this.trigger('filterBySearch', e.target.value);
   },
 
   /**

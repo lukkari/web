@@ -61,3 +61,21 @@ RegExp.escape = function (text) {
 RegExp.exactWord = function (text) {
   return '^' + text + '$';
 };
+
+module.exports = {
+
+  /**
+   * Escape html tags
+   */
+  htmlChars : function (str) {
+    return (
+      str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+    );
+  }
+
+};

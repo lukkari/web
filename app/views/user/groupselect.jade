@@ -1,7 +1,4 @@
-extends ../layouts/main
-
-block customHead
-  link(rel='stylesheet', href='/stylesheets/auth.css')
+extends ../layouts/user
 
 block content
   div.loginpage
@@ -17,6 +14,3 @@ block content
               option(value=group.id selected=selected)=group.name
         div.row
           input.button(type='submit' value='Proceed')
-
-block customFoot
-  script(src='/js/libs/analytics.js' async)

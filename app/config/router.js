@@ -34,17 +34,17 @@ function handleManage(req, res) {
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) return next();
+  if(req.isAuthenticated()) return next();
 
   if(handleManage(req, res)) return;
 
   res.set('X-Auth-Required', 'true');
   //res.redirect('/login/?returnTo=' + encodeURIComponent(req.originalUrl));
-  res.redirect('/login');
+  res.redirect('/u/login');
 }
 
 function ensureAuthenticatedAPI(req, res, next) {
-  if (req.isAuthenticated()) return next();
+  if(req.isAuthenticated()) return next();
 
   res.set('X-Auth-Required', 'true');
   res.status(401).send('Authentication is required');
@@ -91,11 +91,11 @@ function setLongCacheHeader(req, res, next) {
 }
 
 // Set up router
-module.exports = function (app, passport) {
+module.exports = function (passport) {
 
   /**
    * ===========================================================
-   * API setups
+   * API set up
    *   1) Manage API
    *   2) Home API
    *   3) User API
@@ -117,10 +117,10 @@ module.exports = function (app, passport) {
 
     .get('/model', api.manage.getModels)
 
-    .get(   '/parse',         api.manage.getParses)
-    .post(  '/parse',         api.manage.addParse)
-    .get(   '/parse/:id/run', api.manage.runParse)
-    .delete('/parse/:id',     api.manage.deleteParse)
+    .get(   '/parse',         api.manage.deprecated)
+    .post(  '/parse',         api.manage.deprecated)
+    .get(   '/parse/:id/run', api.manage.deprecated)
+    .delete('/parse/:id',     api.manage.deprecated)
 
     .get('/message',    api.manage.getMessages)
     .get('/serverdata', api.manage.getServerData);
@@ -132,6 +132,7 @@ module.exports = function (app, passport) {
   apiRouter
     .use(ensureXhr)
     .post('/message', api.home.sendMsg)
+    .post('/entry',   api.home.addEntry)
 
     .get('/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
@@ -143,13 +144,19 @@ module.exports = function (app, passport) {
     .get('/groups',   api.home.getGroups)
     .get('/teachers', api.home.getTeachers)
     .get('/rooms',    api.home.getRooms)
-    .get('*',         api.home.notFound)
+    .get('/filters',  api.home.getFilters)
+    .get('*',         api.home.notFound);
 
   /**
    * User API
    */
   var userApiRouter = express.Router();
   userApiRouter
+    .get('/login',
+      passport.authenticate('basic', { session: true }),
+      api.user.login
+    )
+
     .use(ensureAuthenticatedAPI)
     .get(   '/schedule',      api.user.getSchedule)
     .get(   '/schedule/now',  api.user.getNowSchedule)
@@ -161,7 +168,7 @@ module.exports = function (app, passport) {
 
   /**
    * =====================================================
-   * Page setups
+   * Page set up
    *   1) Manage page
    *   2) User page
    *   3) Home page
@@ -183,6 +190,20 @@ module.exports = function (app, passport) {
    */
   var userRouter = express.Router();
   userRouter
+    // Log in
+    .get( '/login', user.login)
+    .post('/login',
+      passport.authenticate('local', {
+        successRedirect: '/my',
+        failureRedirect: '/u/login?wrong'
+      })
+    )
+
+    // Sign up
+    .get( '/signup', user.signup)
+    .post('/signup', user.create)
+
+    // When user logged
     .use(ensureAuthenticated)
     .get( '/',       user.me)
     .post('/',       user.update)
@@ -195,19 +216,6 @@ module.exports = function (app, passport) {
    */
   var homeRouter = express.Router();
   homeRouter
-    // Log in
-    .get( '/login', user.login)
-    .post('/login',
-      passport.authenticate('local', {
-        successRedirect: '/my',
-        failureRedirect: '/login?wrong'
-      })
-    )
-
-    // Sign up
-    .get( '/signup', user.signup)
-    .post('/signup', user.create)
-
     .use(setLongCacheHeader)
     // Main page
     .get('/*',      home.index);
@@ -215,9 +223,12 @@ module.exports = function (app, passport) {
 
   /**
    * ==================================================
-   * Add all routers to the app
+   * Add all routers to the main router
    */
-  app
+
+  var router = express.Router();
+
+  router
     .use(securityHeaders)
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)
@@ -225,4 +236,6 @@ module.exports = function (app, passport) {
     .use('/api/user',   userApiRouter)
     .use('/api',        apiRouter)
     .use('/',           homeRouter);
+
+  return router;
 };

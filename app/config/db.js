@@ -5,6 +5,9 @@
 var mongoose = require('mongoose');
 var crypto   = require('crypto');
 var Schema   = mongoose.Schema;
+var uuid = require('node-uuid');
+
+var helpers = require('../helpers/');
 
 
 /**
@@ -13,9 +16,8 @@ var Schema   = mongoose.Schema;
 
 var subjectSchema = new Schema({
   name      : { type : String, default : '' },
-  coursenum : { type : String, default : '' },
+  code      : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
   createdAt : { type : Date, default : Date.now }
 });
 
@@ -29,73 +31,29 @@ subjectSchema.methods = {
     var subject = this;
 
     // Check for dublicate entry
-    Entry.findOne({
-        date      : entry.date,
-        duration  : entry.duration,
-        groups    : entry.groups
-      }, function (err, dublicate) {
-        if(err) console.log(err);
+    Entry
+      .find({
+        'date.start' : entry.date.start,
+        'date.end' : entry.date.end,
+        groups : entry.groups,
+        teachers : entry.teachers
+      })
+      .limit(1)
+      .exec(function (err, dublicates) {
+        if(err) return cb(err, dublicates);
 
-        if(!dublicate) {
+        if(!dublicates.length) {
           // If no dublicate found add current entry
           entry.subject = subject._id;
 
           var e = new Entry(entry);
-          e.save(function (err, entry) {
-            cb(err, entry);
-          });
-        } else {
-          // Otherwise return dublicate (just in case)
-          cb(err, dublicate);
+          return e.save(cb);
         }
-      }
-    );
-  },
-
-  /**
-   * Transfer entries from dublicate subjects
-   * @param  {Array}   dublicates Array of dublicate subjects ids
-   * @param  {Function} cb        Callback
-   */
-  transferFrom : function (dublicates, cb) {
-    var
-      subject = this,
-      Entry   = mongoose.model('Entry'),
-      Subject = mongoose.model('Subject');
-
-    if(typeof cb != 'function') {
-      cb = function (err) {
-        if(err) console.log(err);
-      };
-    }
-
-    Entry.find({
-      subject : {
-        $in : dublicates
-      }
-    }, function (err, entries) {
-      if(err) return cb(err);
-
-      if(!entries || !Array.isArray(entries)) return cb();
-
-      console.log('Start changing subject id from entry');
-      // Change subject id to Original document for every entry
-      entries.forEach(function (entry) {
-        entry.subject = subject._id;
-        entry.save();
+        // Otherwise return dublicate (just in case)
+        return cb(null, dublicates[0]);
       });
-
-      console.log('Start removing dublicates');
-      // Remove dublicate subjects
-      Subject.remove({
-        $id : {
-          $in : dublicates
-        }
-      });
-
-      return cb();
-    });
   }
+
 };
 
 subjectSchema.index({ name : 'text' });
@@ -109,12 +67,14 @@ mongoose.model('Subject', subjectSchema);
 
 var entrySchema = new Schema({
   subject   : { type : Schema.Types.ObjectId, ref : 'Subject' },
-  date      : { type : Date,   default : 0 },
-  duration  : { type : Number, default : 0 },
+  date      : {
+    start : { type : Date, default : 0 },
+    end   : { type : Date, default : 0 }
+  },
   rooms     : [{ type : Schema.Types.ObjectId, ref : 'Room' }],
   groups    : [{ type : Schema.Types.ObjectId, ref : 'Group' }],
   teachers  : [{ type : Schema.Types.ObjectId, ref : 'Teacher' }],
-  parse     : { type : Schema.Types.ObjectId, ref : 'Parse' },
+  filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   createdAt : { type : Date, default : Date.now }
 });
 
@@ -131,6 +91,7 @@ var roomSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
   capacity  : { type : Number, default : 0 },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -161,6 +122,7 @@ mongoose.model('Room', roomSchema);
 var teacherSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -191,6 +153,7 @@ mongoose.model('Teacher', teacherSchema);
 var groupSchema = new Schema({
   name      : { type : String, default : '' },
   filter    : { type : Schema.Types.ObjectId, ref : 'Filter' },
+  code      : { type : String, default : '' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -215,26 +178,6 @@ mongoose.model('Group', groupSchema);
 
 
 /**
- * Parse
- */
-
-var parseSchema = new Schema({
-  url         : { type : String,  default : '' },
-  description : { type : String,  default : '' },
-  parsed      : { type : Date,    default : 0 },
-  children    : [{
-    url   : { type : String, default : '' },
-    title : { type : String, default : '' },
-    week  : { type : Number, default : 0 }
-  }],
-  filter      : { type : Schema.Types.ObjectId, ref : 'Filter' },
-  createdAt   : { type : Date,    default : Date.now }
-});
-
-mongoose.model('Parse', parseSchema);
-
-
-/**
  * Messages from the main page
  */
 
@@ -244,6 +187,12 @@ var messageSchema = new Schema({
   device    : { type : String, default : '' },
   user      : { type : Schema.Types.ObjectId, ref : 'User' },
   createdAt : { type : Date,   default : Date.now }
+});
+
+messageSchema.pre('save', function (next, done) {
+  if(this.message.length < 4) return done(new Error('Message is too short'));
+  this.message = helpers.htmlChars(this.message);
+  next();
 });
 
 messageSchema.index(
@@ -276,6 +225,9 @@ userSchema.pre('save', function (next, done) {
 
   this.salt = this.makeSalt();
   this.password = this.encryptPassword(this.password);
+
+  this.username = helpers.htmlChars(this.username);
+  this.email = helpers.htmlChars(this.email);
   next();
 });
 
@@ -287,19 +239,22 @@ userSchema.methods = {
   },
 
   makeSalt : function () {
-    return Math.round((new Date().valueOf() * Math.random())) + '';
+    return '' + Math.round((new Date().valueOf() * Math.random()));
   },
 
   encryptPassword : function (password) {
     if (!password) return '';
-    var encrypred;
-    try {
-      encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex');
-      return encrypred;
-    }
-    catch (err) {
-      return '';
-    }
+    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+  },
+
+  shortForm : function () {
+    var user = {
+      _id : this._id,
+      username : this.username,
+      createdAt : this.createdAt
+    };
+
+    return user;
   }
 };
 
@@ -332,4 +287,44 @@ var FilterSchema = new Schema({
   createdAt   : { type : Date,   default : Date.now }
 });
 
+FilterSchema.statics = {
+
+  /**
+  * Return all filter in ascendant order
+  */
+  getAll : function (cb) {
+    this
+    .find({})
+    .sort({ 'name' : 1 })
+    .lean()
+    .exec(cb);
+  }
+
+};
+
 mongoose.model('Filter', FilterSchema);
+
+
+/**
+ * Tokens
+ */
+
+var TokenSchema = new Schema({
+  access    : { type : String, default : '' },
+  user      : { type : Schema.Types.ObjectId, ref : 'User' },
+  createdAt : { type : Date,   default : Date.now }
+});
+
+TokenSchema.pre('save', function (next, done) {
+  this.access = uuid.v4();
+  next();
+});
+
+/*
+TokenSchema.index(
+  { "access" : 1 },
+  { expireAfterSeconds : (60*60*24*30) } // 30 days
+);
+*/
+
+mongoose.model('Token', TokenSchema);

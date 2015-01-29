@@ -12,10 +12,13 @@ module.exports = Backbone.View.extend({
 
   template : templates.footer,
 
-  initialize : function (options) {},
-
   render : function () {
-    this.$el.html(_.template(this.template, { variable : 'data' }));
+    var data = {
+      year : new Date().getFullYear()
+    };
+    var tmpl = _.template(this.template, { variable : 'data' });
+
+    this.$el.html(tmpl(data));
     return this;
   }
 

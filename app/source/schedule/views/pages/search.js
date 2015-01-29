@@ -10,16 +10,19 @@ var templates = require('../../dist');
 
 var
   SearchSection = require('../../collections/searchsection'),
+  SearchFilters = require('../../collections/searchfilters'),
 
   SearchFiltersView = require('../searchfilters'),
   SearchSectionView = require('../searchsection');
 
 
 module.exports = Backbone.View.extend({
-  template     : templates.searchpage,
-  className    : 'navwindow',
-  filters : {},
+  template : templates.searchpage,
+  className : 'navwindow',
+  filterView : null,
+  filters : [], // Filters to show
   sections : {},
+  search : '',
 
   events : {
     'click #backBtn' : 'goBack'
@@ -29,38 +32,54 @@ module.exports = Backbone.View.extend({
     options = options || {};
 
     this.filterString = options.filter;
+    this.loadFilters();
     this.loadChildren();
     this.header = options.header;
 
-    this.listenTo(this.header, 'filterSections', this.filterSections);
+    this.header.on('filterBySearch', this.filterBySearch, this);
+    this.filterView.on('addFilter', this.addFilter, this);
+    this.filterView.on('removeFilter', this.removeFilter, this);
   },
 
   render : function () {
     this.$el.html(_.template(this.template, { variable : 'data' }));
 
-    _.invoke(this.subViews, 'render');
+    this.$el.find('#filters').html(this.filterView.render().el);
 
     return this;
   },
 
   /**
-   * Filter sections after user typed
-   * @param  {Event} e event
+   * Filter sections
    */
-  filterSections : function (e) {
-    this.filterView(e.currentTarget.value);
+  filterSections : function (filters, search) {
+    _.each(this.sections, function (section) {
+      section.filter(filters, search);
+    });
   },
 
   /**
    * Filter search view
    * @param  {String} s filter string
    */
-  filterView : function (s) {
-    s = s || '';
+  filterBySearch : function (s) {
+    this.search = s || '';
+    this.filterSections(this.filters, this.search);
+  },
 
-    _.each(this.sections, function (el) {
-      el.filter(s);
-    });
+  filterByFilters : function () {
+    this.filterSections(this.filters, this.search);
+  },
+
+  /**
+   * Load filters
+   */
+  loadFilters : function () {
+    var filters = new SearchFilters();
+    filters.fetch();
+    this.filterView = new SearchFiltersView({ collection : filters });
+
+    return this;
   },
 
   /**
@@ -89,7 +108,9 @@ module.exports = Backbone.View.extend({
 
           counter += 1;
           // when all sections are loaded call filter function
-          if(counter == sections.length) this.filterView(this.header.search());
+          if(counter === sections.length) {
+            this.filterSections(this.filters, this.header.search());
+          }
 
         }).bind(this)
       });
@@ -106,11 +127,25 @@ module.exports = Backbone.View.extend({
     window.app.router.goBack();
   },
 
+  addFilter : function (filterId) {
+    var index = this.filters.indexOf(filterId);
+    if(index > -1) return;
+    this.filters.push(filterId);
+    this.filterByFilters();
+  },
+
+  removeFilter : function (filterId) {
+    var index = this.filters.indexOf(filterId);
+    if(index === -1) return;
+    this.filters.splice(index, 1);
+    this.filterByFilters();
+  },
+
   /**
    * Rewrite remove function to switch header theme first and remove children
    */
   remove : function () {
-    _.invoke(this.filters, "remove");
+    if(this.filterView) this.filterView.remove();
     _.invoke(this.sections, "remove");
 
     Backbone.View.prototype.remove.apply(this, arguments);

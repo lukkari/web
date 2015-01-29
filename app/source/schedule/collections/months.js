@@ -18,15 +18,24 @@ module.exports = Backbone.Collection.extend({
       m = d.getMonth(), // current month
       prec = 3,         // number of preceding months to show
       follow = 4,       // number of following months to show
-      model, i, j;
+      model, i, j, k;
 
     for(i = -prec; i <= follow; i += 1) {
+      k = 0;
       j = m + i; // month to show
-      j = (j < 0) ? (12 + j) : j;  // handle if month < 0
-      j = (j > 11) ? (j - 12) : j; // handle if month > 11
+
+      if(j < 0) {
+        // Show month from the previous year
+        k = -1;
+        j = 12 + j;
+      } else if(j > 11) {
+        // Show month from the next year
+        k = 1;
+        j = j - 12;
+      }
 
       this.add(new Month([], {
-        date : new Date(d.getFullYear(), j, 1)
+        date : new Date(d.getFullYear() + k, j, 1)
       }));
     }
   }

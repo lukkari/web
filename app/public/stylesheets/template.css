@@ -280,18 +280,18 @@ a:focus {
   color: #555;
 }
 
-.navwindow .content {
+.navwindow section {
   max-width: 800px;
   margin: 0 auto;
   padding-bottom: 1em;
 }
 
-.navwindow .content li {
+.navwindow section li {
   float: left;
   width: 33.33333%;
 }
 
-.navwindow .content li > a {
+.navwindow section li > a {
   display: block;
   box-sizing: border-box;
   padding: 0.3em 0.4em;
@@ -304,39 +304,48 @@ a:focus {
   will-change: background-color;
 }
 
-.navwindow .content li > a:hover {
+.navwindow section li > a:hover {
   background-color: #75BCEB;
 }
 
-.navwindow .content li > input {
+.navwindow .filters-list {
+  padding-top: 1.5rem;
+}
+
+.navwindwo .filters-list > li {
+  box-sizing: border-box;
+}
+
+.navwindow .filters-list input {
   width: 0;
   height: 0;
   visibility: hidden;
 }
 
-.navwindow .content li label {
+.navwindow .filters-list label {
   display: block;
   font-size: 1.2em;
-  color: #bbb;
-  background-color: #444;
-  padding: 0.3em 0.4em;
+  color: #888;
+  background-color: #fff;
+  padding: 0.3rem 0.7rem;
   margin: -0.3em 0.2em;
   border-radius: 10px;
   cursor: pointer;
 }
 
-.navwindow .content li > input:checked ~ label {
-  background-color: #266E44;
+.navwindow .filters-list input:checked ~ label {
+  background-color: #8feab0;
+  color: #222;
 }
 
 @media screen and (max-width: 480px) {
-  .navwindow .content li {
+  .navwindow section li {
     width: 100%;
   }
 }
 
 @media screen and (min-width: 480px) and (max-width: 700px) {
-  .navwindow .content li {
+  .navwindow section li {
     width: 50%;
   }
 }

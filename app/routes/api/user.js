@@ -9,6 +9,25 @@ var weekday = require('../../libs/weekday');
 // DB models
 var UserTable = mongoose.model('UserTable');
 var Subject = mongoose.model('Subject');
+var Token = mongoose.model('Token');
+
+
+/**
+ * GET '/api/user/login' Login user
+ */
+exports.login = function (req, res) {
+  var accessToken = new Token({
+    user : req.user._id
+  });
+
+  accessToken.save(function (err, token) {
+    if(err) console.log(err);
+
+    var outUser = req.user.shortForm();
+    outUser.accessToken = token.access;
+    res.send(outUser);
+  });
+};
 
 /**
  * GET '/api/user/schedule' Return user's schedule
@@ -20,7 +39,9 @@ exports.getSchedule = function (req, res) {
   var i = 0;
 
   if(typeof w !== 'undefined') {
-    //if(today.getStudyWeek() > (w + 35)) i = 1;
+    // Return next year schedule for january,
+    // when we are in August
+    if(today.getStudyWeek() > 31 && w < 30) i = 1;
     today = today.getDateOfISOWeek(w, today.getFullYear() + i);
   } else w = today.getStudyWeek();
 

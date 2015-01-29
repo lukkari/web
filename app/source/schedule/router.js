@@ -110,7 +110,8 @@ module.exports = Backbone.Router.extend({
     document.title = title;
 
     var schedule = new Schedule([], {
-      url  : options.query,
+      query : q,
+      week : w,
       isMy : isMySchedule
     });
 
@@ -139,7 +140,7 @@ module.exports = Backbone.Router.extend({
     var isMy = (q == 'my');
 
     var schedule = new Schedule([], {
-      url : q + '/',
+      query : q,
       isMy : isMy,
       isNow : true
     });
