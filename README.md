@@ -59,3 +59,7 @@ For production:
 ### Production
 
 * `nohup bin/forever > logs/server.log &`
+
+## License
+
+MIT
