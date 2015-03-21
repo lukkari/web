@@ -249,3 +249,10 @@ function addSingleEntry(entry) {
     }
   });
 }
+
+/**
+ * GET '/api/timestamp' Send server time
+ */
+exports.getTimestamp = function (req, res) {
+  res.send(new Date().toISOString());
+};

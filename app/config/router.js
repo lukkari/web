@@ -130,6 +130,8 @@ module.exports = function (passport) {
    */
   var apiRouter = express.Router();
   apiRouter
+    .get('/timestamp', api.home.getTimestamp) // For lukkari-sync to ping app
+    
     .use(ensureXhr)
     .post('/message', api.home.sendMsg)
     .post('/entry',   api.home.addEntry)
