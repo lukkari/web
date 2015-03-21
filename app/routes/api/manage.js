@@ -265,6 +265,6 @@ exports.deleteApp = function (req, res) {
       return res.status(400).send(err);
     }
 
-    res.send('success');
+    res.status(204).send();
   });
 };

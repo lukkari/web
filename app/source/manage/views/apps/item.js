@@ -30,7 +30,6 @@ module.exports = Backbone.View.extend({
 
     this.model.destroy({
       success : function () {
-        console.log('removed');
         this.$el.remove();
         this.remove();
       }.bind(this),
