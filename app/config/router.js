@@ -117,11 +117,6 @@ module.exports = function (passport) {
 
     .get('/model', api.manage.getModels)
 
-    .get(   '/parse',         api.manage.deprecated)
-    .post(  '/parse',         api.manage.deprecated)
-    .get(   '/parse/:id/run', api.manage.deprecated)
-    .delete('/parse/:id',     api.manage.deprecated)
-
     .get('/message',    api.manage.getMessages)
     .get('/serverdata', api.manage.getServerData);
 
@@ -131,7 +126,7 @@ module.exports = function (passport) {
   var apiRouter = express.Router();
   apiRouter
     .get('/timestamp', api.home.getTimestamp) // For lukkari-sync to ping app
-    
+
     .use(ensureXhr)
     .post('/message', api.home.sendMsg)
     .post('/entry',   api.home.addEntry)
@@ -183,8 +178,6 @@ module.exports = function (passport) {
   manageRouter
     .use(ensureAuthenticated)
     .use(ensureAdmin)
-
-    .get('/parser', manage.index)
     .get('/*', manage.index);
 
   /**

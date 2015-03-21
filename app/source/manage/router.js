@@ -3,7 +3,6 @@
  */
 
 var
-  $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
@@ -13,7 +12,6 @@ var
   ServerData  = require('./collections/serverdata'),
   ModelBlocks = require('./collections/modelblocks'),
   Messages    = require('./collections/messages'),
-  Parses      = require('./collections/parses'),
 
   AppView = require('./views/app'),
 
@@ -21,16 +19,13 @@ var
   SectionView    = require('./views/dashboard/section'),
   ServerDataItemView = require('./views/dashboard/serverdataitem'),
   ModelBlockView = require('./views/dashboard/modelblock'),
-  MessageView    = require('./views/dashboard/message'),
+  MessageView    = require('./views/dashboard/message');
 
-  ModelPageView = require('./views/modelpage'),
-
-  ParserView = require('./views/parser');
+  ModelPageView = require('./views/modelpage');
 
 module.exports = Backbone.Router.extend({
   routes : {
     'model/:m(/page/:p)(/)' : 'modelPage',
-    'parser' : 'parser',
     '/*' : 'dashboard'
   },
 
@@ -70,27 +65,6 @@ module.exports = Backbone.Router.extend({
         this.app.toContent(this.view.render().el);
       }).bind(this)
     });
-  },
-
-  /**
-   * Show parser page
-   */
-  parser : function () {
-    if(this.view) this.view.remove();
-
-    var parses = new Parses();
-
-    parses.fetch({
-      success : (function () {
-
-      }).bind(this)
-    });
-
-    this.view = new ParserView({
-      parses : parses
-    });
-
-    this.app.toContent(this.view.render().el);
   },
 
   /**
