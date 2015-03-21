@@ -12,6 +12,7 @@ var
   ServerData  = require('./collections/serverdata'),
   ModelBlocks = require('./collections/modelblocks'),
   Messages    = require('./collections/messages'),
+  Apps = require('./collections/apps'),
 
   AppView = require('./views/app'),
 
@@ -19,13 +20,18 @@ var
   SectionView    = require('./views/dashboard/section'),
   ServerDataItemView = require('./views/dashboard/serverdataitem'),
   ModelBlockView = require('./views/dashboard/modelblock'),
-  MessageView    = require('./views/dashboard/message');
+  MessageView    = require('./views/dashboard/message'),
+
+  AppsPageView = require('./views/apps'),
+  AddAppView = require('./views/apps/add'),
+  AppListView = require('./views/apps/list'),
 
   ModelPageView = require('./views/modelpage');
 
 module.exports = Backbone.Router.extend({
   routes : {
     'model/:m(/page/:p)(/)' : 'modelPage',
+    'apps' : 'appsPage',
     '/*' : 'dashboard'
   },
 
@@ -65,6 +71,32 @@ module.exports = Backbone.Router.extend({
         this.app.toContent(this.view.render().el);
       }).bind(this)
     });
+  },
+
+  /**
+   * Show applications page
+   */
+  appsPage : function () {
+    if(this.view) this.view.remove();
+
+    var apps = new Apps();
+    apps.fetch();
+
+    var addAppView = new AddAppView();
+    addAppView.on('new_app', function (app) {
+      apps.add(app, { at : 0 });
+    });
+
+    this.view = new AppsPageView({
+      subviews : {
+        addApp : addAppView,
+        appList : new AppListView({
+          collection : apps
+        })
+      }
+    });
+
+    this.app.toContent(this.view.render().el);
   },
 
   /**

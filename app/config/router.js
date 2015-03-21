@@ -118,7 +118,11 @@ module.exports = function (passport) {
     .get('/model', api.manage.getModels)
 
     .get('/message',    api.manage.getMessages)
-    .get('/serverdata', api.manage.getServerData);
+    .get('/serverdata', api.manage.getServerData)
+
+    .post(  '/app',     api.manage.addApp)
+    .get(   '/app',     api.manage.getApps)
+    .delete('/app/:id', api.manage.deleteApp);
 
   /**
    * Home API

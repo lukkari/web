@@ -8,6 +8,7 @@ var async    = require('async');
 
 // DB models
 var Message = mongoose.model('Message');
+var App = mongoose.model('App');
 
 /**
  * Counts documents in any collection by model
@@ -219,4 +220,51 @@ exports.getServerData = function (req, res) {
       value : week
     }
   ]);
+};
+
+/**
+ * POST '/manage/api/app' Create new application
+ */
+exports.addApp = function (req, res) {
+  var app = new App(req.body);
+
+  app.save(function (err, app) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.json(app);
+  });
+};
+
+/**
+ * GET '/manage/api/app' List all applications
+ */
+exports.getApps = function (req, res) {
+  App
+  .find({})
+  .sort({ lastAccessed : -1 })
+  .lean()
+  .exec(function (err, apps) {
+    if(err) console.log(err);
+
+    res.json(apps);
+  });
+};
+
+/**
+ * DELETE '/manage/api/app/:id' Remove application
+ */
+exports.deleteApp = function (req, res) {
+  App
+  .findByIdAndRemove(req.params.id)
+  .exec(function (err) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.send('success');
+  });
 };

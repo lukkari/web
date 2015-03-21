@@ -1,0 +1,6 @@
+div
+  span.name <%= data.name %>
+  input.token(onfocus="this.select();" onmouseup="return false;" readonly value!="<%= data.token %>")
+  button.remove-app-btn Remove
+  
+span.last-used Last accessed: <%= data.lastAccessed %>

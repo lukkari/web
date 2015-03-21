@@ -410,3 +410,39 @@ a, button, input, textarea {
 .manage .pagination li.current > a {
   background-color: #fff;
 }
+
+
+/**
+ * Add application
+ */
+
+.manage .apps-page .list {
+  margin: 1.5rem 0;
+}
+
+.manage .apps-page .list > li {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem 0;
+}
+
+.manage .apps-page .list > li:last-child {
+  border: none;
+}
+
+.manage .apps-page .list .name {
+  font-size: 1.1rem;
+}
+
+.manage .apps-page .list .token {
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  width: 300px;
+  font-family: monospace;
+  padding: 0.1rem;
+  margin: 0 0.5rem;
+}
+
+.manage .apps-page .list .last-used {
+  color: #888;
+  font-size: 0.8rem;
+}
