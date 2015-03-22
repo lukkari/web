@@ -28,11 +28,12 @@ module.exports = Backbone.Model.extend({
 
       if(prev) {
         // Try to fit rest block between subjects
-        // date = new Date(el.date);
-        // pdate = new Date(prev.date);
-        // dur = date.getHours() - pdate.getHours() - prev.duration;
-        //
-        // if(dur > 0) subjects.push(this.restBlock(date, pdate, dur, prev.duration));
+        pdate = new Date(prev.date.end);
+        date = new Date(el.date.start);
+        dur = date.getHours() - pdate.getHours();
+        if(dur > 0) {
+          subjects.push(this.restBlock(prev.date.end, el.date.start));
+        }
       }
 
       subjects.push(el);
@@ -72,25 +73,28 @@ module.exports = Backbone.Model.extend({
 
   /**
    * Return rest block
-   * @param  {Date}    date
-   * @param  {Date}    pdate
-   * @param  {Integer} dur
-   * @param  {Integer} pdur
+   * @param  {Date}  pend Previous block ending date
+   * @param  {Date}  date Current block starting date
    * @return {Object}
    */
-  restBlock : function (date, pdate, dur, pdur) {
-    date = new Date(date);
-    pdate = new Date(pdate);
+  restBlock : function (pend, cstart) {
+    pend = new Date(pend);
+    cstart = new Date(cstart);
     return {
       rest : true,
-      duration : dur,
       date : {
-        start : new Date(date.getFullYear(),
-                         date.getMonth(),
-                         date.getDate(),
-                         pdate.getHours() + pdur,
-                         15
-                       )
+        start : new Date(pend.getFullYear(),
+                         pend.getMonth(),
+                         pend.getDate(),
+                         pend.getHours(),
+                         0
+                       ),
+        end : new Date(cstart.getFullYear(),
+                       cstart.getMonth(),
+                       cstart.getDate(),
+                       cstart.getHours(),
+                       0
+                      )
       }
     };
   },
