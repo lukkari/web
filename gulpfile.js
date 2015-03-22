@@ -2,15 +2,21 @@
  * Gulp tasks
  */
 
-var gulp       = require('gulp');
-var browserify = require('gulp-browserify');
-var uglify     = require('gulp-uglify');
-var jade       = require('gulp-jade');
-var minifyCSS  = require('gulp-minify-css');
-var rename     = require('gulp-rename');
-var fs         = require('fs');
-var path       = require('path');
+var gulp = require('gulp');
+var uglify = require('gulp-uglify');
+var jade = require('gulp-jade');
+var minifyCSS = require('gulp-minify-css');
+var rename = require('gulp-rename');
+var fs = require('fs');
+var path = require('path');
 var del = require('del');
+// var gutil = require('gulp-util');
+var sourcemaps = require('gulp-sourcemaps');
+// var source = require('vinyl-source-stream');
+// var buffer = require('vinyl-buffer');
+// var watchify = require('watchify');
+var browserify = require('browserify');
+var transform = require('vinyl-transform');
 
 var paths = {
 
@@ -44,6 +50,7 @@ var paths = {
   clean : {
     builds : [
       './app/public/js/builds/*.js',
+      './app/public/js/builds/*.js.map',
       './app/public/js/**/*.min.js',
       './app/source/*/dist/*'
     ],
@@ -180,10 +187,20 @@ scriptTasks.forEach(function (task) {
   var src = getDir(pageName, paths.scripts.src);
   var dest = getDir(pageName, paths.scripts.dest);
 
+  // transform regular node stream to gulp (buffered vinyl) stream
+  var browserified = transform(function(filename) {
+    var b = browserify({ entries: filename, debug: true });
+    return b.bundle();
+  });
+
   gulp.task(task, ['templates-' + pageName], function () {
     return gulp
       .src(src)
-      .pipe(browserify({ debug : true }))
+      .pipe(browserified)
+      .pipe(sourcemaps.init({loadMaps: true}))
+          // Add transformation tasks to the pipeline here.
+          .pipe(uglify())
+      .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(dest));
   });
 
