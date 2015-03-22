@@ -28,7 +28,8 @@ module.exports = Backbone.View.extend({
     this.collection.fetch({
       data :  {
         page  : this.page,
-        limit : this.limit
+        limit : this.limit,
+        q     : options.query
       },
 
       success : (function () {

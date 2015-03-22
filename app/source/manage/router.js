@@ -31,7 +31,7 @@ var
 
 module.exports = Backbone.Router.extend({
   routes : {
-    'model/:m(/page/:p)(/)' : 'modelPage',
+    'model/:m(/page/:p)(/:search)' : 'modelPage',
     'apps' : 'appsPage',
     '/*' : 'dashboard'
   },
@@ -45,28 +45,36 @@ module.exports = Backbone.Router.extend({
       el : '#app'
     });
     this.app.render();
+
+    // Events
+    this.on('search-model', function (model, query) {
+      this.navigate('model/' + model + '/page/1/' + JSON.stringify(query), {
+        trigger : true
+      });
+    }.bind(this));
   },
 
   /**
    * Show model page
    * @param  {String} name Model name
-   * @param  {String]} p   Page number
+   * @param  {String} p   Page number
+   * @param  {String} search query
    */
-  modelPage : function (name, p) {
+  modelPage : function (name, p, search) {
     if(!name || !name.length) return;
     p = p || '1'; // page number
 
     if(this.view) this.view.remove();
 
-    var page = new Page(name);
-
+    var page = new Page(name, search);
 
     page.fetch({
       success : (function () {
         this.view = new ModelPageView({
           name : name,
           page : p,
-          model : page
+          model : page,
+          query : search
         });
 
         this.app.toContent(this.view.render().el);

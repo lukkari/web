@@ -21,7 +21,11 @@ module.exports = Backbone.View.extend({
   },
 
   initialize : function (options) {
+    options = options || {};
+
+    this.query = JSON.parse(options.query) || {};
     this.model = new Search(options);
+    this.modelName = options.name;
   },
 
   render : function () {
@@ -29,21 +33,33 @@ module.exports = Backbone.View.extend({
       data = this.model.toJSON(),
       tmpl = _.template(this.template, { variable : 'data' });
 
-    data.fields = Object.keys(data.schema);
+    var values = this.query;
+
+    data.fields = Object.keys(data.schema).map(function (field) {
+      var val = '';
+      if(values.hasOwnProperty(field)) {
+        val = values[field];
+      }
+
+      return {
+        name : field,
+        value : val
+      };
+    });
+
     this.$el.html(tmpl(data));
+
+    this
+      .$el
+      .find('#query')
+      .val(JSON.stringify(this.query, null, '  '));
+
     return this;
   },
 
   search : function () {
-    var query = this.$el.find('#query').val();
-
-    try {
-      query = JSON.parse(query);
-      console.log(query);
-      this.$el.find('#error').text('');
-    } catch (err) {
-      this.$el.find('#error').text(err);
-    }
+    var query = this.query;
+    window.app.router.trigger('search-model', this.modelName, query);
   },
 
   /**
