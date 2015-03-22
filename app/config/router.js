@@ -4,6 +4,7 @@
 
 var express = require('express');
 var config  = require('./config');
+var mongoose = require('mongoose');
 
 // Load routes
 var home = require('../routes/');
@@ -13,8 +14,12 @@ var manage = require('../routes/manage');
 var api = {
   home : require('../routes/api/home'),
   manage : require('../routes/api/manage'),
-  user : require('../routes/api/user')
+  user : require('../routes/api/user'),
+  app : require('../routes/api/app')
 };
+
+// DB models
+var App = mongoose.model('App');
 
 
 function securityHeaders(req, res, next) {
@@ -75,9 +80,35 @@ function ensureXhr(req, res, next) {
   next();
 }
 
+function ensureApplication(req, res, next) {
+  var token = req.get('App-Token');
+
+  if(!token) {
+    return res.status(401).send('Specify application token');
+  }
+
+  App
+  .findOne({
+    token : token
+  })
+  .exec(function (err, app) {
+    if(err) console.log(err);
+
+    // App is found
+    if(app) {
+      app.lastAccessed = new Date();
+      app.save();
+
+      return next();
+    }
+
+    return res.status(401).send('Specify application token');
+  });
+}
+
 function setCache(res, val) {
   if(!val) return res.set('Cache-Control', 'no-cache');
-  res.set('Cache-Control', 'public, max-age=' + val)
+  res.set('Cache-Control', 'public, max-age=' + val);
 }
 
 function setShortCacheHeader(req, res, next) {
@@ -99,6 +130,7 @@ module.exports = function (passport) {
    *   1) Manage API
    *   2) Home API
    *   3) User API
+   *   4) Applications API
    */
 
   /**
@@ -135,7 +167,6 @@ module.exports = function (passport) {
 
     .use(ensureXhr)
     .post('/message', api.home.sendMsg)
-    .post('/entry',   api.home.addEntry)
 
     .get('/schedule/:q/now', api.home.getNowSchedule)
     // For some API methods set cache header
@@ -168,6 +199,14 @@ module.exports = function (passport) {
     .get(   '/subject',       api.user.findSubject)
     .get(   '/usertable',     api.user.getUserTable)
     .delete('/usertable/:id', api.user.removeFromUserTable);
+
+  /**
+   * Applications API
+   */
+  var appApiRouter = express.Router();
+  appApiRouter
+    .use(ensureApplication)
+    .post('/entry', api.app.addEntry);
 
   /**
    * =====================================================
@@ -234,6 +273,7 @@ module.exports = function (passport) {
     .use('/manage/api', manageApiRouter)
     .use('/manage',     manageRouter)
     .use('/u',          userRouter)
+    .use('/api/app',    appApiRouter)
     .use('/api/user',   userApiRouter)
     .use('/api',        apiRouter)
     .use('/',           homeRouter);
