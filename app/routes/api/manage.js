@@ -9,6 +9,7 @@ var async    = require('async');
 // DB models
 var Message = mongoose.model('Message');
 var App = mongoose.model('App');
+var Filter = mongoose.model('Filter');
 
 /**
  * Counts documents in any collection by model
@@ -266,5 +267,21 @@ exports.deleteApp = function (req, res) {
     }
 
     res.status(204).send();
+  });
+};
+
+/**
+ * POST '/manage/api/filter' Create filter
+ */
+exports.addFilter = function (req, res) {
+  var filter = new Filter(req.body);
+
+  filter.save(function (err, filter) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.json(filter);
   });
 };

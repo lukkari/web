@@ -1,7 +1,7 @@
-h1 Applications
+h1 Add <%= data.formModel %>
 
 div.add-form
   div.row
-    input.text#addAppName(type="text" placeholder="App name" name="app-name")
+    input.text#addAppName(type="text" placeholder!="<%= data.formModel %> name" name="app-name")
   div.row
-    button.button#addAppBtn Add application
+    button.button#addAppBtn Add <%= data.formModel %>

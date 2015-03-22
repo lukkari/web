@@ -21,6 +21,7 @@ var
   ServerDataItemView = require('./views/dashboard/serverdataitem'),
   ModelBlockView = require('./views/dashboard/modelblock'),
   MessageView    = require('./views/dashboard/message'),
+  AddFilterView = require('./views/dashboard/addfilter'),
 
   AppsPageView = require('./views/apps'),
   AddAppView = require('./views/apps/add'),
@@ -131,7 +132,9 @@ module.exports = Backbone.Router.extend({
           className : 'messages',
           collection : messages,
           ModelView : MessageView
-        })
+        }),
+
+        addFilter : new AddFilterView()
       }
     });
 

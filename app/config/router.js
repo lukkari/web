@@ -120,6 +120,8 @@ module.exports = function (passport) {
     .get('/message',    api.manage.getMessages)
     .get('/serverdata', api.manage.getServerData)
 
+    .post('/filter', api.manage.addFilter)
+
     .post(  '/app',     api.manage.addApp)
     .get(   '/app',     api.manage.getApps)
     .delete('/app/:id', api.manage.deleteApp);
