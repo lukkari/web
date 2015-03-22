@@ -73,7 +73,7 @@ app
   .use(express.static(path.join(appdir, 'public'), { maxAge : (config.cache.week * 1000) }))
   .use(bodyParser.json({ limit : '5mb' }))
   .use(bodyParser.urlencoded({ limit : '5mb', extended : true }))
-  .use(cookieParser())
+  .use(cookieParser(config.app.name))
   .use(session({
     secret : config.app.name,
     store  : new MongoStore({ mongoose_connection: mongoose.connection })

@@ -328,3 +328,29 @@ TokenSchema.index(
 */
 
 mongoose.model('Token', TokenSchema);
+
+
+/**
+ * Applications
+ */
+
+var appSchema = new Schema({
+  name         : { type : String, default : '' },
+  token        : { type : String, default : '' },
+  createdAt    : { type : Date,   default : Date.now },
+  lastAccessed : { type : Date,   default : Date.now }
+});
+
+appSchema.pre('save', function (next, done) {
+  if(this.isNew) {
+    if(this.name.length < 2) return done(new Error('Name is too short'));
+    this.name = helpers.htmlChars(this.name);
+    this.token = uuid.v4();
+  }
+
+  next();
+});
+
+appSchema.index({ name : 1 }, { unique : true });
+
+mongoose.model('App', appSchema);

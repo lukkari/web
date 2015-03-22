@@ -412,96 +412,37 @@ a, button, input, textarea {
 }
 
 
-/*
-  ##########################################################################################
-  Parser
+/**
+ * Add application
  */
-.manage .parser .link-list .link-item {
-  margin: 0.5em 0;
-  border-top: 1px solid #ddd;
-  padding: 0.5em 0;
+
+.manage .apps-page .list {
+  margin: 1.5rem 0;
 }
 
-.manage .parser .link-list .url {
-  font-size: 1.1em;
-  padding: 0.1em 0;
+.manage .apps-page .list > li {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem 0;
 }
 
-.manage .parser .link-list .description {
-  font-size: 0.9em;
-  color: #444;
+.manage .apps-page .list > li:last-child {
+  border: none;
 }
 
-.manage .parser .link-list .controls {
-  margin: 0.2em 0;
+.manage .apps-page .list .name {
+  font-size: 1.1rem;
 }
 
-.manage .parser .link-list .controls button {
-  border: 0;
-  padding: 0.5em 1.5em;
-  margin: 0 0.5em 0 0;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  outline: none;
+.manage .apps-page .list .token {
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  width: 300px;
+  font-family: monospace;
+  padding: 0.1rem;
+  margin: 0 0.5rem;
 }
 
-.manage .parser .link-list .controls button:disabled {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-.manage .parser .link-list .run {
-  background-color: #6DC970;
-}
-
-.manage .parser .link-list .run:hover {
-  background-color: #309634;
-}
-
-.manage .parser .link-list .delete {
-  background-color: #F27474;
-}
-
-.manage .parser .link-list .delete:hover {
-  background-color: #CF3E3E;
-}
-
-.manage .parser .link-list .sublinks {
-  margin: 0.5em 0 0.2em 1em;
-  color: #333;
-}
-
-.manage .parser .add-link-form .row h2 {
-  text-transform: uppercase;
-  color: #666;
-}
-
-.manage .parser .add-link-form .note {
-  margin: 1em 0;
-}
-
-.manage .parser .add-link-form .text {
-  border: 1px solid #bbb;
-  padding: 0.3em 0.5em;
-  font-size: 0.9em;
-  margin: 0;
-  min-width: 300px;
-}
-
-.manage .parser .add-link-form .add-btn {
-  margin: 0;
-  padding: 0.4em 1.5em;
-  border: 0;
-  min-width: 300px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.2s;
-}
-
-.manage .parser .add-link-form .add-btn:hover {
-  background-color: #ccc;
-}
-
-.manage .parser .add-link-form .row {
-  margin: 0.3em 0;
+.manage .apps-page .list .last-used {
+  color: #888;
+  font-size: 0.8rem;
 }

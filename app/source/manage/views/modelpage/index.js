@@ -25,7 +25,8 @@ module.exports = Backbone.View.extend({
     this.subviews = {
       search : new SearchView({
         schema  : this.model.get('schema'),
-        name    : this.model.get('name')
+        name    : this.model.get('name'),
+        query   : options.query
       }),
 
       models : new ModelsView(options),

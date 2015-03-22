@@ -6,10 +6,10 @@ div.search-form
 
     <% _.each(data.fields, function (field) { %>
     tr.row
-      td.labels: label(for!='<%= field %>') <%= field %>
+      td.labels: label(for!='<%= field.name %>') <%= field.name %>
       td.colons :
       td.inputs
-        input.text.field(type='text' id!='<%= field %>' placeholder='your query')
+        input.text.field(type='text' id!='<%= field.name %>' placeholder='your query' value!="<%= field.value %>")
     <% }); %>
 
     tr.row

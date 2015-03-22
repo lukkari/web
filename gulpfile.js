@@ -2,34 +2,40 @@
  * Gulp tasks
  */
 
-var gulp       = require('gulp');
-var browserify = require('gulp-browserify');
-var uglify     = require('gulp-uglify');
-var jade       = require('gulp-jade');
-var minifyCSS  = require('gulp-minify-css');
-var rename     = require('gulp-rename');
-var fs         = require('fs');
-var path       = require('path');
+var gulp = require('gulp');
+var uglify = require('gulp-uglify');
+var jade = require('gulp-jade');
+var minifyCSS = require('gulp-minify-css');
+var rename = require('gulp-rename');
+var fs = require('fs');
+var path = require('path');
+var del = require('del');
+// var gutil = require('gulp-util');
+var sourcemaps = require('gulp-sourcemaps');
+// var source = require('vinyl-source-stream');
+// var buffer = require('vinyl-buffer');
+// var watchify = require('watchify');
+var browserify = require('browserify');
+var transform = require('vinyl-transform');
 
 var paths = {
-  watch : './app/source/**/*.js',
 
-  builds : {
+  jade : {
+    src : './app/source/{page}/templates/*.jade',
+    dest : './app/source/{page}/dist/'
+  },
+
+  html : {
+    src  : './app/source/{page}/dist/',
+    dest : './app/source/{page}/dist/index.js'
+  },
+
+  scripts : {
     src : './app/source/{page}/{page}page.js',
     dest : './app/public/js/builds/'
   },
 
-  templates : {
-    jade : {
-      src  : './app/source/{page}/templates/*.jade',
-      dest : './app/source/{page}/dist/'
-    },
-
-    html : {
-      src  : './app/source/{page}/dist/',
-      dest : './app/source/{page}/dist/index.js'
-    }
-  },
+  watch : './app/source/**/*.js',
 
   css : {
     src  : './app/public/stylesheets/*.css',
@@ -41,99 +47,53 @@ var paths = {
     dest : './app/public/js/'
   },
 
+  clean : {
+    builds : [
+      './app/public/js/builds/*.js',
+      './app/public/js/builds/*.js.map',
+      './app/public/js/**/*.min.js',
+      './app/source/*/dist/*'
+    ],
+    css : [
+      './app/public/stylesheets/*.min.css'
+    ]
+  },
+
   pages : ['schedule', 'manage', 'user']
 };
 
 /**
- * transform way (change {page} to correct page name)
+ * Get page path (change {page} to correct page name)
  * @param  {String} page Page name
- * @param  {String} way  Path
- * @return {String}      Correct way
+ * @param  {String} dir  Path
+ * @return {String}      Correct dir
  */
-function tWay(page, way) {
-  return way.replace(/\{page\}/ig, page);
+function getDir(page, dir) {
+  return dir.replace(/\{page\}/ig, page);
 }
 
-
 /**
- * Build js files from the source folder
+ * Return array with script name prepending page names
+ *   Ex: ('jade', ['schedule', 'user']) -> ['jade-schedule', 'jade-user']
+ *
+ * @param {String} name
+ * @param {Array} pages Page names
  */
-gulp.task('scripts', function () {
-
-  paths.pages.forEach(function (page) {
-    gulp
-    .src(tWay(page, paths.builds.src))
-    .pipe(browserify({ debug : true }))
-    .pipe(gulp.dest(paths.builds.dest));
+function nameWithPages(name, pages) {
+  return pages.map(function (page) {
+    return name + '-' + page;
   });
-});
-
-
-/**
- * Same as `scripts`, but minified versions
- */
-gulp.task('min-js', function () {
-  gulp
-    .src(paths.minjs.src)
-    .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(paths.minjs.dest));
-});
-
+}
 
 /**
- * Compile jade templates into html
+ * Get page name from task name
+ * 	Ex: ('jade-schedule') -> 'schedule'
+ *
+ * @param {String} taskName
  */
-gulp.task('jade', function () {
-
-  paths.pages.forEach(function (page) {
-    gulp
-    .src(tWay(page, paths.templates.jade.src))
-    .pipe(jade({}))
-    .pipe(gulp.dest(tWay(page, paths.templates.jade.dest)));
-  });
-});
-
-
-/**
- * Add all html files into one browserifyable
- */
-gulp.task('templates', function () {
-
-  paths.pages.forEach(function (page) {
-
-    var
-      source = tWay(page, paths.templates.html.src),
-      dest = tWay(page, paths.templates.html.dest);
-
-    fs.readdir(source, function (err, files) {
-      if(err) {
-        console.log(err);
-        return;
-      }
-
-      var templates = {},
-          dir, val;
-
-      files.forEach(function (filename) {
-        if(filename.indexOf('.html') === -1) {
-          // work with directory
-          return;
-        }
-
-        dir = path.normalize(source + filename);
-        val = fs.readFileSync(dir, 'utf8');
-        templates[filename.slice(0, filename.indexOf('.'))] = val;
-      });
-
-      dir = path.normalize(dest);
-
-      fs.writeFileSync(dir, 'module.exports = ' + JSON.stringify(templates) + ';');
-      console.log('templates file was built (' + dir +')');
-    });
-
-  });
-});
+function findPageName(taskName) {
+  return taskName.split('-')[1];
+}
 
 
 /**
@@ -148,17 +108,141 @@ gulp.task('watch', ['scripts'], function () {
 
 
 /**
- * Execute `scripts` and then `watch`
+ * Jade templates
  */
-gulp.task('default', ['scripts', 'watch']);
+var jadeTasks = nameWithPages('jade', paths.pages);
+
+gulp.task('jade', jadeTasks);
+
+jadeTasks.forEach(function (task) {
+
+  var pageName = findPageName(task);
+  var src = getDir(pageName, paths.jade.src);
+  var dest = getDir(pageName, paths.jade.dest);
+
+  gulp.task(task, function () {
+    return gulp
+      .src(src)
+      .pipe(jade({}))
+      .pipe(gulp.dest(dest));
+  });
+
+});
+
+/**
+ * Combine templates into one file for each page
+ */
+var templateTasks = nameWithPages('templates', paths.pages);
+
+gulp.task('templates', templateTasks);
+
+templateTasks.forEach(function (task) {
+
+  var pageName = findPageName(task);
+  var src = getDir(pageName, paths.html.src);
+  var dest = getDir(pageName, paths.html.dest);
+
+  gulp.task(task, ['jade-' + pageName], function (cb) {
+
+    fs.readdir(src, function (err, files) {
+      if(err) {
+        console.log(err);
+        return;
+      }
+
+      var templates = {};
+      var dir = path.normalize(dest);
+
+      files.forEach(function (filename) {
+        if(filename.indexOf('.html') === -1) {
+          // work with directory
+          return;
+        }
+
+        var dir = path.join(src, filename);
+        var val = fs.readFileSync(dir, 'utf8');
+        templates[filename.slice(0, filename.indexOf('.'))] = val;
+      });
+
+      fs.writeFileSync(dir, 'module.exports = ' + JSON.stringify(templates) + ';');
+
+      return cb();
+    });
+
+  });
+
+});
+
+
+/**
+ * Build js files for each page
+ */
+var scriptTasks = nameWithPages('scripts', paths.pages);
+
+gulp.task('scripts', scriptTasks);
+
+scriptTasks.forEach(function (task) {
+
+  var pageName = findPageName(task);
+  var src = getDir(pageName, paths.scripts.src);
+  var dest = getDir(pageName, paths.scripts.dest);
+
+  // transform regular node stream to gulp (buffered vinyl) stream
+  var browserified = transform(function(filename) {
+    var b = browserify({ entries: filename, debug: true });
+    return b.bundle();
+  });
+
+  gulp.task(task, ['templates-' + pageName], function () {
+    return gulp
+      .src(src)
+      .pipe(browserified)
+      .pipe(sourcemaps.init({loadMaps: true}))
+          // Add transformation tasks to the pipeline here.
+          .pipe(uglify())
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(dest));
+  });
+
+});
+
+
+/**
+ * Clean from all builds
+ */
+gulp.task('clean', function (cb) {
+  del(paths.clean.builds, cb);
+});
+
+gulp.task('clean-css', function (cb) {
+  del(paths.clean.css, cb);
+});
+
+
+/**
+ * Minify js files
+ */
+gulp.task('min-js', ['clean', 'scripts'], function () {
+  return gulp
+    .src(paths.minjs.src)
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(paths.minjs.dest));
+});
 
 
 /**
  * Minify css files
  */
-gulp.task('min-css', function () {
-  gulp.src(paths.css.src)
+gulp.task('min-css', ['clean-css'], function () {
+  return gulp.src(paths.css.src)
     .pipe(minifyCSS())
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.css.dest));
 });
+
+
+/**
+ * Build for production
+ */
+gulp.task('prod', ['min-css', 'min-js']);

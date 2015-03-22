@@ -11,6 +11,7 @@ app/cache/*
 
 # Builds
 app/public/js/builds/*.js
+app/public/js/builds/*.js.map
 
 # Minified files
 app/public/**/*.min.*

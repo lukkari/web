@@ -3,7 +3,6 @@
  */
 
 var
-  $ = require('jquery'),
   _ = require('underscore'),
   Backbone = require('backbone');
 
@@ -13,7 +12,7 @@ var
   ServerData  = require('./collections/serverdata'),
   ModelBlocks = require('./collections/modelblocks'),
   Messages    = require('./collections/messages'),
-  Parses      = require('./collections/parses'),
+  Apps = require('./collections/apps'),
 
   AppView = require('./views/app'),
 
@@ -22,15 +21,18 @@ var
   ServerDataItemView = require('./views/dashboard/serverdataitem'),
   ModelBlockView = require('./views/dashboard/modelblock'),
   MessageView    = require('./views/dashboard/message'),
+  AddFilterView = require('./views/dashboard/addfilter'),
 
-  ModelPageView = require('./views/modelpage'),
+  AppsPageView = require('./views/apps'),
+  AddAppView = require('./views/apps/add'),
+  AppListView = require('./views/apps/list'),
 
-  ParserView = require('./views/parser');
+  ModelPageView = require('./views/modelpage');
 
 module.exports = Backbone.Router.extend({
   routes : {
-    'model/:m(/page/:p)(/)' : 'modelPage',
-    'parser' : 'parser',
+    'model/:m(/page/:p)(/:search)' : 'modelPage',
+    'apps' : 'appsPage',
     '/*' : 'dashboard'
   },
 
@@ -43,28 +45,36 @@ module.exports = Backbone.Router.extend({
       el : '#app'
     });
     this.app.render();
+
+    // Events
+    this.on('search-model', function (model, query) {
+      this.navigate('model/' + model + '/page/1/' + JSON.stringify(query), {
+        trigger : true
+      });
+    }.bind(this));
   },
 
   /**
    * Show model page
    * @param  {String} name Model name
-   * @param  {String]} p   Page number
+   * @param  {String} p   Page number
+   * @param  {String} search query
    */
-  modelPage : function (name, p) {
+  modelPage : function (name, p, search) {
     if(!name || !name.length) return;
     p = p || '1'; // page number
 
     if(this.view) this.view.remove();
 
-    var page = new Page(name);
-
+    var page = new Page(name, search);
 
     page.fetch({
       success : (function () {
         this.view = new ModelPageView({
           name : name,
           page : p,
-          model : page
+          model : page,
+          query : search
         });
 
         this.app.toContent(this.view.render().el);
@@ -73,21 +83,26 @@ module.exports = Backbone.Router.extend({
   },
 
   /**
-   * Show parser page
+   * Show applications page
    */
-  parser : function () {
+  appsPage : function () {
     if(this.view) this.view.remove();
 
-    var parses = new Parses();
+    var apps = new Apps();
+    apps.fetch();
 
-    parses.fetch({
-      success : (function () {
-
-      }).bind(this)
+    var addAppView = new AddAppView();
+    addAppView.on('new_app', function (app) {
+      apps.add(app, { at : 0 });
     });
 
-    this.view = new ParserView({
-      parses : parses
+    this.view = new AppsPageView({
+      subviews : {
+        addApp : addAppView,
+        appList : new AppListView({
+          collection : apps
+        })
+      }
     });
 
     this.app.toContent(this.view.render().el);
@@ -125,7 +140,9 @@ module.exports = Backbone.Router.extend({
           className : 'messages',
           collection : messages,
           ModelView : MessageView
-        })
+        }),
+
+        addFilter : new AddFilterView()
       }
     });
 

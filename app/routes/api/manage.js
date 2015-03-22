@@ -8,6 +8,8 @@ var async    = require('async');
 
 // DB models
 var Message = mongoose.model('Message');
+var App = mongoose.model('App');
+var Filter = mongoose.model('Filter');
 
 /**
  * Counts documents in any collection by model
@@ -32,11 +34,29 @@ function countCollection (name, cb) {
 }
 
 /**
- * GET '/manage/api/model/:model' [description]
+ * Make object searchable by name
+ * @param {Object} obj query
+ */
+function searchableByName(obj) {
+  if(obj.hasOwnProperty('name')) {
+    obj.name = new RegExp(obj.name, "i");
+  }
+
+  return obj;
+}
+
+/**
+ * GET '/manage/api/model/:model' Get all models
  */
 exports.model = function (req, res) {
 
   try {
+    var query = {};
+
+    if(typeof req.query.q === 'string' && req.query.q.length) {
+      query = searchableByName(JSON.parse(req.query.q));
+    }
+
     var
       model = mongoose.model(req.params.model),
       page  = +req.param('page'),
@@ -46,7 +66,7 @@ exports.model = function (req, res) {
     limit = limit && (limit < 100) ? limit : 10;
 
     model
-      .find({})
+      .find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ 'createdAt' : -1 })
@@ -65,14 +85,20 @@ exports.model = function (req, res) {
 
 
 /**
- * GET '/manage/api/model/:model/config' [description]
+ * GET '/manage/api/model/:model/config' Get model config data
  */
 exports.modelConfig = function (req, res) {
 
   try {
+    var query = {};
+
+    if(typeof req.query.q === 'string' && req.query.q.length) {
+      query = searchableByName(JSON.parse(req.query.q));
+    }
+
     var model = mongoose.model(req.params.model);
 
-    model.count({}, function (err, count) {
+    model.count(query, function (err, count) {
       if(err) {
         console.log(err);
         return res.json(400, err);
@@ -90,7 +116,7 @@ exports.modelConfig = function (req, res) {
 
 
 /**
- * PUT '/manage/api/model/:model/:id' [description]
+ * PUT '/manage/api/model/:model/:id' Update model
  */
 exports.editModel = function (req, res) {
 
@@ -118,7 +144,7 @@ exports.editModel = function (req, res) {
 
 
 /**
- * DELETE '/manage/api/model/:model/:id' [description]
+ * DELETE '/manage/api/model/:model/:id' Delete model
  */
 exports.deleteModel = function (req, res) {
 
@@ -132,7 +158,7 @@ exports.deleteModel = function (req, res) {
         return res.status(400).send(err);
       }
 
-      res.send('success');
+      res.status(204).send();
     });
 
   } catch (err) {
@@ -142,7 +168,7 @@ exports.deleteModel = function (req, res) {
 
 
 /**
- * GET '/manage/api/model' [description]
+ * GET '/manage/api/model' Get list of available models and their count
  */
 exports.getModels = function (req, res) {
 
@@ -219,4 +245,67 @@ exports.getServerData = function (req, res) {
       value : week
     }
   ]);
+};
+
+/**
+ * POST '/manage/api/app' Create new application
+ */
+exports.addApp = function (req, res) {
+  var app = new App(req.body);
+
+  app.save(function (err, app) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.json(app);
+  });
+};
+
+/**
+ * GET '/manage/api/app' List all applications
+ */
+exports.getApps = function (req, res) {
+  App
+  .find({})
+  .sort({ lastAccessed : -1 })
+  .lean()
+  .exec(function (err, apps) {
+    if(err) console.log(err);
+
+    res.json(apps);
+  });
+};
+
+/**
+ * DELETE '/manage/api/app/:id' Remove application
+ */
+exports.deleteApp = function (req, res) {
+  App
+  .findByIdAndRemove(req.params.id)
+  .exec(function (err) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.status(204).send();
+  });
+};
+
+/**
+ * POST '/manage/api/filter' Create filter
+ */
+exports.addFilter = function (req, res) {
+  var filter = new Filter(req.body);
+
+  filter.save(function (err, filter) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send(err);
+    }
+
+    res.json(filter);
+  });
 };
