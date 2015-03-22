@@ -6,16 +6,43 @@ var handlers = {
   manage : require('../routes/socket/manage')
 };
 
+var mongoose = require('mongoose');
+
+// DB models
+var App = mongoose.model('App');
+
+function authorizeApp(socket, next) {
+  var query = socket.handshake.query;
+  var token = query.token;
+
+  if(!token) {
+    return next(new Error('Specify application token'));
+  }
+
+  App
+  .findOne({
+    token : token
+  })
+  .exec(function (err, app) {
+    if(err) console.log(err);
+
+    // App is found
+    if(app) {
+      app.lastAccessed = new Date();
+      app.save();
+
+      return next();
+    }
+
+    return next(new Error('Specify application token'));
+  });
+}
+
 module.exports = function (io) {
 
   var manage = io
     .of('/manage')
-    .use(function (socket, next) {
-      var handshake = socket.handshake;
-      // TO DO: Handle simple authorization
-      console.log(handshake.query);
-      next();
-    })
+    .use(authorizeApp)
     .on('connection', function (socket) {
       function withParams(f) {
         return function () {
