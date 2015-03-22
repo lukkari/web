@@ -23,7 +23,7 @@ module.exports = Backbone.View.extend({
 
   render : function () {
     var tmpl = _.template(this.template, { variable : 'data' });
-    this.$el.html(tmpl());
+    this.$el.html(tmpl({ formModel : 'application' }));
 
     this.$appName = this.$el.find('#addAppName');
 
