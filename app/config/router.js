@@ -206,6 +206,7 @@ module.exports = function (passport) {
   var appApiRouter = express.Router();
   appApiRouter
     .use(ensureApplication)
+    .get('/new_version/:filter', api.app.newVersion)
     .post('/entry', api.app.addEntry);
 
   /**

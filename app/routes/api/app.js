@@ -13,6 +13,26 @@ var Queue = require('../../libs/queue');
 var queue = new Queue();
 
 /**
+ * GET '/api/app/new_version'
+ *   Prepare for getting new schedule:
+ *    - Remove old schedule entries by filter
+ */
+exports.newVersion = function(req, res) {
+
+  var filter = req.params.filter;
+
+  Entry.remove({ filter : filter }, function (err) {
+    if(err) {
+      console.log(err);
+      return res.status(400).send();
+    }
+
+    return res.send('success');
+  });
+
+};
+
+/**
  * GET '/api/app/entry' Add entry/entries
  */
 exports.addEntry = function (req, res) {
