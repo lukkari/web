@@ -48,11 +48,17 @@ var paths = {
   },
 
   clean : {
-    builds : [
+    all : [
       './app/public/js/builds/*.js',
       './app/public/js/builds/*.js.map',
       './app/public/js/**/*.min.js',
-      './app/source/*/dist/*'
+      './app/source/*/dist/*',
+      './app/public/stylesheets/*.min.css'
+    ],
+    js : [
+      './app/public/js/builds/*.js',
+      './app/public/js/builds/*.js.map',
+      './app/public/js/**/*.min.js'
     ],
     css : [
       './app/public/stylesheets/*.min.css'
@@ -211,18 +217,22 @@ scriptTasks.forEach(function (task) {
  * Clean from all builds
  */
 gulp.task('clean', function (cb) {
-  del(paths.clean.builds, cb);
+  del(paths.clean.all, cb);
 });
 
 gulp.task('clean-css', function (cb) {
   del(paths.clean.css, cb);
 });
 
+gulp.task('clean-js', function (cb) {
+  del(paths.clean.js, cb);
+});
+
 
 /**
  * Minify js files
  */
-gulp.task('min-js', ['clean', 'scripts'], function () {
+gulp.task('min-js', ['clean-js', 'scripts'], function () {
   return gulp
     .src(paths.minjs.src)
     .pipe(uglify())
