@@ -28,18 +28,10 @@ Brief description is provided below.
 
 ### Build project
 
-**Note:** you need gulp to build project. To install gulp type: `npm install -g gulp`
+* For testing `npm run gulp scripts`
+* For production: `npm run build`
 
-1. `gulp jade`
-2. `gulp templates`
-3. `gulp scripts`
-
-For production:
-
-1. `gulp min-js`
-2. `gulp min-css`
-
-[List of all gulp tasks](https://github.com/zaynetro/lukkari/wiki/Gulp-tasks)
+[List of all tasks](https://github.com/zaynetro/lukkari/wiki/Build-tasks)
 
 ### Configure envrironments
 
