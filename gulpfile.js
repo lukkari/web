@@ -60,6 +60,9 @@ var paths = {
       './app/public/js/builds/*.js.map',
       './app/public/js/**/*.min.js'
     ],
+    minjs : [
+      './app/public/js/**/*.min.js'
+    ],
     css : [
       './app/public/stylesheets/*.min.css'
     ]
@@ -228,11 +231,15 @@ gulp.task('clean-js', function (cb) {
   del(paths.clean.js, cb);
 });
 
+gulp.task('clean-min-js', function (cb) {
+  del(paths.clean.minjs, cb);
+});
+
 
 /**
  * Minify js files
  */
-gulp.task('min-js', ['clean-js', 'scripts'], function () {
+gulp.task('min-js', ['clean-min-js', 'scripts'], function () {
   return gulp
     .src(paths.minjs.src)
     .pipe(uglify())
