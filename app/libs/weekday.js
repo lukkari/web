@@ -49,7 +49,7 @@ exports.getSubjects = function (options) {
     };
 
     query[options.type] = options.typeid;
-    
+
   } else {
     qtype[options.type] = options.typeid;
 
@@ -75,7 +75,7 @@ exports.getSubjects = function (options) {
     .populate('teachers', 'name')
     .populate('rooms', 'name')
     .populate('subject', 'name')
-    .sort({ 'date' : 1 })
+    .sort({ 'date.start' : 1 })
     .exec(function(err, subjects) {
       data.subjects = subjects;
       if(typeof options.cb === 'function') options.cb(err, data);
