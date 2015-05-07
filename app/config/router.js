@@ -192,6 +192,7 @@ module.exports = function (passport) {
     )
 
     .use(ensureAuthenticatedAPI)
+    .use(ensureXhr)
     .get(   '/schedule',      api.user.getSchedule)
     .get(   '/schedule/now',  api.user.getNowSchedule)
     .delete('/subject/:id',   api.user.removeSubject)
