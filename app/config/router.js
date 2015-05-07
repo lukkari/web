@@ -70,12 +70,12 @@ function ensureXhr(req, res, next) {
   //if(!req.xhr) return res.send('');
 
   /**
-   * For CORS
-   *
-  res.header('Access-Control-Allow-Origin',  req.headers.origin || "*");
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
+   * CORS
    */
+  res.set('Access-Control-Allow-Origin',  '*');
+  res.set('Access-Control-Allow-Credentials', true);
+  res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
   next();
 }
